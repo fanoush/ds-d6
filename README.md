@@ -11,9 +11,11 @@ Direct links to internal photos
 - https://fccid.io/png.php?id=3414019&page=2 SWD test points (CLK,DIO), USB data pins marked as TX,RX (serial UART)
 - https://fccid.io/png.php?id=3414019&page=3 CPU N53832
 
-Also there is similar bracelet without HR sensor - Lenovo HX06 https://www.gearbest.com/smart-watches/pp_1830584.html?wid=1433363 (lowest so far for $11.99). It is made by same manufacturer and shares app and the screen looks the same. Also the FCC info seems promising so I ordered that one too, still waiting.
+Also there is similar bracelet without HR sensor - Lenovo HX06 https://www.gearbest.com/smart-watches/pp_1830584.html?wid=1433363 (lowest so far for $11.99). It is made by same manufacturer and shares app and the screen looks the same. Also the FCC info seems promising so I ordered that one too, still waiting. **UPDATE 7.12.2018 sadly HX06 is not Nordic based but has some Dialog chip**
 
-Lenovo HX06 FCC info https://fccid.io/2AEMN-D16/ - CPU marking is unreadable but board looks very similar to DS-D6 and there are SWD test points (= ARM Cortex M architecture). Also a bit more expensive is HX-03F (with color LCD) and HX03W both https://fccid.io/2AOYQ-HX03, these are [nRF52832 based too](https://fccid.io/png.php?id=3779556&page=2) however SDW test points are unmarked (possibly the ones near top of lcd?)
+Lenovo HX06 FCC info https://fccid.io/2AEMN-D16/ - CPU marking is unreadable but board looks very similar to DS-D6 and there are SWD test points (= ARM Cortex M architecture). **UPDATE however HX06 is not Nordic **
+
+Also a bit more expensive is HX-03F (with color LCD) and HX03W both https://fccid.io/2AOYQ-HX03, these are [nRF52832 based](https://fccid.io/png.php?id=3779556&page=2) however SDW test points are unmarked (possibly the ones near top of lcd?)
 
 
 Firmware in fwdump folder was dumped via gdb over SWD using bluepill board flashed with blackmagic probe firmware
