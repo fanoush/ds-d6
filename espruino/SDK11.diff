@@ -1,0 +1,172 @@
+diff --git a/libs/bluetooth/jswrap_bluetooth.c b/libs/bluetooth/jswrap_bluetooth.c
+index 1a998967..b99bbcb4 100644
+--- a/libs/bluetooth/jswrap_bluetooth.c
++++ b/libs/bluetooth/jswrap_bluetooth.c
+@@ -552,7 +552,7 @@ of the address don't match the address type.
+ 
+ */
+ void jswrap_ble_setAddress(JsVar *address) {
+-#ifdef NRF52
++#if defined(NRF52) && NRF_SD_BLE_API_VERSION>=3
+   ble_gap_addr_t p_addr;
+   if (!bleVarToAddr(address, &p_addr)) {
+     jsExceptionHere(JSET_ERROR, "Expecting a mac address of the form aa:bb:cc:dd:ee:ff");
+diff --git a/make/common/NRF5X.make b/make/common/NRF5X.make
+index a20b626c..03229c62 100644
+--- a/make/common/NRF5X.make
++++ b/make/common/NRF5X.make
+@@ -28,6 +28,9 @@ ARM_HAS_OWN_CMSIS = 1 # Nordic uses its own CMSIS files in its SDK, these are up
+ INCLUDE += -I$(NRF5X_SDK_PATH)
+ 
+ # This is where the common linker for both nRF51 & nRF52 is stored.
++ifdef NRF5X_SDK_11
++LDFLAGS += -L$(NRF5X_SDK_PATH)/nrf5x_linkers 
++endif
+ ifdef NRF5X_SDK_12
+ LDFLAGS += -L$(NRF5X_SDK_PATH)/nrf5x_linkers 
+ endif
+@@ -76,11 +79,13 @@ INCLUDE += -I$(NRF5X_SDK_PATH)/components/libraries/util
+ INCLUDE += -I$(NRF5X_SDK_PATH)/components/drivers_nrf/delay
+ INCLUDE += -I$(NRF5X_SDK_PATH)/components/drivers_nrf/uart
+ INCLUDE += -I$(NRF5X_SDK_PATH)/components/libraries/fds
++INCLUDE += -I$(NRF5X_SDK_PATH)/components/libraries/fds/config
+ INCLUDE += -I$(NRF5X_SDK_PATH)/components/ble/common
+ INCLUDE += -I$(NRF5X_SDK_PATH)/components/device
+ INCLUDE += -I$(NRF5X_SDK_PATH)/components/libraries/button
+ INCLUDE += -I$(NRF5X_SDK_PATH)/components/libraries/timer
+ INCLUDE += -I$(NRF5X_SDK_PATH)/components/libraries/fstorage
++INCLUDE += -I$(NRF5X_SDK_PATH)/components/libraries/fstorage/config
+ INCLUDE += -I$(NRF5X_SDK_PATH)/components/libraries/queue
+ INCLUDE += -I$(NRF5X_SDK_PATH)/components/libraries/experimental_section_vars
+ INCLUDE += -I$(NRF5X_SDK_PATH)/components/drivers_nrf/gpiote
+@@ -95,7 +100,8 @@ INCLUDE += -I$(NRF5X_SDK_PATH)/components/drivers_nrf/ppi
+ INCLUDE += -I$(NRF5X_SDK_PATH)/components/drivers_nrf/hal/nrf_pwm
+ INCLUDE += -I$(NRF5X_SDK_PATH)/components/drivers_nrf/clock
+ INCLUDE += -I$(NRF5X_SDK_PATH)/components/drivers_nrf/rng
+-ifdef NRF5X_SDK_12
++ifneq ($(or $(NRF5X_SDK_12),$(NRF5X_SDK_11)),)
++#ifdef NRF5X_SDK_12
+ INCLUDE += -I$(NRF5X_SDK_PATH)/components/libraries/log
+ INCLUDE += -I$(NRF5X_SDK_PATH)/components/libraries/log/src
+ else
+@@ -168,14 +174,21 @@ $(NRF5X_SDK_PATH)/components/ble/peer_manager/gatt_cache_manager.c \
+ $(NRF5X_SDK_PATH)/components/ble/peer_manager/gatts_cache_manager.c \
+ $(NRF5X_SDK_PATH)/components/libraries/timer/app_timer.c \
+ $(NRF5X_SDK_PATH)/components/libraries/fds/fds.c \
+-$(NRF5X_SDK_PATH)/components/libraries/queue/nrf_queue.c \
+ $(NRF5X_SDK_PATH)/components/libraries/util/app_util_platform.c \
+ $(NRF5X_SDK_PATH)/components/libraries/util/sdk_mapped_flags.c \
+ $(NRF5X_SDK_PATH)/components/libraries/util/app_error.c \
+ $(NRF5X_SDK_PATH)/components/libraries/util/nrf_assert.c 
+ 
++ifdef NRF5X_SDK_11
++TARGETSOURCES += \
++$(NRF5X_SDK_PATH)/components/drivers_nrf/delay/nrf_delay.c \
++$(NRF5X_SDK_PATH)/components/drivers_nrf/hal/nrf_saadc.c
++else
++TARGETSOURCES += \
++$(NRF5X_SDK_PATH)/components/libraries/queue/nrf_queue.c
++endif
+ 
+-ifdef NRF5X_SDK_12
++ifneq ($(or $(NRF5X_SDK_12),$(NRF5X_SDK_11)),)
+ TARGETSOURCES += \
+ $(NRF5X_SDK_PATH)/components/softdevice/common/softdevice_handler/softdevice_handler.c \
+ $(NRF5X_SDK_PATH)/components/libraries/fstorage/fstorage.c \
+diff --git a/make/family/NRF52.make b/make/family/NRF52.make
+index 9d04d830..d56a5a66 100644
+--- a/make/family/NRF52.make
++++ b/make/family/NRF52.make
+@@ -25,6 +25,16 @@ SOFTDEVICE_PATH = $(NRF5X_SDK_PATH)/components/softdevice/s132
+ SOFTDEVICE        = $(SOFTDEVICE_PATH)/hex/s132_nrf52_5.0.0_softdevice.hex
+ DEFINES += -DS132
+ else
++ifdef NRF_SDK11
++# Use SDK11
++NRF5X_SDK=11
++NRF5X_SDK_11=1
++NRF5X_SDK_PATH=$(ROOT)/targetlibs/nrf5x_11
++DEFINES += -DNRF_SD_BLE_API_VERSION=2
++SOFTDEVICE_PATH = $(NRF5X_SDK_PATH)/components/softdevice/s132
++SOFTDEVICE        = $(SOFTDEVICE_PATH)/hex/s132_nrf52_2.0.0_softdevice.hex
++DEFINES += -DS132
++else
+ # Use SDK12
+ NRF5X_SDK=12
+ NRF5X_SDK_12=1
+@@ -35,6 +45,7 @@ SOFTDEVICE        = $(SOFTDEVICE_PATH)/hex/s132_nrf52_3.0.0_softdevice.hex
+ DEFINES += -DS132
+ endif
+ endif
++endif
+ 
+ # ARCHFLAGS are shared by both CFLAGS and LDFLAGS.
+ ARCHFLAGS = -mcpu=cortex-m4 -mthumb -mabi=aapcs -mfloat-abi=hard -mfpu=fpv4-sp-d16
+@@ -87,12 +98,15 @@ TARGETSOURCES += $(NRF5X_SDK_PATH)/modules/nrfx/drivers/src/nrfx_saadc.c
+ TARGETSOURCES += $(NRF5X_SDK_PATH)/modules/nrfx/drivers/src/nrfx_rng.c
+ endif
+ 
++ifndef NRF5X_SDK_11
+ # Secure connection support
+ INCLUDE += -I$(NRF5X_SDK_PATH)/components/libraries/ecc
+ TARGETSOURCES += $(NRF5X_SDK_PATH)/components/libraries/ecc/ecc.c
+ INCLUDE += -I$(NRF5X_SDK_PATH)/components/drivers_nrf/rng
+ INCLUDE += -I$(NRF5X_SDK_PATH)/external/micro-ecc
+ TARGETSOURCES += $(NRF5X_SDK_PATH)/external/micro-ecc/uECC.c
++endif
++
+ endif # BOOTLOADER
+ 
+ include make/common/NRF5X.make
+diff --git a/targets/nrf5x/jshardware.c b/targets/nrf5x/jshardware.c
+index 024568c9..acea0efc 100644
+--- a/targets/nrf5x/jshardware.c
++++ b/targets/nrf5x/jshardware.c
+@@ -38,7 +38,9 @@ void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info) {
+ }
+ #endif
+ 
++#ifndef NRF5X_SDK_11
+ #include "nrf_peripherals.h"
++#endif
+ #include "nrf_gpio.h"
+ #include "nrf_gpiote.h"
+ #include "nrf_timer.h"
+@@ -102,7 +104,37 @@ bool spi0Initialised = false;
+ static const nrf_drv_twi_t TWI1 = NRF_DRV_TWI_INSTANCE(1);
+ bool twi1Initialised = false;
+ 
++#ifdef NRF5X_SDK_11
++// UART does not support instance numbers
++#define nrf_drv_uart_rx(u,b,l) nrf_drv_uart_rx(b,l)
++#define nrf_drv_uart_tx(u,b,l) nrf_drv_uart_tx(b,l)
++#define nrf_drv_uart_rx_disable(u) nrf_drv_uart_rx_disable()
++#define nrf_drv_uart_rx_enable(u) nrf_drv_uart_rx_enable()
++#define nrf_drv_uart_tx_abort(u) nrf_drv_uart_tx_abort()
++#define nrf_drv_uart_uninit(u) nrf_drv_uart_uninit()
++#define nrf_drv_uart_init(u,c,h) nrf_drv_uart_init(c,h)
++
++// different name in SDK11
++#define GPIOTE_CH_NUM NUMBER_OF_GPIO_TE
++
++//this macro in SDK11 needs instance id and contains useless pin defaults so just copy generic version from SDK12
++#undef NRF_DRV_SPI_DEFAULT_CONFIG
++#define NRF_DRV_SPI_DEFAULT_CONFIG                           \
++{                                                            \
++    .sck_pin      = NRF_DRV_SPI_PIN_NOT_USED,                \
++    .mosi_pin     = NRF_DRV_SPI_PIN_NOT_USED,                \
++    .miso_pin     = NRF_DRV_SPI_PIN_NOT_USED,                \
++    .ss_pin       = NRF_DRV_SPI_PIN_NOT_USED,                \
++    .irq_priority = SPI0_CONFIG_IRQ_PRIORITY,         \
++    .orc          = 0xFF,                                    \
++    .frequency    = NRF_DRV_SPI_FREQ_4M,                     \
++    .mode         = NRF_DRV_SPI_MODE_0,                      \
++    .bit_order    = NRF_DRV_SPI_BIT_ORDER_MSB_FIRST,         \
++}
++
++#else
+ static const nrf_drv_uart_t UART0 = NRF_DRV_UART_INSTANCE(0);
++#endif
+ static uint8_t uart0rxBuffer[2]; // 2 char buffer
+ static uint8_t uart0txBuffer[1];
+ bool uartIsSending = false;
