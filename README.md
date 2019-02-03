@@ -3,7 +3,7 @@ Custom firmware for Desay/MPow DS-D6  nRF52832 bracelet
 
 ## Where to get the device
 
-Sold in various places like  ebay. I got it from GearBest https://www.gearbest.com/smart-watches/pp_1232618.html?wid=1433363 In recent months it is quite often on sale for $9.99 (lowest so far was 7.99). The price changes often (sometimes even multiple times per day) so if it is for full price you may try to wait few days (or hours). Sometimes the discount is only valid in their mobile app. Found also [here](https://www.6elec.com/product/mpow-ds-d6-smart-fitness-tracker-heart-rate-sleep-monitor/) but never bought from them.
+Sold in various places like  ebay. I got it from GearBest https://www.gearbest.com/smart-watches/pp_1232618.html?wid=1433363 In recent months it is quite often on sale for $9.99 (lowest so far was 7.99). The price changes often (sometimes even multiple times per day) so if it is for full price you may try to wait few days (or hours). Sometimes the discount is only valid in their mobile app.
 
 ## HW reference
 DS-D6 FCC info https://fccid.io/2AEMN-D6/
