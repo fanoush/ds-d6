@@ -3,7 +3,7 @@ Custom firmware for Desay/MPow DS-D6  nRF52832 bracelet
 
 ## Where to get the device
 
-Sold in various places like  ebay. I got it from GearBest https://www.gearbest.com/smart-watches/pp_1232618.html?wid=1433363 In recent months it is quite often on sale for $9.99 (lowest so far was 7.99). The price changes often (sometimes even multiple times per day) so if it is for full price you may try to wait few days (or hours). Sometimes the discount is only valid in their mobile app. **UPDATE 26.02.2019** looks like Gearbest is out of stock already for some time so there are just random sellers on ebay/aliexpress with price that is no longer interesting. Gearbest still accepts arrival notices in [this warehouse](https://www.gearbest.com/smart-watches/pp_1232618.html?wid=1527929) so maybe it will come back but maybe it is really over as this device is quite old now.
+Sold in various places like  ebay. I got it from GearBest https://www.gearbest.com/smart-watches/pp_1232618.html?wid=1433363 In recent months it is quite often on sale for $9.99 (lowest so far was 7.99). The price changes often (sometimes even multiple times per day) so if it is for full price you may try to wait few days (or hours). Sometimes the discount is only valid in their mobile app. **UPDATE 26.02.2019** looks like Gearbest is out of stock already for some time so there are just random sellers on ebay/aliexpress with price that is no longer interesting. 
 
 ## HW reference
 DS-D6 FCC info https://fccid.io/2AEMN-D6/
@@ -20,7 +20,7 @@ Direct links to internal photos
 
 - all/most hardware known and documented
 - it is possible to [update and restore device via serial DFU](https://github.com/fanoush/ds-d6/wiki/DFU-update) without opening it as long as you app is developed with Nordic SDK11 and SoftDevice 2.0.x
-- recent build of Espruino (2.00.143) works with all hardware with no issues, flashable DFU package [here](https://github.com/fanoush/ds-d6/tree/master/espruino/DFU)
+- recent build of Espruino (2.01) works with all hardware with no issues, flashable DFU package [here](https://github.com/fanoush/ds-d6/tree/master/espruino/DFU)
 
 
 All stuff documented in WIKI **https://github.com/fanoush/ds-d6/wiki**
@@ -54,4 +54,4 @@ There is similar bracelet without HR sensor - Lenovo HX06 https://www.gearbest.c
 Also a bit more expensive is HX-03F (with color LCD) and HX03W both https://fccid.io/2AOYQ-HX03, these are [nRF52832 based](https://fccid.io/png.php?id=3779556&page=2) however SWD test points are unmarked (possibly the ones near top of lcd?)
 
 ### DS-D9
-HW is very similar to DS-D6 to the point that D9 firmware runs on D6 only with garbled display (clock digits are cut off). FCC info https://fccid.io/2AEMN-D9/ I have ordered one from Aliexpress for $11 (search for "mpow fitness"). This one has smaller OLED positioned hrozontally and is charged via cable so it should be thinner. There are still 4 pins including serial port. I hope the same Espruino binary for DS-D6 will run 'as is' on D9.
+HW is very similar to DS-D6 to the point that D9 firmware runs on D6 only with garbled display (clock digits are cut off). FCC info https://fccid.io/2AEMN-D9/ I have ordered one from Aliexpress for $11 (search for "mpow fitness"). This one has smaller OLED positioned hrozontally and is charged via cable so it should be thinner. There are still 4 pins including serial port. I hope the same Espruino binary for DS-D6 will run 'as is' on D9. **UPDATE 4.3.2019** I got it and it is indeed exactly the same except the display which is 64x32. All the pins seems to be wired in same way (motor, spi display, battery, serial) and flashing same DS-D6 espruino binary over serial worked just fine. So while DS-D9 is even harder to get (I got black one from [this seller](https://www.aliexpress.com/item/Mpow-Fitness-Activity-Tracker-IP67-Heart-Rate-Monitor-Smartband-Sleep-Monitor-Wristband-Call-Message-Reminder-Bracelet/32955082325.html) but it is already out of stock and price went up) and the OLED has poor visiblility and resolution, I still like its minimalistic design a bit more than DS-D6.
