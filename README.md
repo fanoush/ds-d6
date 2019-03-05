@@ -1,11 +1,11 @@
 # DS-D6
 Custom firmware for Desay/MPow DS-D6  nRF52832 bracelet
 
-Also works on [Mpow DS-D9/Lenovo HW02](https://fccid.io/2AEMN-D9/)
+Also works on [Mpow DS-D9/Lenovo HW02](https://fccid.io/2AEMN-D9/) (same GPIO setup, components, firmware layout, the only difference seems to be different OLED resolution)
 
 ## Where to get the device
 
-Sold in various places like  ebay. I got it from GearBest https://www.gearbest.com/smart-watches/pp_1232618.html?wid=1433363 In recent months it is quite often on sale for $9.99 (lowest so far was 7.99). The price changes often (sometimes even multiple times per day) so if it is for full price you may try to wait few days (or hours). Sometimes the discount is only valid in their mobile app. **UPDATE 26.02.2019** looks like Gearbest is out of stock already for some time so there are just random sellers on ebay/aliexpress with price that is no longer interesting. 
+Sold in various places like  ebay. I got it from GearBest https://www.gearbest.com/smart-watches/pp_1232618.html?wid=1433363 In recent months it is quite often on sale for $9.99 (lowest so far was 7.99). The price changes often (sometimes even multiple times per day) so if it is for full price you may try to wait few days (or hours). Sometimes the discount is only valid in their mobile app.
 
 ## HW reference
 DS-D6 FCC info https://fccid.io/2AEMN-D6/
