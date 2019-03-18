@@ -1,7 +1,7 @@
 # DS-D6
-Custom firmware for Desay/MPow DS-D6  nRF52832 bracelet
+Custom Espruino firmware for Desay/MPow DS-D6  nRF52832 bracelet
 
-Also works on [Mpow DS-D9/Lenovo HW02](https://fccid.io/2AEMN-D9/) (same GPIO setup, components, firmware layout, the only difference seems to be different display - small 0.42" 72x40 SSD1306)
+Also works on [Mpow DS-D9/Lenovo HW02](https://github.com/fanoush/ds-d6/wiki/DS-D9)
 
 ## Where to get the device
 
