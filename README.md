@@ -19,8 +19,9 @@ Direct links to internal photos
 ## Status
 
 - all/most hardware [known and documented](https://github.com/fanoush/ds-d6/wiki/Hardware) (HR sensor somehow works but I don't use it)
-- it is possible to [update and restore device via bluetooth or TTL serial](https://github.com/fanoush/ds-d6/wiki/DFU-update) ) without opening it as long as your app is developed with Nordic SDK11 and SoftDevice 2.0.x
+- it is possible to [update and restore device via bluetooth or TTL serial](https://github.com/fanoush/ds-d6/wiki/DFU-update) without opening it as long as your app is developed with Nordic SDK11 and SoftDevice 2.0.x
 - recent build of Espruino (2.01) works with all hardware with no issues, flashable DFU package [here](https://github.com/fanoush/ds-d6/tree/master/espruino/DFU)
+- it is also possible to update device to newer version of SDK, bootloader and SoftDevice over serial DFU without opening it (and also restore it back) so porting SW that requires higher SDK and SoftDevice versions is now possible too (e.g. micropython). This involves flashing patched original bootloader first as there was [bootloader bug](https://devzone.nordicsemi.com/f/nordic-q-a/16774/updating-from-s132-v2-0-x-to-s132-v3-0-0-with-dual-bank-bootloader-from-sdk-v11-0-0-does-not-work) preventing the upgrade to newer SoftDevices.
 
 
 
