@@ -19,9 +19,9 @@ Direct links to internal photos
 ## Status
 
 - all/most hardware [known and documented](https://github.com/fanoush/ds-d6/wiki/Hardware) (HR sensor somehow works but I don't use it)
-- it is possible to [update and restore device via serial DFU](https://github.com/fanoush/ds-d6/wiki/DFU-update) without opening it as long as your app is developed with Nordic SDK11 and SoftDevice 2.0.x
+- it is possible to [update and restore device via bluetooth or TTL serial](https://github.com/fanoush/ds-d6/wiki/DFU-update) ) without opening it as long as your app is developed with Nordic SDK11 and SoftDevice 2.0.x
 - recent build of Espruino (2.01) works with all hardware with no issues, flashable DFU package [here](https://github.com/fanoush/ds-d6/tree/master/espruino/DFU)
-- figuring out bluetooth DFU would be nice but as long as serial DFU works it is not a priority
+
 
 
 All stuff documented in WIKI **https://github.com/fanoush/ds-d6/wiki**
