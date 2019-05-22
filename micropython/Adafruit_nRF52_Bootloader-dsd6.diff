@@ -182,10 +182,10 @@ index cd1760b..d94015b 100644
  //--------------------------------------------------------------------+
 diff --git a/src/boards/dsd6_nrf52832/board.h b/src/boards/dsd6_nrf52832/board.h
 new file mode 100644
-index 0000000..10bf0ba
+index 0000000..a1e16dc
 --- /dev/null
 +++ b/src/boards/dsd6_nrf52832/board.h
-@@ -0,0 +1,60 @@
+@@ -0,0 +1,57 @@
 +/*
 + * The MIT License (MIT)
 + *
@@ -210,15 +210,15 @@ index 0000000..10bf0ba
 + * THE SOFTWARE.
 + */
 +
-+#ifndef _FEATHER_NRF52832_H
-+#define _FEATHER_NRF52832_H
++#ifndef _DSD6_NRF52832_H
++#define _DSD6_NRF52832_H
 +
 +/*------------------------------------------------------------------*/
 +/* LED
 + *------------------------------------------------------------------*/
 +#define LEDS_NUMBER        0
-+#define LED_PRIMARY_PIN    9 // Red
-+#define LED_SECONDARY_PIN  10 // Blue
++//#define LED_PRIMARY_PIN    9 // Red
++//#define LED_SECONDARY_PIN  10 // Blue
 +#define LED_STATE_ON       1
 +
 +/*------------------------------------------------------------------*/
@@ -242,10 +242,7 @@ index 0000000..10bf0ba
 +#define BLEDIS_MANUFACTURER   "Desay"
 +#define BLEDIS_MODEL          "DS-D6"
 +
-+#define UF2_PRODUCT_NAME   "DS-D6"
-+#define UF2_INDEX_URL      "https://github.com/fanoush/ds-d6"
-+
-+#endif // _FEATHER_NRF52832_H
++#endif // _DSD6_NRF52832_H
 diff --git a/src/linker/s132_v6.ld b/src/linker/s132_v6.ld
 index 206effa..9cf572b 100644
 --- a/src/linker/s132_v6.ld
@@ -261,7 +258,7 @@ index 206effa..9cf572b 100644
    /** RAM Region for bootloader. */
    RAM (rwx) :  ORIGIN = 0x20003000, LENGTH = 0x20007F7C-0x20003000
 diff --git a/src/main.c b/src/main.c
-index 38581d4..89b97f2 100644
+index 38581d4..a3122f6 100644
 --- a/src/main.c
 +++ b/src/main.c
 @@ -109,24 +109,13 @@ void usb_teardown(void);
@@ -290,20 +287,30 @@ index 38581d4..89b97f2 100644
  static uint32_t softdev_init(bool init_softdevice);
  
  uint32_t* dbl_reset_mem = ((uint32_t*)  DFU_DBL_RESET_MEM );
-@@ -191,7 +180,11 @@ int main(void)
+@@ -190,8 +179,10 @@ int main(void)
+   // DFU button pressed
    dfu_start  = dfu_start || button_pressed(BUTTON_DFU);
  
-   // DFU + FRESET are pressed --> OTA
--  _ota_dfu = _ota_dfu  || ( button_pressed(BUTTON_DFU) && button_pressed(BUTTON_FRESET) ) ;
-+  _ota_dfu = _ota_dfu  || !serial_only_dfu; //(button_pressed(BUTTON_DFU)
 +#if BUTTONS_NUMBER > 1
-+ && button_pressed(BUTTON_FRESET)
-+ ) ;
+   // DFU + FRESET are pressed --> OTA
+   _ota_dfu = _ota_dfu  || ( button_pressed(BUTTON_DFU) && button_pressed(BUTTON_FRESET) ) ;
 +#endif
  
    bool const valid_app = bootloader_app_is_valid(DFU_BANK_0_REGION_START);
  
-@@ -243,12 +236,13 @@ int main(void)
+@@ -217,6 +208,11 @@ int main(void)
+ 
+   (*dbl_reset_mem) = 0;
+ 
++#if BUTTONS_NUMBER < 2
++  // set BLE/ota DFU by default unless asked for serial as we don't have button to select it
++  _ota_dfu = _ota_dfu  || !serial_only_dfu;
++#endif
++
+   if ( dfu_start || !valid_app )
+   {
+     if ( _ota_dfu )
+@@ -243,12 +239,13 @@ int main(void)
      }
    }
  
@@ -318,7 +325,7 @@ index 38581d4..89b97f2 100644
    // Reset Board
    board_teardown();
  
-@@ -266,6 +260,17 @@ int main(void)
+@@ -266,6 +263,17 @@ int main(void)
    NVIC_SystemReset();
  }
  
