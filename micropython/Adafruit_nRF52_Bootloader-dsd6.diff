@@ -1,0 +1,272 @@
+diff --git a/Makefile b/Makefile
+index 55082e4..626c454 100644
+--- a/Makefile
++++ b/Makefile
+@@ -17,6 +17,7 @@ TUSB_PATH    = lib/tinyusb/src
+ NRFX_PATH    = lib/nrfx
+ 
+ SD_VERSION   = 6.1.1
++#SD_VERSION   = 3.0.0
+ SD_FILENAME  = $(SD_NAME)_nrf52_$(SD_VERSION)
+ SD_API_PATH  = $(SD_PATH)/$(SD_FILENAME)_API
+ SD_HEX       = $(SD_PATH)/$(SD_FILENAME)_softdevice.hex
+@@ -76,7 +77,7 @@ remduplicates = $(strip $(if $1,$(firstword $1) $(call remduplicates,$(filter-ou
+ #*********************************
+ BOARD_LIST = $(sort $(subst .h,,$(subst src/boards/,,$(wildcard src/boards/*))))
+ 
+-NRF52832_BOARDLIST = feather_nrf52832
++NRF52832_BOARDLIST = feather_nrf52832 dsd6_nrf52832
+ IS_52832 = $(filter $(BOARD),$(NRF52832_BOARDLIST))
+ 
+ ifeq ($(filter $(BOARD),$(BOARD_LIST)),)
+diff --git a/lib/sdk11/components/libraries/bootloader_dfu/dfu_dual_bank.c b/lib/sdk11/components/libraries/bootloader_dfu/dfu_dual_bank.c
+index 99f3d45..47ab50b 100644
+--- a/lib/sdk11/components/libraries/bootloader_dfu/dfu_dual_bank.c
++++ b/lib/sdk11/components/libraries/bootloader_dfu/dfu_dual_bank.c
+@@ -816,6 +816,10 @@ uint32_t dfu_sd_image_validate(void)
+         uint32_t block_size      = (bootloader_settings.sd_image_start - sd_start) / 2;
+         uint32_t image_end       = bootloader_settings.sd_image_start + 
+                                    bootloader_settings.sd_image_size;
++        
++        /* ##### FIX START ##### */
++        block_size &= ~(uint32_t)(CODE_PAGE_SIZE - 1); 
++        /* ##### FIX END ##### */       
+ 
+         uint32_t img_block_start = bootloader_settings.sd_image_start + 2 * block_size;
+         uint32_t sd_block_start  = sd_start + 2 * block_size;
+diff --git a/lib/sdk11/components/libraries/bootloader_dfu/dfu_single_bank.c b/lib/sdk11/components/libraries/bootloader_dfu/dfu_single_bank.c
+index e6ccbf5..6248739 100644
+--- a/lib/sdk11/components/libraries/bootloader_dfu/dfu_single_bank.c
++++ b/lib/sdk11/components/libraries/bootloader_dfu/dfu_single_bank.c
+@@ -789,6 +789,10 @@ uint32_t dfu_sd_image_validate(void)
+         uint32_t block_size      = (bootloader_settings.sd_image_start - sd_start) / 2;
+         uint32_t image_end       = bootloader_settings.sd_image_start + 
+                                    bootloader_settings.sd_image_size;
++        
++        /* ##### FIX START ##### */
++        block_size &= ~(uint32_t)(CODE_PAGE_SIZE - 1); 
++        /* ##### FIX END ##### */       
+ 
+         uint32_t img_block_start = bootloader_settings.sd_image_start + 2 * block_size;
+         uint32_t sd_block_start  = sd_start + 2 * block_size;
+diff --git a/lib/sdk11/components/libraries/bootloader_dfu/dfu_types.h b/lib/sdk11/components/libraries/bootloader_dfu/dfu_types.h
+index 617b8ee..889cb9a 100644
+--- a/lib/sdk11/components/libraries/bootloader_dfu/dfu_types.h
++++ b/lib/sdk11/components/libraries/bootloader_dfu/dfu_types.h
+@@ -42,7 +42,7 @@
+ 
+ #if defined(NRF52832_XXAA)
+ 
+-#define BOOTLOADER_REGION_START             0x00074000                  /**< This field should correspond to start address of the bootloader, found in UICR.RESERVED, 0x10001014, register. This value is used for sanity check, so the bootloader will fail immediately if this value differs from runtime value. The value is used to determine max application size for updating. */
++#define BOOTLOADER_REGION_START             0x00078000                  /**< This field should correspond to start address of the bootloader, found in UICR.RESERVED, 0x10001014, register. This value is used for sanity check, so the bootloader will fail immediately if this value differs from runtime value. The value is used to determine max application size for updating. */
+ #define BOOTLOADER_SETTINGS_ADDRESS         0x0007F000                  /**< The field specifies the page location of the bootloader settings address. */
+ #define BOOTLOADER_MBR_PARAMS_PAGE_ADDRESS  0x0007E000                  /**< The field specifies the page location of the mbr params page address. */
+ 
+diff --git a/src/boards.c b/src/boards.c
+index 44890ed..7d94472 100644
+--- a/src/boards.c
++++ b/src/boards.c
+@@ -57,12 +57,16 @@ void board_init(void)
+   NRF_CLOCK->LFCLKSRC = CLOCK_LFCLKSRC_SRC_RC;
+   NRF_CLOCK->TASKS_LFCLKSTART = 1UL;
+ 
+-  button_init(BUTTON_DFU);
+-  button_init(BUTTON_FRESET);
++  button_init(BUTTON_1);
++#if BUTTONS_NUMBER > 1
++  button_init(BUTTON_2);
++#endif
+   NRFX_DELAY_US(100); // wait for the pin state is stable
+ 
+   // use PMW0 for LED RED
++  #if LEDS_NUMBER > 0
+   led_pwm_init(LED_PRIMARY, LED_PRIMARY_PIN);
++  #endif
+   #if LEDS_NUMBER > 1
+   led_pwm_init(LED_SECONDARY, LED_SECONDARY_PIN);
+   #endif
+@@ -88,10 +92,10 @@ void board_teardown(void)
+ {
+   // Disable systick, turn off LEDs
+   SysTick->CTRL = 0;
+-
++  #if LEDS_NUMBER > 0
+   // Disable and reset PWM for LEDs
+   led_pwm_teardown();
+-
++  #endif
+ #if defined(LED_NEOPIXEL) || defined(LED_RGB_RED_PIN)
+   extern void neopixel_teardown(void);
+   neopixel_teardown();
+@@ -113,8 +117,9 @@ static uint32_t _systick_count = 0;
+ void SysTick_Handler(void)
+ {
+   _systick_count++;
+-
++#if LEDS_NUMBER > 0
+   led_tick();
++#endif
+ }
+ 
+ 
+@@ -122,6 +127,7 @@ uint32_t tusb_hal_millis(void)
+ {
+   return ( ( ((uint64_t)app_timer_cnt_get())*1000*(APP_TIMER_CONFIG_RTC_FREQUENCY+1)) / APP_TIMER_CLOCK_FREQ );
+ }
++#if LEDS_NUMBER > 0
+ 
+ void pwm_teardown(NRF_PWM_Type* pwm )
+ {
+@@ -289,6 +295,11 @@ void led_state(uint32_t state)
+     (void) final_color;
+     #endif
+ }
++#else //  LEDS_NUMBER > 0
++void led_state(uint32_t state)
++{
++}
++#endif
+ 
+ #ifdef LED_NEOPIXEL
+ 
+diff --git a/src/boards.h b/src/boards.h
+index cd1760b..d94015b 100644
+--- a/src/boards.h
++++ b/src/boards.h
+@@ -32,12 +32,28 @@
+ 
+ #include "board.h"
+ 
++
++//--------------------------------------------------------------------+
++// BUTTONS
++//--------------------------------------------------------------------+
++// Make sure we have at least two buttons (DFU + FRESET since DFU+FRST=OTA)
++#if BUTTONS_NUMBER < 1
++#error "At least one button required in the BSP (see 'BUTTONS_NUMBER')"
++#endif
++
+ #ifndef BUTTON_DFU
+ #define BUTTON_DFU      BUTTON_1
+ #endif
++
++#if BUTTONS_NUMBER > 1
+ #ifndef BUTTON_FRESET
+ #define BUTTON_FRESET   BUTTON_2
+ #endif
++#endif
++
++void button_init(uint32_t pin);
++bool button_pressed(uint32_t pin);
++
+ 
+ // The primary LED is usually Red but not in all cases.
+ #define LED_PRIMARY 0
+@@ -87,17 +103,6 @@ void led_pwm_enable(uint32_t led_index);
+ void led_state(uint32_t state);
+ void led_tick(void);
+ 
+-//--------------------------------------------------------------------+
+-// BUTTONS
+-//--------------------------------------------------------------------+
+-// Make sure we have at least two buttons (DFU + FRESET since DFU+FRST=OTA)
+-#if BUTTONS_NUMBER < 2
+-#error "At least two buttons required in the BSP (see 'BUTTONS_NUMBER')"
+-#endif
+-
+-void button_init(uint32_t pin);
+-bool button_pressed(uint32_t pin);
+-
+ bool is_ota(void);
+ 
+ //--------------------------------------------------------------------+
+diff --git a/src/linker/s132_v6.ld b/src/linker/s132_v6.ld
+index 206effa..9cf572b 100644
+--- a/src/linker/s132_v6.ld
++++ b/src/linker/s132_v6.ld
+@@ -11,7 +11,8 @@ MEMORY
+    *  those values do not match. The check is performed in main.c, see
+    *  APP_ERROR_CHECK_BOOL(*((uint32_t *)NRF_UICR_BOOT_START_ADDRESS) == BOOTLOADER_REGION_START);
+    */
+-  FLASH (rx) : ORIGIN = 0x74000, LENGTH = 0xA000 /* 40 KB */
++/*  FLASH (rx) : ORIGIN = 0x74000, LENGTH = 0xA000 */ /* 40 KB */
++  FLASH (rx) : ORIGIN = 0x78000, LENGTH = 0x6000 /* 24 KB */
+ 
+   /** RAM Region for bootloader. */
+   RAM (rwx) :  ORIGIN = 0x20003000, LENGTH = 0x20007F7C-0x20003000
+diff --git a/src/main.c b/src/main.c
+index 38581d4..89b97f2 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -109,24 +109,13 @@ void usb_teardown(void);
+ #define DFU_DBL_RESET_MEM               0x20007F7C
+ 
+ #define BOOTLOADER_VERSION_REGISTER     NRF_TIMER2->CC[0]
+-#define DFU_SERIAL_STARTUP_INTERVAL     1000
++#define DFU_SERIAL_STARTUP_INTERVAL     3000
+ 
+ // These value must be the same with one in dfu_transport_ble.c
+ #define BLEGAP_EVENT_LENGTH             6
+ #define BLEGATT_ATT_MTU_MAX             247
+ enum { BLE_CONN_CFG_HIGH_BANDWIDTH = 1 };
+ 
+-// Adafruit for factory reset
+-#define APPDATA_ADDR_START              (BOOTLOADER_REGION_START-DFU_APP_DATA_RESERVED)
+-
+-#ifdef NRF52840_XXAA
+-STATIC_ASSERT( APPDATA_ADDR_START == 0xED000);
+-#else
+-STATIC_ASSERT( APPDATA_ADDR_START == 0x6D000);
+-#endif
+-
+-
+-void adafruit_factory_reset(void);
+ static uint32_t softdev_init(bool init_softdevice);
+ 
+ uint32_t* dbl_reset_mem = ((uint32_t*)  DFU_DBL_RESET_MEM );
+@@ -191,7 +180,11 @@ int main(void)
+   dfu_start  = dfu_start || button_pressed(BUTTON_DFU);
+ 
+   // DFU + FRESET are pressed --> OTA
+-  _ota_dfu = _ota_dfu  || ( button_pressed(BUTTON_DFU) && button_pressed(BUTTON_FRESET) ) ;
++  _ota_dfu = _ota_dfu  || !serial_only_dfu; //(button_pressed(BUTTON_DFU)
++#if BUTTONS_NUMBER > 1
++ && button_pressed(BUTTON_FRESET)
++ ) ;
++#endif
+ 
+   bool const valid_app = bootloader_app_is_valid(DFU_BANK_0_REGION_START);
+ 
+@@ -243,12 +236,13 @@ int main(void)
+     }
+   }
+ 
++#if BUTTONS_NUMBER > 1
+   // Adafruit Factory reset
+   if ( !button_pressed(BUTTON_DFU) && button_pressed(BUTTON_FRESET) )
+   {
+     adafruit_factory_reset();
+   }
+-
++#endif
+   // Reset Board
+   board_teardown();
+ 
+@@ -266,6 +260,17 @@ int main(void)
+   NVIC_SystemReset();
+ }
+ 
++// Adafruit for factory reset
++#define APPDATA_ADDR_START              (BOOTLOADER_REGION_START-DFU_APP_DATA_RESERVED)
++
++#ifdef NRF52840_XXAA
++STATIC_ASSERT( APPDATA_ADDR_START == 0xED000);
++#else
++STATIC_ASSERT( APPDATA_ADDR_START == 0x71000);
++#endif
++
++
++void adafruit_factory_reset(void);
+ 
+ // Perform factory reset to erase Application + Data
+ void adafruit_factory_reset(void)
