@@ -12,4 +12,10 @@ Espruino console should work both on USB data pins (as serial port, not usb, spe
 
 Currently no OLED or main DS-D6 module is included directly in the build as these are WIP. However this is not an issue since you can upload what you wish e.g. via [Espruino Web IDE](https://www.espruino.com/Web+IDE). Example you can use as a start is here https://gist.github.com/fanoush/ce461c73c299834bcb53a615721b5a2e
 
+## How to rebuild
+clone espruino repo
+patch with DS-D6-espruinoXX.diff
+extract targetlibs_nrf5x_11.tgz to get working sdk11 for espruino sources
+make -j BOARDNAME=DSD6 BOARD=DSD6 RELEASE=1 NRF_SDK11=1 USE_BOOTLADER=1 VERBOSE=1 DFU_UPDATE_BUILD=1
+
 
