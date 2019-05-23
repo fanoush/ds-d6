@@ -1,4 +1,4 @@
-Build of Espruino with DS-D6 board.
+Build of Espruino for DS-D6
 
 See DFU folder for installation packages.
 
