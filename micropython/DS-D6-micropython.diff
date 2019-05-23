@@ -1,0 +1,200 @@
+diff --git a/ports/nrf/bluetooth_conf.h b/ports/nrf/bluetooth_conf.h
+index 58d47e218..1f58a7b8e 100644
+--- a/ports/nrf/bluetooth_conf.h
++++ b/ports/nrf/bluetooth_conf.h
+@@ -14,8 +14,8 @@
+ #elif (BLUETOOTH_SD == 132)
+ 
+ #define MICROPY_PY_BLE                  (1)
+-#define MICROPY_PY_BLE_NUS              (0)
+-#define BLUETOOTH_WEBBLUETOOTH_REPL     (0)
++#define MICROPY_PY_BLE_NUS              (0) //(1)
++#define BLUETOOTH_WEBBLUETOOTH_REPL     (0) //(1)
+ #define MICROPY_PY_UBLUEPY              (1)
+ #define MICROPY_PY_UBLUEPY_PERIPHERAL   (1)
+ #define MICROPY_PY_UBLUEPY_CENTRAL      (1)
+diff --git a/ports/nrf/boards/dsd6/mpconfigboard.h b/ports/nrf/boards/dsd6/mpconfigboard.h
+new file mode 100644
+index 000000000..c9237f66e
+--- /dev/null
++++ b/ports/nrf/boards/dsd6/mpconfigboard.h
+@@ -0,0 +1,64 @@
++/*
++ * This file is part of the MicroPython project, http://micropython.org/
++ *
++ * The MIT License (MIT)
++ *
++ * Copyright (c) 2017 Glenn Ruben Bakke
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining a copy
++ * of this software and associated documentation files (the "Software"), to deal
++ * in the Software without restriction, including without limitation the rights
++ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++ * copies of the Software, and to permit persons to whom the Software is
++ * furnished to do so, subject to the following conditions:
++ *
++ * The above copyright notice and this permission notice shall be included in
++ * all copies or substantial portions of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
++ * THE SOFTWARE.
++ */
++
++#define MICROPY_HW_BOARD_NAME       "DS-D6"
++#define MICROPY_HW_MCU_NAME         "NRF52832"
++#define MICROPY_PY_SYS_PLATFORM     "nrf52"
++
++#define MICROPY_PY_MACHINE_UART     (1)
++#define MICROPY_PY_MACHINE_HW_PWM   (1)
++#define MICROPY_PY_MACHINE_HW_SPI   (1)
++#define MICROPY_PY_MACHINE_TIMER    (1)
++#define MICROPY_PY_MACHINE_RTCOUNTER (1)
++#define MICROPY_PY_MACHINE_I2C      (1)
++#define MICROPY_PY_MACHINE_ADC      (1)
++#define MICROPY_PY_MACHINE_TEMP     (1)
++#define MICROPY_PY_RANDOM_HW_RNG    (1)
++
++#define MICROPY_HW_HAS_LED          (0)
++#define MICROPY_HW_LED_COUNT        (0)
++#define MICROPY_HW_LED_PULLUP       (0)
++
++//#define MICROPY_HW_LED1             (17) // LED1
++//#define MICROPY_HW_LED2             (19) // LED2
++
++// UART config
++#define MICROPY_HW_UART1_RX         (22)
++#define MICROPY_HW_UART1_TX         (23)
++#define MICROPY_HW_UART1_HWFC       (0)
++
++// SPI0 config
++#define MICROPY_HW_SPI0_NAME        "SPI0"
++#define MICROPY_HW_SPI0_SCK         (5) // (Arduino D13)
++#define MICROPY_HW_SPI0_MOSI        (6) // (Arduino D11)
++#define MICROPY_HW_SPI0_MISO        (NRFX_SPI_PIN_NOT_USED) // (Arduino D12)
++
++#define MICROPY_HW_PWM0_NAME        "PWM0"
++#define MICROPY_HW_PWM1_NAME        "PWM1"
++#define MICROPY_HW_PWM2_NAME        "PWM2"
++
++#define HELP_TEXT_BOARD_LED         ""
++#define BLUETOOTH_LFCLK_RC 1
+\ No newline at end of file
+diff --git a/ports/nrf/boards/dsd6/mpconfigboard.mk b/ports/nrf/boards/dsd6/mpconfigboard.mk
+new file mode 100644
+index 000000000..6dacee220
+--- /dev/null
++++ b/ports/nrf/boards/dsd6/mpconfigboard.mk
+@@ -0,0 +1,8 @@
++MCU_SERIES = m4
++MCU_VARIANT = nrf52
++MCU_SUB_VARIANT = nrf52832
++SOFTDEV_VERSION = 6.1.1
++LD_FILES += boards/nrf52832_512k_64k_bldr78.ld
++CFLAGS += -DBLUETOOTH_LFCLK_RC
++NRF_DEFINES += -DNRF52832_XXAA
++
+diff --git a/ports/nrf/boards/dsd6/pins.csv b/ports/nrf/boards/dsd6/pins.csv
+new file mode 100644
+index 000000000..8f16fd4a3
+--- /dev/null
++++ b/ports/nrf/boards/dsd6/pins.csv
+@@ -0,0 +1,29 @@
++P2,P2,ADC0_IN0
++P3,P3,ADC0_IN1
++P4,P4
++SPI_SCK,P5
++SPI_MOSI,P6
++P7,P7
++P8,P8
++P9,P9
++P10,P10
++P11,P11
++P12,P12
++P13,P13
++P14,P14
++P15,P14
++P16,P13
++P17,P17
++P18,P18
++P19,P19
++P20,P20
++UART_RX,P22
++UART_TX,P23
++P24,P24
++PWM0,P25
++P26,P26
++P27,P27
++P28,P28
++P29,P29
++P30,P30
++P31,P31
+diff --git a/ports/nrf/boards/nrf52832_512k_64k_bldr78.ld b/ports/nrf/boards/nrf52832_512k_64k_bldr78.ld
+new file mode 100644
+index 000000000..998c58629
+--- /dev/null
++++ b/ports/nrf/boards/nrf52832_512k_64k_bldr78.ld
+@@ -0,0 +1,10 @@
++/*
++    GNU linker script for NRF52832
++*/
++
++_flash_size = 0x78000; /* bootloader starts at 0x78000 */
++_ram_size   = 64K;
++
++/* produce a link error if there is not this amount of RAM for these sections */
++_stack_size = 8K;
++_minimum_heap_size = 32K;
+diff --git a/ports/nrf/modules/machine/modmachine.c b/ports/nrf/modules/machine/modmachine.c
+index 841e136d0..8f28e2653 100644
+--- a/ports/nrf/modules/machine/modmachine.c
++++ b/ports/nrf/modules/machine/modmachine.c
+@@ -143,6 +143,23 @@ STATIC mp_obj_t machine_reset(void) {
+ }
+ MP_DEFINE_CONST_FUN_OBJ_0(machine_reset_obj, machine_reset);
+ 
++#define DFU_MAGIC_SERIAL_ONLY_RESET   0x4e
++#define DFU_MAGIC_OTA_RESET           0xA8
++
++STATIC mp_obj_t machine_enter_ota_dfu(void) {
++    NRF_POWER->GPREGRET = DFU_MAGIC_OTA_RESET;
++    NVIC_SystemReset();
++    return mp_const_none;
++}
++MP_DEFINE_CONST_FUN_OBJ_0(machine_enter_ota_dfu_obj, machine_enter_ota_dfu);
++
++STATIC mp_obj_t machine_enter_serial_dfu(void) {
++    NRF_POWER->GPREGRET = DFU_MAGIC_SERIAL_ONLY_RESET;
++    NVIC_SystemReset();
++    return mp_const_none;
++}
++MP_DEFINE_CONST_FUN_OBJ_0(machine_enter_serial_dfu_obj, machine_enter_serial_dfu);
++
+ STATIC mp_obj_t machine_soft_reset(void) {
+     pyexec_system_exit = PYEXEC_FORCED_EXIT;
+     nlr_raise(mp_obj_new_exception(&mp_type_SystemExit));
+@@ -191,6 +208,8 @@ STATIC const mp_rom_map_elem_t machine_module_globals_table[] = {
+     { MP_ROM_QSTR(MP_QSTR___name__),           MP_ROM_QSTR(MP_QSTR_umachine) },
+     { MP_ROM_QSTR(MP_QSTR_info),               MP_ROM_PTR(&machine_info_obj) },
+     { MP_ROM_QSTR(MP_QSTR_reset),              MP_ROM_PTR(&machine_reset_obj) },
++    { MP_ROM_QSTR(MP_QSTR_enter_ota_dfu),      MP_ROM_PTR(&machine_enter_ota_dfu_obj) },
++    { MP_ROM_QSTR(MP_QSTR_enter_serial_dfu),      MP_ROM_PTR(&machine_enter_serial_dfu_obj) },
+     { MP_ROM_QSTR(MP_QSTR_soft_reset),         MP_ROM_PTR(&machine_soft_reset_obj) },
+     { MP_ROM_QSTR(MP_QSTR_enable_irq),         MP_ROM_PTR(&machine_enable_irq_obj) },
+     { MP_ROM_QSTR(MP_QSTR_disable_irq),        MP_ROM_PTR(&machine_disable_irq_obj) },
+diff --git a/ports/nrf/modules/machine/modmachine.h b/ports/nrf/modules/machine/modmachine.h
+index 1ea6959ea..80d26e2f0 100644
+--- a/ports/nrf/modules/machine/modmachine.h
++++ b/ports/nrf/modules/machine/modmachine.h
+@@ -36,6 +36,7 @@ void machine_init(void);
+ 
+ MP_DECLARE_CONST_FUN_OBJ_VAR_BETWEEN(machine_info_obj);
+ MP_DECLARE_CONST_FUN_OBJ_0(machine_reset_obj);
++MP_DECLARE_CONST_FUN_OBJ_0(machine_enter_ota_dfu_obj);
+ MP_DECLARE_CONST_FUN_OBJ_0(machine_lightsleep_obj);
+ MP_DECLARE_CONST_FUN_OBJ_0(machine_deepsleep_obj);
+ 
