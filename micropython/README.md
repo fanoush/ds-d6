@@ -18,3 +18,16 @@ You need to install 3 following packages in that order
 - micropython for SoftDevice S132 6.1.1 - in this folder
 
 Easiest way to install is via [D6Flasher](https://play.google.com/store/apps/details?id=com.atcnetz.ble.readwrite) for more details and other ways see [DFU-update](https://github.com/fanoush/ds-d6/wiki/DFU-update).
+
+# How to use
+
+To enter bootloader for bluetooth/OTA update you can type 
+```
+import machine
+machine.enter_ota_dfu()
+```
+To enter bootloader for  serial DFU update you can type 
+```
+import machine
+machine.enter_serial_dfu()
+```
