@@ -4,7 +4,7 @@ This build is experimental. No guarantee that it is useful or stable enough for 
 
 There are two versions:
 - uartrepl has interactive console on TTL serial port available on USB data pins (faster, more stable choice)
-- blerepl has interactive console via NUS service over bluetooth e.g. over https://aykevl.nl/apps/nus/ (a bit slow and less stable)
+- blerepl has interactive console via NUS service over bluetooth, accessible e.g. via https://aykevl.nl/apps/nus/ (a bit slow and less stable, connect to "mpus" device name)
 
 Unlike with Espruino it cannot be switched at runtime.
 
