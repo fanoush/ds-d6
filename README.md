@@ -5,7 +5,7 @@ Also works on [Mpow DS-D9/Lenovo HW02](https://github.com/fanoush/ds-d6/wiki/DS-
 
 ## Where to get the device
 
-Sold in various places like  ebay. I got it from GearBest https://www.gearbest.com/smart-watches/pp_1232618.html?wid=1433363 In recent months it is quite often on sale for $9.99 (lowest so far was 6.99). The price changes often (sometimes even multiple times per day) so if it is for full price you may try to wait few days (or hours). Sometimes the discount is only valid in their mobile app.
+I got it from GearBest https://www.gearbest.com/smart-watches/pp_1232618.html?wid=1433363 In recent months it is quite often on sale (lowest so far was $6.99). The price changes often (sometimes even multiple times per day) so if it is for full price you may try to wait few days (or hours). Sometimes the discount is only valid in their mobile app. Previously it was also avaliable in various other places like ebay but it is quite old device so nowadays it may be hard to find elsewhere. Gearbest may be the last one and once the stock runs our it may be the end. 
 
 ## HW reference
 DS-D6 FCC info https://fccid.io/2AEMN-D6/
