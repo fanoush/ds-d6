@@ -1,7 +1,7 @@
 # DS-D6
 Custom Espruino/Arduino/Micropython firmware for Desay/MPow DS-D6 nRF52832 bracelet
 
-Also works on [Mpow DS-D9/Lenovo HW02](https://github.com/fanoush/ds-d6/wiki/DS-D9) and [Lenovo HX03W](https://github.com/fanoush/ds-d6/blob/master/README.md#hx03-hx03w-hx03f-aka-ds-d1010w10f) with minor changes.
+Also works on [Mpow DS-D9/Lenovo HW02](https://github.com/fanoush/ds-d6/wiki/DS-D9) and [Lenovo HX03W](https://github.com/fanoush/ds-d6#hx03-hx03w-hx03f-aka-ds-d1010w10f) with minor changes.
 
 ## Where to get the device
 
