@@ -60,7 +60,7 @@ I have ordered couple of HX03W ones. Will update once I receive it. According to
 ### DS-D9 (a.k.a. Lenovo HW02)
 HW is very similar to DS-D6 to the point that D9 firmware runs on D6 only with garbled display (clock digits are cut off). FCC info https://fccid.io/2AEMN-D9/ I have ordered one from Aliexpress for $11 (search for "mpow fitness"). This one has smaller OLED positioned horizontally and is charged via cable so it should be thinner. There are still 4 pins including serial port. I hope the same Espruino binary for DS-D6 will run 'as is' on D9. **UPDATE 4.3.2019** I got it and it is indeed exactly the same except the display which is 72x40. All the pins seems to be wired in same way (motor, spi display, battery, serial) and flashing same DS-D6 espruino binary over serial worked just fine. So while DS-D9 is even harder to get and the OLED has poor visiblility and resolution, I still like its minimalistic design a bit more than DS-D6. See also [wiki page](https://github.com/fanoush/ds-d6/wiki/DS-D9).
 
-### Lenovo HW01
+### Lenovo [HW01](https://fccid.io/2AEMN-HW01) ([Desay B521](https://fccid.io/2AEMN-B521))
 This one is very similar to DS-D6. I managed to get firmware file for HW01, flashed it to DS-D6 and it works except display being unreadable. This means it is same architecture as others and should be usable too. If you have one and want to experiment with custom firmware, let me know.
 
 ### Other nrf52832 Desay models
