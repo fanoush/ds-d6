@@ -27,6 +27,8 @@ Direct links to internal photos
 
 All stuff documented in WIKI **https://github.com/fanoush/ds-d6/wiki**
 
+For contact use either github issues here or join https://gitter.im/nRF51822-Arduino-Mbed-smart-watch/Lobby or [Espruino forum](http://forum.espruino.com/conversations/280747/).
+
 Initial progress (for historic reasons) here
 https://gitter.im/nRF51822-Arduino-Mbed-smart-watch/Lobby?at=5be3fbf36b9822140df92510
 
