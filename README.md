@@ -64,3 +64,17 @@ This one is very similar to DS-D6. I managed to get firmware file for HW01, flas
 ### Other nrf52832 Desay models
 
 Devices mentioned above, while still being sold, are no longer manufactured by [Desay](https://www.globalsources.com/si/AS/Desay-Infor/6008849906089/Homepage.htm) OEM manufacturer, however there are more current models they offer. They are suppored by MPOW android app and we have links to beta firmware downloads. They still look like newer iterations of same SW and HW design. Names are [DS-D15F](https://www.globalsources.com/si/AS/Desay-Infor/6008849906089/pdtl/smart-bracelet/1167004882.htm), [DS-D20F](https://www.globalsources.com/si/AS/Desay-Infor/6008849906089/pdtl/activity-tracker/1167004827.htm) (also [FCC ID](https://fccid.io/2AEMN-D20)), [DS-Z10F](https://www.globalsources.com/si/AS/Desay-Infor/6008849906089/pdtl/Smart-bracelet/1167004825.htm) So far I didn't find them available for sale via some brand like Lenovo or MPow.
+
+### Other nrf52832 devices
+
+There are also other devices by other manufacturers. Most are using newer Nordic SDKs and have signed firmware so cannot be updated without taking each one apart. Also most have no GPIOs on usb data pins like devices made by Desay. Here is list of known devices.
+
+- F07,F07plus ~$17 on aliexpress, also on Gearbest [here](https://www.gearbest.com/smart-watches/pp_1231729.html?wid=1433363) and [here](https://www.gearbest.com/smart-watches/pp_009307252051.html), beware that there is also cheaper similar variant on aliexpress with different pictures on screen, this one may not be nrf52 so make sure the pictures on screen looks same and listing says it uses iband app and has nrf52832. I got it and I am working on bootloader fixes and Espruino port. Stock bootloader is unsigned but dual banked so only half of flash is available so Espruino doesn't fit so I am working on suitable single bank bootloader replacement.
+
+- F10 - this is slimmer and sligtly more expensive version of F07, Aliexpress examples [here](https://www.aliexpress.com/item/32864537037.html) or [here](https://www.aliexpress.com/item/32867894249.html), again make sure pictures on screen looks exactly the same as F07
+
+- some other devices supported by [iband app](https://play.google.com/store/apps/details?id=com.manridy.iband&hl=en), details [here](http://forum.espruino.com/comments/14746917/)
+
+- IDXXX devices made by [Shenzhen DO Intelligent Technology Co., Ltd](https://fccid.io/2AHFT) details [here](http://forum.espruino.com/comments/14731598/)
+
+- [iWOWNfit Fitness Tracker I6HRC](https://fccid.io/2AKPH-I6HRC/) this is great and relatively cheap device (~17 on aliexpress like F07) sadly **the firmware is signed** so each device must be taken apart however the procedure is realively easy, see video [here](https://www.youtube.com/watch?v=0Fu-VSuKHEg) so it may be worth it if you like the dual touch areas that allow interaction by swiping (I got one too)
