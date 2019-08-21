@@ -21,7 +21,7 @@ Easiest way to install is via [D6Flasher](https://play.google.com/store/apps/det
 
 # How to use
 
-To enter bootloader for bluetooth/OTA update you can type 
+To enter [Adafruit bootloader](https://github.com/adafruit/Adafruit_nRF52_Bootloader) for bluetooth/OTA update you can type 
 ```
 import machine
 machine.enter_ota_dfu()
