@@ -5,7 +5,7 @@ This is build of vanilla SDK12 based Espruino including its bootloader for best 
 You get a bit more features thanks to SDK12 and SoftDevice S132 v3.1 (like e.g secure connections).
 You also get slightly less available RAM and flash memory.
 
-The bootloader is derived from standard Nordic secure one. To get back to DFU mode from Espruino you need to hold touch button while executing `E.reboot()`. However if you hold if over 3 seconds this will do emergency recovery and reboot back to espruino and clear storage area with your program. 
+The bootloader is derived from standard Nordic secure one. To get back to DFU mode from Espruino you need to hold touch button while executing `E.reboot()`. However if you hold if over 3 seconds it will reboot back to espruino and do not run any startup code. 
 
 
 ### How to build
