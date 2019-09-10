@@ -29,21 +29,6 @@ All stuff documented in WIKI **https://github.com/fanoush/ds-d6/wiki**
 
 For contact use either github issues here or join **https://gitter.im/nRF51822-Arduino-Mbed-smart-watch/Lobby** or [Espruino forum](http://forum.espruino.com/conversations/280747/).
 
-Firmware in fwdump folder was dumped via gdb over SWD as seen below (using bluepill board flashed with blackmagic probe firmware). Restoring over SWD works.
-
-```gdb
-(gdb) info mem
-Using memory regions provided by the target.
-Num Enb Low Addr   High Addr  Attrs 
-0   y      0x00000000 0x00080000 flash blocksize 0x1000 nocache 
-1   y      0x10001000 0x10001100 flash blocksize 0x100 nocache 
-2   y      0x20000000 0x20010000 rw nocache 
-
-(gdb) dump memory dsd6-flash.bin 0x00000000 0x00080000
-(gdb) dump memory d6d6-uicr.bin 0x10001000 0x10001100
-```
-
-
 ## Other  devices made by Desay
 
 ### HX-06
@@ -69,9 +54,9 @@ Devices mentioned above, while still being sold, are no longer manufactured by [
 
 There are also many other devices by other manufacturers. Most are using newer Nordic SDKs than SDK11 -> have signed firmware -> cannot be updated without taking each one apart. Also most have no GPIOs on usb data pins like devices made by Desay. Ideal device is using nrf52832, firmware is compiled with SDK11 (=is unsigned) and there is firmware update available so one can reflash it back to restore original functionality. As a bonus GPIOs on USB data pins are nice as is color display and low price since at least two devices are good to have.  Below is some list of known devices suitable for hacking. 
 
-- F07,F07plus - [FCC info](https://fccid.io/2AONX-F07) ,~$17 on aliexpress, also on Gearbest [here](https://www.gearbest.com/smart-watches/pp_1231729.html?wid=1433363) and [here](https://www.gearbest.com/smart-watches/pp_009307252051.html), beware that there is also cheaper similar variant on aliexpress with different pictures on screen sometimes named F07MAX, this one may not be nrf52 so make sure the pictures on screen looks same and listing says it uses iband app and has nrf52832. I got it and I am working on bootloader fixes and Espruino port. Stock bootloader is unsigned but dual banked so only half of flash is available so Espruino doesn't fit. I am working on suitable single bank bootloader replacement.
+- F07,F07plus - [FCC info](https://fccid.io/2AONX-F07) ,~$14-$17 on aliexpress, also on Gearbest [here](https://www.gearbest.com/smart-watches/pp_1231729.html?wid=1433363) and [here](https://www.gearbest.com/smart-watches/pp_009307252051.html), beware that there is also cheaper similar variant on aliexpress with different pictures on screen sometimes named F07MAX, this one may not be nrf52 so make sure the pictures on screen looks same and listing says it uses iband app and has nrf52832. I got it and I am working on bootloader fixes and Espruino port. Stock bootloader is unsigned but dual banked so only half of flash is available so Espruino doesn't fit. I am working on suitable single bank bootloader replacement.
 
-- F10 - this is slimmer and sligtly more expensive version of F07, Aliexpress examples [here](https://www.aliexpress.com/item/32864537037.html) or [here](https://www.aliexpress.com/item/32867894249.html), again make sure pictures on screen looks exactly the same as F07
+- F10 - this is slimmer and sligtly more expensive (~$16-$19) version of F07, Aliexpress examples [here](https://www.aliexpress.com/item/32864537037.html) or [here](https://www.aliexpress.com/item/32867894249.html), again make sure pictures on screen looks exactly the same as F07
 
 - some other untested devices supported by [iband app](https://play.google.com/store/apps/details?id=com.manridy.iband&hl=en), details [here](http://forum.espruino.com/comments/14746917/)
 
