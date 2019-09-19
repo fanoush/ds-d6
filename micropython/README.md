@@ -10,6 +10,8 @@ Unlike with Espruino it cannot be switched at runtime.
 
 # How to install
 
+*** UPDATE *** Several people are having issues flashing DFU packages with  adafruit bootloader over bluetooth, please do not try this now unless you are OK with taking the device apart as most likely it won't work for you too, see https://github.com/fanoush/ds-d6/issues/3 
+
 This needs newer version of bootloader and SoftDevice so the installation is more involved than SDK11 based Espruino build.
 You need to install following 3 packages in that order
 
