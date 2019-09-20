@@ -10,8 +10,6 @@ Unlike with Espruino it cannot be switched at runtime.
 
 # How to install
 
-*** UPDATE *** Several people are having issues flashing DFU packages with  adafruit bootloader over bluetooth, please do not try this now unless you are OK with taking the device apart as most likely it won't work for you too, see https://github.com/fanoush/ds-d6/issues/3 
-
 This needs newer version of bootloader and SoftDevice so the installation is more involved than SDK11 based Espruino build.
 You need to install following 3 packages in that order
 
@@ -20,6 +18,8 @@ You need to install following 3 packages in that order
 - micropython for SoftDevice S132 6.1.1 - in this folder
 
 Easiest way to install is via [D6Flasher](https://play.google.com/store/apps/details?id=com.atcnetz.ble.readwrite) for more details and other ways see [DFU-update](https://github.com/fanoush/ds-d6/wiki/DFU-update).
+
+*** UPDATE *** Several people are having issues flashing DFU packages with  adafruit bootloader over bluetooth, if you see this try nrfConnect for Android with  "Settings" -> "DFU options" -> "Number of packets" changed to 5, see https://github.com/fanoush/ds-d6/issues/3 
 
 # How to use
 
