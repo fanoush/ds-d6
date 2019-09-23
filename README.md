@@ -5,7 +5,7 @@ Also works on [Mpow DS-D9/Lenovo HW02](https://github.com/fanoush/ds-d6/wiki/DS-
 
 ## Where to get the device
 
-I got it from GearBest https://www.gearbest.com/smart-watches/pp_1232618.html?wid=1433363 In recent months it is quite often on sale (lowest so far was $4.99). The price changes often (sometimes even multiple times per day) so if it is for full price you may try to wait few days (or hours). Sometimes the discount is only valid in their mobile app. You can also try to use `MPOWDS-D6` or `GB0722MPOW` **promo code** at checkout if it makes a difference. Previously it was also avaliable in various other places like ebay but it is quite old device so nowadays it may be hard to find elsewhere. Gearbest may be the last one and once the stock runs our it may be the end. 
+I got it from GearBest https://www.gearbest.com/smart-watches/pp_1232618.html?wid=1433363 In recent months it is quite often on sale (lowest so far was $4.49). The price changes often (sometimes even multiple times per day) so if it is for full price you may try to wait few days (or hours). Sometimes the discount is only valid in their mobile app. You can also try to use `MPOWDS-D6` or `GB0722MPOW` **promo code** at checkout if it makes a difference. Previously it was also avaliable in various other places like ebay but it is quite old device so nowadays it may be hard to find elsewhere. Gearbest may be the last one and once the stock runs our it may be the end. 
 
 ## HW reference
 DS-D6 FCC info https://fccid.io/2AEMN-D6/
@@ -31,7 +31,7 @@ For contact use either github issues here or join **https://gitter.im/nRF51822-A
 
 ## Other  devices made by Desay
 
-### HX-06
+### ~~HX-06~~
 
 There is similar bracelet without HR sensor - Lenovo HX06 https://www.gearbest.com/smart-watches/pp_1830584.html?wid=1433363 (lowest so far for $11.99). It is made by same manufacturer and shares app and the watch UI look&feel is the same. Also the FCC info seems promising https://fccid.io/2AEMN-D16/ - CPU marking is unreadable but board looks very similar to DS-D6 and there are SWD test points (= ARM Cortex M architecture) so I ordered that one too. **UPDATE 7.12.2018 sadly after receiving it I found HX06 is not Nordic based but has Dialog [DA14585/6](https://www.dialog-semiconductor.com/products/connectivity/bluetooth-low-energy/smartbond-da14585-and-da14586) chip** There is SDK available from Dialog however the chip architecture is not suitable for large codebase like Espruino.  There is 96KB of SRAM for both data and code, code is mirrored at poweron from SPI FLASH to SRAM, there is no XIP (execute in place) for flash memory like there is e.g. for ESP8266 or NRF52840 so everything (code,data,bss) must fit into that 96KB SRAM.  However for Arduino C coding it should be good enough and the device is quite hackable. USB data pins have serial port too and DA14585 documentation says the device could boot directly from serial port just like from SPI flash so it may be in a way unbrickable. I have atached SWD debugger and dumped SRAM so there is plenty of information how to proceed. If you would like to continue with this let me know. The OTP memory is empty so it runs in developer mode with nothing locked.
 
