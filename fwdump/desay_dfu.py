@@ -461,23 +461,24 @@ class Responses:
         return int(res_str, 16)
 
 
-class BleDfuControllerDesay(NrfBleDfuController):
+class BleDfuControllerLegacy(NrfBleDfuController):
     # Class constants
-    UUID_DESAY_AT_WRITE  = "00000003-0000-1000-8000-00805f9b34fb"
-    UUID_DESAY_AT_READ   = "00000004-0000-1000-8000-00805f9b34fb"
-    UUID_PACKET          = "00000005-0000-1000-8000-00805f9b34fb"
-    UUID_CONTROL_POINT   = "00000006-0000-1000-8000-00805f9b34fb"
-    UUID_VERSION         = "00000008-0000-1000-8000-00805f9b34fb"
-
+    UUID_DESAY_AT_WRITE         = "00000003-0000-1000-8000-00805f9b34fb"
+    UUID_DESAY_AT_READ          = "00000004-0000-1000-8000-00805f9b34fb"
+    UUID_DESAY_PACKET           = "00000005-0000-1000-8000-00805f9b34fb"
+    UUID_DESAY_CONTROL_POINT    = "00000006-0000-1000-8000-00805f9b34fb"
+    UUID_DESAY_VERSION          = "00000008-0000-1000-8000-00805f9b34fb"
+    UUID_CONTROL_POINT          = "00001531-1212-efde-1523-785feabcd123"
+    UUID_PACKET                 = "00001532-1212-efde-1523-785feabcd123"
+    UUID_VERSION                = "00001534-1212-efde-1523-785feabcd123"
+    UUID_NORDIC_UART_RX         = "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
+    UUID_NORDIC_UART_TX         = "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
     # Constructor inherited from abstract base class
 
     # --------------------------------------------------------------------------
     #  Start the firmware update process
     # --------------------------------------------------------------------------
     def start(self, verbose=False):
-        (_, self.ctrlpt_handle, self.ctrlpt_cccd_handle) = self._get_handles(self.UUID_CONTROL_POINT)
-        (_, self.data_handle, _) = self._get_handles(self.UUID_PACKET)
-
         self.pkt_receipt_interval = 15 #5
 
         if verbose:
@@ -608,65 +609,101 @@ class BleDfuControllerDesay(NrfBleDfuController):
     # --------------------------------------------------------------------------
     #  Check if the peripheral is running in bootloader (DFU) or application mode
     #  Returns True if the peripheral is in DFU mode
+    #  Presets handles for data and control poits
     # --------------------------------------------------------------------------
     def check_DFU_mode(self):
-        verbose=True
+        #verbose=True
         if verbose: print "Checking DFU State..."
-        try:
-            (_, bl_value_handle, bl_cccd_handle) = self._get_handles(self.UUID_VERSION)
+        try: #try nordic DFU guids
+            (_, bl_value_handle, _) = self._get_handles(self.UUID_VERSION)
+            (_, self.data_handle, _) = self._get_handles(self.UUID_PACKET)
+            (_, self.ctrlpt_handle, self.ctrlpt_cccd_handle) = self._get_handles(self.UUID_CONTROL_POINT)
+            return True
         except:
-            return False
+            try: #now try desay DFU guids
+                (_, bl_value_handle, _) = self._get_handles(self.UUID_DESAY_VERSION)
+                (_, self.ctrlpt_handle, self.ctrlpt_cccd_handle) = self._get_handles(self.UUID_DESAY_CONTROL_POINT)
+                (_, self.data_handle, _) = self._get_handles(self.UUID_DESAY_PACKET)
+                return True
+            except:
+                pass
+        #no known guids
+        return False
+        # below is unused code that could check version characteristics value
+        # however in code above we are happy enough that service exists
 
-        if verbose: print bl_value_handle
-
-        cmd = 'char-read-uuid %s' % self.UUID_VERSION
-
+        #if verbose: print bl_value_handle
+        #cmd = 'char-read-uuid %s' % self.UUID_VERSION
+        cmd = 'char-read-hnd %s' % bl_value_handle
         if verbose: print cmd
-
         self.ble_conn.sendline(cmd)
-
-        # Skip two rows
         try:
-            res = self.ble_conn.expect('handle:.*', timeout=10)
-            # res = self.ble_conn.expect('handle:', timeout=10)
+            #res = self.ble_conn.expect('handle:.*', timeout=3)
+            res = self.ble_conn.expect('Characteristic value/descriptor:.*', timeout=3)
         except pexpect.TIMEOUT, e:
             print "State timeout"
             return False
         except:
             pass
-
-        return self.ble_conn.after.find("value: 08 00")!=-1
+        return self.ble_conn.after.find(": 08 00")!=-1
 
     def switch_to_dfu_mode(self):
         #verbose=True
-        #(_, bl_value_handle, bl_cccd_handle) = self._get_handles(self.UUID_DESAY_AT_READ)
-        ## Enable notifications
-        #cmd = 'char-write-req 0x%02x %02x' % (bl_cccd_handle, 1)
-        #if verbose: print cmd
-        #self.ble_conn.sendline(cmd)
 
-        (_, bl_value_handle, bl_cccd_handle) = self._get_handles(self.UUID_DESAY_AT_WRITE)
-        # Reset the board in DFU mode. After reset the board will be disconnected
-        cmd = 'char-write-req 0x%02x ' % (bl_value_handle)
-        cmd += array_to_hex_string(bytearray("BT+UPGB:1\r\n"))
-        if verbose: print cmd
-        self.ble_conn.sendline(cmd)
-
-        cmd = 'char-write-req 0x%02x ' % (bl_value_handle)
-        cmd += array_to_hex_string(bytearray("BT+RESET\r\n"))
-        if verbose: print cmd
-        self.ble_conn.sendline(cmd)
-
+        try:
+            #(_, bl_value_handle, bl_cccd_handle) = self._get_handles(self.UUID_DESAY_AT_READ)
+            ## Enable notifications
+            #cmd = 'char-write-req 0x%02x %02x' % (bl_cccd_handle, 1)
+            #if verbose: print cmd
+            #self.ble_conn.sendline(cmd)
+            (_, bl_value_handle, _) = self._get_handles(self.UUID_DESAY_AT_WRITE)
+            # Reset the board in DFU mode. After reset the board will be disconnected
+            print "Found Desay firmware, rebooting to bootloader"
+            cmd = 'char-write-req 0x%02x ' % (bl_value_handle)
+            cmd += array_to_hex_string(bytearray("BT+UPGB:1\r\n"))
+            if verbose: print cmd
+            self.ble_conn.sendline(cmd)
+            cmd = 'char-write-req 0x%02x ' % (bl_value_handle)
+            cmd += array_to_hex_string(bytearray("BT+RESET\r\n"))
+            if verbose: print cmd
+            self.ble_conn.sendline(cmd)
+        except:
+            try:
+                (_, bl_value_handle, bl_cccd_handle) = self._get_handles(self.UUID_CONTROL_POINT)
+                print "Found Nordic Buttonless service, rebooting to bootloader"
+                # Enable notifications
+                cmd = 'char-write-req 0x%02x %02x' % (bl_cccd_handle, 1)
+                if verbose: print cmd
+                self.ble_conn.sendline(cmd)
+                # Reset the board in DFU mode. After reset the board will be disconnected
+                cmd = 'char-write-req 0x%02x 0104' % (bl_value_handle)
+                if verbose: print cmd
+                self.ble_conn.sendline(cmd)
+            except:
+                try:
+                    (_, bl_value_handle, bl_cccd_handle) = self._get_handles(self.UUID_NORDIC_UART_TX)
+                    print "Found Nordic UART, inviting monkeys with typewriters"
+                    cmd = 'char-write-req 0x%02x 0100' % (bl_cccd_handle)
+                    self.ble_conn.sendline(cmd)
+                    (_, bl_value_handle, _) = self._get_handles(self.UUID_NORDIC_UART_RX)
+                    # nordic uart - can be espruino or micropython
+                    cmd = 'char-write-req 0x%02x ' % (bl_value_handle)
+                    self.ble_conn.sendline(cmd + array_to_hex_string(bytearray("poke32(0x4000051c,1)")))
+                    self.ble_conn.sendline(cmd + array_to_hex_string(bytearray("\r\n")))
+                    self.ble_conn.sendline(cmd + array_to_hex_string(bytearray("import machine\r\n")))
+                    self.ble_conn.sendline(cmd + array_to_hex_string(bytearray("machine.enter")))
+                    self.ble_conn.sendline(cmd + array_to_hex_string(bytearray("_ota_dfu()\r\n")))
+                    self._dfu_wait_for_notify()
+                except:
+                    return False
         time.sleep(0.5)
-
-        #print  "Send 'START DFU' + Application Command"
-        #self._dfu_state_set(0x0104)
 
         self.target_mac_increase(1)
         # Reconnect the board.
         ret = self.scan_and_connect()
         if verbose: print "Connected " + str(ret)
-
+        if ret:
+            return self.check_DFU_mode()
         return ret
 
 
@@ -836,7 +873,7 @@ def main():
 
         ''' Start of Device Firmware Update processing '''
 
-        ble_dfu = BleDfuControllerDesay(options.address.upper(), hexfile, datfile, manfile)
+        ble_dfu = BleDfuControllerLegacy(options.address.upper(), hexfile, datfile, manfile)
 
         # Initialize inputs
         ble_dfu.input_setup()
@@ -844,10 +881,12 @@ def main():
         # Connect to peer device. Assume application mode.
         if ble_dfu.scan_and_connect():
             if not ble_dfu.check_DFU_mode():
-                print "Need to switch to DFU mode"
+                print "Trying to switch to DFU mode"
                 success = ble_dfu.switch_to_dfu_mode()
                 if not success:
-                    print "Couldn't reconnect"
+                    print "Couldn't switch"
+                else:
+                    ble_dfu.start()
         else:
             # The device might already be in DFU mode (MAC + 1)
             ble_dfu.target_mac_increase(1)
@@ -856,8 +895,9 @@ def main():
             print "Couldn't connect, will try DFU MAC"
             if not ble_dfu.scan_and_connect():
                 raise Exception("Can't connect to device")
-
-        ble_dfu.start()
+            if not ble_dfu.check_DFU_mode():
+                raise Exception("Not in DFU mode")
+            ble_dfu.start()
 
         # Disconnect from peer device if not done already and clean up.
         ble_dfu.disconnect()
