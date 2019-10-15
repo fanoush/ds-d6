@@ -8,6 +8,21 @@ Looks like the animation is too heavy so sometimes the update breaks in the midd
 It is still possible to retry so you probably cannot brick your device with this booloader, it is just annoying.
 
 
+## desay_dfu.py flasher
+
+This is python bluetooth DFU flasher for linux. It works by scripting [`gatttool`](https://git.kernel.org/pub/scm/bluetooth/bluez.git/tree/attrib) command from [bluez](http://www.bluez.org/) so no python bluetooth library is used. It needs [pexpect package](https://pexpect.readthedocs.io/en/stable/index.html) to be installed via pip.
+
+Original project https://github.com/dingari/ota-dfu-python
+
+I have added support for Desay bootloader, some recovery retry code, ability to flash also bootloader and softdevice combinations and ability to switch to bootloader from stock DS-D6 app, espruino and micropython.
+
+### usage
+```
+sudo ./desay_dfu.py -a D2:72:54:EA:16:1E -z DS-D6-desay-bootloader-noanim-fix-with-sd132v201.zip 
+```
+
+
+
 ## firmware dumps 
 
 ds-d6 bin firmware was dumped via gdb over SWD as seen below (using bluepill board flashed with blackmagic probe firmware). 
