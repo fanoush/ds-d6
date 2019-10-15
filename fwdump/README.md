@@ -10,11 +10,11 @@ It is still possible to retry so you probably cannot brick your device with this
 
 ## desay_dfu.py flasher
 
-This is python bluetooth DFU flasher for linux. It works by scripting [`gatttool`](https://git.kernel.org/pub/scm/bluetooth/bluez.git/tree/attrib) command from [bluez](http://www.bluez.org/) so no python bluetooth library is used. It needs [pexpect package](https://pexpect.readthedocs.io/en/stable/index.html) to be installed via pip.
+This is python bluetooth DFU flasher for linux. It works by scripting [`gatttool`](https://git.kernel.org/pub/scm/bluetooth/bluez.git/tree/attrib) command from [bluez](http://www.bluez.org/) so no python bluetooth library is used. It needs [pexpect package](https://pexpect.readthedocs.io/en/stable/index.html) to be installed via pip. It is written in Python 2.
 
 Original project https://github.com/dingari/ota-dfu-python
 
-I have added support for Desay bootloader, some recovery retry code, ability to flash also bootloader and softdevice combinations and ability to switch to bootloader from stock DS-D6 app, espruino and micropython.
+I have added support for Desay bootloader, some recovery retry code, ability to flash also bootloader and softdevice combinations and ability to switch to bootloader from stock DS-D6 app, espruino and micropython. Also multiple sources are joined into single file. Will add proper fork later and link it here.
 
 ### usage
 ```
