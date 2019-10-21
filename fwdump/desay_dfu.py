@@ -10,6 +10,9 @@ import re
 
 from os.path  import basename
 
+verbose = False
+gatttool= "gatttool" # -i hci1
+
 class Unpacker(object):
    def entropy(self, length):
        return ''.join(random.choice(string.lowercase) for i in range (length))
@@ -126,7 +129,6 @@ from abc   import ABCMeta, abstractmethod
 from array import array
 #from util  import *
 
-verbose = False
 
 class NrfBleDfuController(object):
     __metaclass__ = ABCMeta
@@ -182,7 +184,7 @@ class NrfBleDfuController(object):
         self.datfile_path = datfile_path
         self.manfile_path = manfile_path
 
-        self.ble_conn = pexpect.spawn("gatttool -b '%s' -t random --interactive" % target_mac)
+        self.ble_conn = pexpect.spawn("%s -b '%s' -t random --interactive" % (gatttool, target_mac))
         self.ble_conn.delaybeforesend = 0
 
     # --------------------------------------------------------------------------
@@ -248,9 +250,9 @@ class NrfBleDfuController(object):
     # Perform a scan and connect via gatttool.
     # Will return True if a connection was established, False otherwise
     # --------------------------------------------------------------------------
-    def scan_and_connect(self, timeout=2):
+    def scan_and_connect(self, timeout=3, mtu=247):
         if verbose: print "scan_and_connect"
-
+        self.handles = None
         print "Connecting to %s" % (self.target_mac)
 
         try:
@@ -265,6 +267,27 @@ class NrfBleDfuController(object):
         except pexpect.TIMEOUT, e:
             return False
 
+        print "Connected"
+        if mtu>23:
+            #MTU negotiation
+            self.ble_conn.sendline('mtu %d' % mtu)
+            res=self.ble_conn.expect('.*MTU was exchanged successfully: (.+)\r.*', timeout=timeout)
+            res=re.findall('.*MTU was exchanged successfully: (.+)\r.*',self.ble_conn.after)
+            self.mtu=int(res[0])
+        else:
+            self.mtu=mtu
+        #get handles for all characteristics
+        self.ble_conn.sendline("characteristics")
+        # self.ble_conn.sendline("   ")
+        # res=self.ble_conn.expect('.*uuid: ........-....-....-....-............\r\n.*\[LE\]>',timeout=3)
+        # sadly there is nothing to match for, no end marker
+        # you get prompt immediatelly and data comes later
+        # even matchin for next command with spaces ends earlier than list of characteristics
+        # also the [LE]> prompt is written on each line and then erased
+        # so we just wait 3 seconds and hope to get all of them
+        res=self.ble_conn.expect(pexpect.TIMEOUT,timeout=3)
+        #get all output until timeout and match all handles
+        self.handles=re.findall('.*handle: (0x....),.*char value handle: (0x....),.*uuid: (........-....-....-....-............)', self.ble_conn.before)
         return True
 
     # --------------------------------------------------------------------------
@@ -273,13 +296,14 @@ class NrfBleDfuController(object):
     def disconnect(self):
         self.ble_conn.sendline('exit')
         self.ble_conn.close()
+        self.handles = None
 
     def target_mac_increase(self, inc):
         self.target_mac = uint_to_mac_string(mac_string_to_uint(self.target_mac) + inc)
 
         # Re-start gatttool with the new address
         self.disconnect()
-        self.ble_conn = pexpect.spawn("gatttool -b '%s' -t random --interactive" % self.target_mac)
+        self.ble_conn = pexpect.spawn("%s -b '%s' -t random --interactive" % (gatttool, self.target_mac))
         self.ble_conn.delaybeforesend = 0
 
     # --------------------------------------------------------------------------
@@ -288,16 +312,22 @@ class NrfBleDfuController(object):
     #  Will raise an exception if the UUID is not found
     # --------------------------------------------------------------------------
     def _get_handles(self, uuid):
+        for h in self.handles:
+            if h[2] == uuid:
+                return (int(h[0], 16), int(h[1], 16), int(h[1], 16)+1)
+        raise Exception("UUID not found: {}".format(uuid))
+        #return (None, None, None)
+        #below old code discovering just one handle from all characteristics below
+        #now all are cached at connect time into self.handles
+        #as scanning for more like this was slow
         self.ble_conn.before = ""
         self.ble_conn.sendline('characteristics')
-
         try:
             self.ble_conn.expect([uuid], timeout=2)
             handles = re.findall('.*handle: (0x....),.*char value handle: (0x....)', self.ble_conn.before)
             (handle, value_handle) = handles[-1]
         except pexpect.TIMEOUT, e:
             raise Exception("UUID not found: {}".format(uuid))
-
         return (int(handle, 16), int(value_handle, 16), int(value_handle, 16)+1)
 
     # --------------------------------------------------------------------------
@@ -340,13 +370,13 @@ class NrfBleDfuController(object):
                 return hxstr[2:]
 
             else:
-                print "unexpeced index: {0}".format(index)
+                print "unexpected index: {0}".format(index)
                 return None
 
     # --------------------------------------------------------------------------
     #  Send a procedure + any parameters required
     # --------------------------------------------------------------------------
-    def _dfu_send_command(self, procedure, params=[]):
+    def _dfu_send_command(self, procedure, params=[], nowait=False):
         if verbose: print '_dfu_send_command'
 
         cmd  = 'char-write-req 0x%04x %02x' % (self.ctrlpt_handle, procedure)
@@ -356,9 +386,10 @@ class NrfBleDfuController(object):
 
         self.ble_conn.sendline(cmd)
 
+        if nowait: return
         # Verify that command was successfully written
         try:
-            res = self.ble_conn.expect('Characteristic value was written successfully.*', timeout=10)
+            res = self.ble_conn.expect('Characteristic value was written successfully.*', timeout=5)
         except pexpect.TIMEOUT, e:
             print "State timeout"
 
@@ -388,7 +419,7 @@ class NrfBleDfuController(object):
 
         # Verify that command was successfully written
         try:
-            res = self.ble_conn.expect('Characteristic value was written successfully.*', timeout=10)
+            res = self.ble_conn.expect('Characteristic value was written successfully.*', timeout=5)
         except pexpect.TIMEOUT, e:
             print "State timeout"
 
@@ -397,10 +428,7 @@ import pexpect
 import time
 from array import array
 #from util  import *
-
 #from nrf_ble_dfu_controller import NrfBleDfuController
-
-#verbose = True
 
 class Procedures:
     START_DFU                   = 1
@@ -478,13 +506,20 @@ class BleDfuControllerLegacy(NrfBleDfuController):
     # --------------------------------------------------------------------------
     #  Start the firmware update process
     # --------------------------------------------------------------------------
-    def start(self, verbose=False):
+    def start(self, test=False):
         self.pkt_receipt_interval = 15 #5
 
         if verbose:
             print 'Control Point Handle: 0x%04x, CCCD: 0x%04x' % (self.ctrlpt_handle, self.ctrlpt_cccd_handle)
             print 'Packet handle: 0x%04x' % (self.data_handle)
 
+        if test:
+            # Reset Command
+            print "Test mode finished - restarting"
+            self._dfu_send_command(Procedures.RESET_SYSTEM,nowait=False)
+            return
+
+        if self.mtu > 23: self.pkt_payload_size = self.mtu-3
         # Subscribe to notifications from Control Point characteristic
         if verbose: print "Enabling notifications"
         self._enable_notifications(self.ctrlpt_cccd_handle)
@@ -519,8 +554,13 @@ class BleDfuControllerLegacy(NrfBleDfuController):
 
         # Wait for response to Image Size
         print "Waiting for Image Size notification"
-        self._wait_and_parse_notify()
-
+        try:
+            self._wait_and_parse_notify()
+        except Exception as e:
+            if "INVALID_STATE" in str(e):
+                print "INVALID_STATE error, resetting device, please retry"
+                self._dfu_send_command(Procedures.RESET_SYSTEM)
+            raise e
         # Send 'INIT DFU' + Init Packet Command
         self._dfu_send_command(Procedures.INITIALIZE_DFU, [0x00])
 
@@ -549,12 +589,28 @@ class BleDfuControllerLegacy(NrfBleDfuController):
         segment_total = int(math.ceil(self.image_size/float(self.pkt_payload_size)))
         time_start = time.time()
         last_send_time = time.time()
-        print "Begin DFU"
+        print "Begin DFU (MTU %d, packet size %d)" % (self.mtu, self.pkt_payload_size)
         i=0
         while i < self.image_size:
             segment = self.bin_array[i:i + self.pkt_payload_size]
             self._dfu_send_data(segment)
+            #check if longer first packet worked
+            if i==0 and self.mtu>23 and self.pkt_payload_size>20:
+                self._dfu_send_command(Procedures.REPORT_RECEIVED_IMAGE_SIZE)
+                (proc, res, imgsize) = self._wait_and_parse_notify()
+                if res == Responses.SUCCESS:
+                    if imgsize==0:
+                        #longer packet didn't get through
+                        print 'Failed to send first long packet, falling back to 20 byte packet size'
+                        self.pkt_payload_size=20
+                        segment_total = int(math.ceil(self.image_size/float(self.pkt_payload_size)))
+                        segment_count = 0
+                        continue
+                    else:
+                        if verbose: print "First long packet worked, offset now %d" % imgsize
+
             segment_count += 1
+            i+=self.pkt_payload_size
 
             # print "segment #{} of {}, dt = {}".format(segment_count, segment_total, time.time() - last_send_time)
             # last_send_time = time.time()
@@ -573,24 +629,24 @@ class BleDfuControllerLegacy(NrfBleDfuController):
             elif (segment_count % self.pkt_receipt_interval) == 0:
                 try:
                     (proc, res, pkts) = self._wait_and_parse_notify()
+                    if verbose: print "\nNotification got %d, segment %d offset %d" % (pkts,segment_count,i)
+                    if pkts != i: print "\nNotification offset=%d, we have %d x %d = %d" % (pkts,segment_count,self.pkt_payload_size,i)
                 except Exception as e:
                     if str(e) != "No notification received":
                         raise
-                    print "\nNotification timeout, trying recovery via REPORT_RECEIVED_IMAGE_SIZE"
+                    print "\nNotification timeout, trying to recover"
                     self._dfu_send_command(Procedures.REPORT_RECEIVED_IMAGE_SIZE)
                     (proc, res, imgsize) = self._wait_and_parse_notify()
                     if res == Responses.SUCCESS:
-                        print 'OK, resuming at offset %d' % (imgsize)
                         i=imgsize
+                        print 'OK, resuming at offset %d' % (imgsize)
                         continue
                     raise Exception("No notification received and retry failed")
-                # TODO: Check pkts == segment_count * pkt_payload_size
 
                 if res != Responses.SUCCESS:
                     raise Exception("bad notification status: {}".format(Responses.to_string(res)))
 
                 print_progress(pkts, self.image_size, prefix = 'Progress:', suffix = 'Complete', barLength = 50)
-            i+=self.pkt_payload_size
 
         # Send Validate Command
         self._dfu_send_command(Procedures.VALIDATE_FIRMWARE)
@@ -612,7 +668,6 @@ class BleDfuControllerLegacy(NrfBleDfuController):
     #  Presets handles for data and control poits
     # --------------------------------------------------------------------------
     def check_DFU_mode(self):
-        #verbose=True
         if verbose: print "Checking DFU State..."
         try: #try nordic DFU guids
             (_, bl_value_handle, _) = self._get_handles(self.UUID_VERSION)
@@ -648,31 +703,25 @@ class BleDfuControllerLegacy(NrfBleDfuController):
         return self.ble_conn.after.find(": 08 00")!=-1
 
     def switch_to_dfu_mode(self):
-        #verbose=True
 
         try:
             #(_, bl_value_handle, bl_cccd_handle) = self._get_handles(self.UUID_DESAY_AT_READ)
-            ## Enable notifications
-            #cmd = 'char-write-req 0x%02x %02x' % (bl_cccd_handle, 1)
+            ## Enable notifications - not needed
+            #cmd = 'char-write-req 0x%02x 0100' % (bl_cccd_handle)
             #if verbose: print cmd
             #self.ble_conn.sendline(cmd)
             (_, bl_value_handle, _) = self._get_handles(self.UUID_DESAY_AT_WRITE)
             # Reset the board in DFU mode. After reset the board will be disconnected
             print "Found Desay firmware, rebooting to bootloader"
             cmd = 'char-write-req 0x%02x ' % (bl_value_handle)
-            cmd += array_to_hex_string(bytearray("BT+UPGB:1\r\n"))
-            if verbose: print cmd
-            self.ble_conn.sendline(cmd)
-            cmd = 'char-write-req 0x%02x ' % (bl_value_handle)
-            cmd += array_to_hex_string(bytearray("BT+RESET\r\n"))
-            if verbose: print cmd
-            self.ble_conn.sendline(cmd)
+            self.ble_conn.sendline(cmd + array_to_hex_string(bytearray("BT+UPGB:1\r\n")))
+            self.ble_conn.sendline(cmd + array_to_hex_string(bytearray("BT+RESET\r\n")))
         except:
             try:
                 (_, bl_value_handle, bl_cccd_handle) = self._get_handles(self.UUID_CONTROL_POINT)
                 print "Found Nordic Buttonless service, rebooting to bootloader"
                 # Enable notifications
-                cmd = 'char-write-req 0x%02x %02x' % (bl_cccd_handle, 1)
+                cmd = 'char-write-req 0x%02x 0100' % (bl_cccd_handle)
                 if verbose: print cmd
                 self.ble_conn.sendline(cmd)
                 # Reset the board in DFU mode. After reset the board will be disconnected
@@ -683,6 +732,7 @@ class BleDfuControllerLegacy(NrfBleDfuController):
                 try:
                     (_, bl_value_handle, bl_cccd_handle) = self._get_handles(self.UUID_NORDIC_UART_TX)
                     print "Found Nordic UART, inviting monkeys with typewriters"
+                    #enable notifications on read otherwise it does not work for micropython
                     cmd = 'char-write-req 0x%02x 0100' % (bl_cccd_handle)
                     self.ble_conn.sendline(cmd)
                     (_, bl_value_handle, _) = self._get_handles(self.UUID_NORDIC_UART_RX)
@@ -784,7 +834,7 @@ import traceback
 def main():
 
     try:
-        parser = optparse.OptionParser(usage='%prog -f <hex_file> -a <dfu_target_address>\n\nExample:\n\tdfu.py -f application.hex -d application.dat -a cd:e3:4a:47:1c:e4',
+        parser = optparse.OptionParser(usage='%prog -f <hex_file> -a <dfu_target_address>\n\nExample:\n\t%prog -f application.hex -d application.dat -a cd:e3:4a:47:1c:e4',
                                        version='0.5')
 
         parser.add_option('-a', '--address',
@@ -794,7 +844,8 @@ def main():
                   default=None,
                   help='DFU target address.'
                   )
-
+        ''' to remove, needs intelhex package and is not that useful
+        '''
         parser.add_option('-f', '--file',
                   action='store',
                   dest="hexfile",
@@ -810,7 +861,6 @@ def main():
                   default=None,
                   help='dat file to be uploaded.'
                   )
-
         parser.add_option('-z', '--zip',
                   action='store',
                   dest="zipfile",
@@ -818,8 +868,23 @@ def main():
                   default=None,
                   help='zip file to be used.'
                   )
+        parser.add_option('-t', '--test',
+                  action='store_true',
+                  dest='test_dfu',
+                  help='test bootloader without flashing.'
+                  )
+        parser.add_option('-v', '--verbose',
+                  action='store_true',
+                  dest='verbose',
+                  help='verbose output.'
+                  )
 
+        test_dfu = False
         options, args = parser.parse_args()
+
+        global verbose
+        verbose=options.verbose
+#        options, args = parser.parse_args()
 
     except Exception, e:
         print e
@@ -835,9 +900,9 @@ def main():
             exit(2)
 
         unpacker = None
+        manfile  = None
         hexfile  = None
         datfile  = None
-        manfile  = None
 
         if options.zipfile != None:
 
@@ -848,7 +913,7 @@ def main():
             unpacker = Unpacker()
             #print options.zipfile
             try:
-                hexfile, datfile, manfile = unpacker.unpack_zipfile(options.zipfile)	
+                hexfile, datfile, manfile = unpacker.unpack_zipfile(options.zipfile)
             except Exception, e:
                 print "ERR"
                 print e
@@ -884,9 +949,11 @@ def main():
                 print "Trying to switch to DFU mode"
                 success = ble_dfu.switch_to_dfu_mode()
                 if not success:
-                    print "Couldn't switch"
+                    raise Exception("Couldn't switch")
                 else:
-                    ble_dfu.start()
+                    ble_dfu.start(test=options.test_dfu)
+            else:
+                ble_dfu.start(test=options.test_dfu)
         else:
             # The device might already be in DFU mode (MAC + 1)
             ble_dfu.target_mac_increase(1)
@@ -897,7 +964,7 @@ def main():
                 raise Exception("Can't connect to device")
             if not ble_dfu.check_DFU_mode():
                 raise Exception("Not in DFU mode")
-            ble_dfu.start()
+            ble_dfu.start(test=options.test_dfu)
 
         # Disconnect from peer device if not done already and clean up.
         ble_dfu.disconnect()
@@ -914,7 +981,7 @@ def main():
     if unpacker != None:
        unpacker.delete()
 
-    print "DFU Server done"
+    print "DFU done"
 
 if __name__ == '__main__':
     # Do not litter the world with broken .pyc files.
