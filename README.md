@@ -5,7 +5,7 @@ Also works on [Mpow DS-D9/Lenovo HW02](https://github.com/fanoush/ds-d6/wiki/DS-
 
 ## Where to get the device
 
-I got it from GearBest https://www.gearbest.com/smart-watches/pp_1232618.html?wid=1433363 however it now appears to be out of stock. Sometimes it can be found on ebay but the prices vary and can be relatively high so it may make sense to get some other device mentioned below (e.g. F07/F10, or HX03W if you need gpio on usb data pins). If you would still desperately need DS-D6 and cannot get it elsewhere then PM me on gitter or ask in the Lobby. I guess I could part with few from my private stock and maybe others could too.
+I got it from GearBest however it now appears to be out of stock. Sometimes it can be found on ebay but the prices vary and can be relatively high so it may make sense to get some other device mentioned below (e.g. F07/F10, or HX03W if you need gpio on usb data pins). If you would still desperately need DS-D6 and cannot get it elsewhere then PM me on gitter or ask in the Lobby. I guess I could part with few from my private stock and maybe others could too.
 
 ## HW reference
 DS-D6 FCC info https://fccid.io/2AEMN-D6/
