@@ -1,11 +1,11 @@
 # DS-D6
 Custom Espruino/Arduino/Micropython firmware for Desay/MPow DS-D6 nRF52832 bracelet
 
-Also works on [Mpow DS-D9/Lenovo HW02](https://github.com/fanoush/ds-d6/wiki/DS-D9) and [Lenovo HX03W](https://github.com/fanoush/ds-d6#hx03-hx03w-hx03f-aka-ds-d1010w10f) with minor changes.
+Also works on [Mpow DS-D9/Lenovo HW02](https://github.com/fanoush/ds-d6/wiki/DS-D9), [Lenovo HX03W](https://github.com/fanoush/ds-d6#hx03-hx03w-hx03f-aka-ds-d1010w10f) and also on couple of generic fitness trackers with color screen available on ebay/aliexpress like F07, F07Plus, F10, see below.
 
 ## Where to get the device
 
-I got it from GearBest however it now appears to be out of stock. Sometimes it can be found on ebay but the prices vary and can be relatively high so it may make sense to get some other device mentioned below (e.g. F07/F10, or HX03W if you need gpio on usb data pins). If you would still desperately need DS-D6 and cannot get it elsewhere then PM me on gitter or ask in the Lobby. I guess I could part with few from my private stock and maybe others could too.
+I got it from GearBest however it now appears to be out of stock on their website (however currently their mobile app lists it as available). Sometimes it can be also found on ebay but the prices vary and can be relatively high so it may make sense to get some other device mentioned below (e.g. F07/F10, or HX03W if you need gpio on usb data pins). If you would still desperately need DS-D6 and cannot get it elsewhere then PM me on gitter or ask in the Lobby. I guess I could part with few from my private stock and maybe others could too.
 
 ## HW reference
 DS-D6 FCC info https://fccid.io/2AEMN-D6/
