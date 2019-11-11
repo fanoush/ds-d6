@@ -20,5 +20,6 @@ Currently no OLED or main DS-D6 module is included directly in the build as thes
 - patch with DS-D6-espruinoXX.diff
 - extract targetlibs_nrf5x_11.tgz to get working sdk11 for espruino sources
 - download fonts listed in board file on lines JSMODULESOURCES+=libs/js/Font* from https://www.espruino.com/modules/ into libs/js/
-- run `make -j BOARDNAME=DSD6 BOARD=DSD6 RELEASE=1 NRF_SDK11=1 USE_BOOTLADER=1 VERBOSE=1 DFU_UPDATE_BUILD=1` 
+- run `make -j BOARDNAME=DSD6 BOARD=DSD6 RELEASE=1 NRF_SDK11=1 USE_BOOTLADER=1 VERBOSE=1 DFU_UPDATE_BUILD=1`
+
 **UPDATE** some version of my patch was merged in [this commit](https://github.com/espruino/Espruino/commit/f34cce8ea1e82715a16cd7895e6407f6ca914996) however the result does not build cleanly with my targetlibs_nrf5x_11.tgz listed above and needs few changes in either the sdk11 or Espruino. Let me know if you try and have some issue.
