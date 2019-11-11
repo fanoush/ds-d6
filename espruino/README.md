@@ -13,7 +13,7 @@ Use poke32(0x4000051c,1) in Espruino console to reboot to DFU bootloader to upda
 
 Espruino console should work both on USB data pins (as serial port, not usb, speed 38400) and over Blueetooth.
 
-Currently no OLED or main DS-D6 module is included directly in the build as these are WIP. However this is not an issue since you can upload what you wish e.g. via [Espruino Web IDE](https://www.espruino.com/Web+IDE). Example you can use as a start is here https://gist.github.com/fanoush/ce461c73c299834bcb53a615721b5a2e
+Currently no OLED or main DS-D6 module is included directly in the build as these are WIP. However this is not an issue since you can upload what you wish e.g. via [Espruino Web IDE](https://www.espruino.com/Web+IDE). Example you can use as a start for DS-D6 is [here](https://gist.github.com/fanoush/ce461c73c299834bcb53a615721b5a2e) or for HX03W [here](https://gist.github.com/fanoush/56db50bd2392abedc15039bc6e7e5f06)
 
 ## How to rebuild
 - clone espruino repo
