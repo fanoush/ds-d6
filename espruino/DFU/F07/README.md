@@ -10,3 +10,19 @@ F07 tracker uses SDK11 based Nordic dual bank bootloader so only half of flash i
 0x7e000 MBR parameters  
 0x7f000 bootloader settigns
 ```
+
+You can use this also for any generic device to get things started - determine HW pinout, bootloader location etc.
+To get bootloader start address run this to read it from UICR
+```
+peek32(0x10001014).toString(16)
+```
+Bootloader backup can be then done like this:
+```
+var f=require("Flash")
+for (a=peek32(0x10001014);a<0x7e000;a+=256) console.log(btoa(f.read(256,a)));
+```
+then copy paste those lines to text file and use base64 decode on that, e.g. in linux run
+```
+base64 -d file.base64 >file.bin
+```
+Once you have bootloader it can be patched to allow upgrade to higher versions.
