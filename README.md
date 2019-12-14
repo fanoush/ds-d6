@@ -56,7 +56,9 @@ There are also many other devices by other manufacturers. Most are using newer N
 
 - F07,F07plus - [FCC info](https://fccid.io/2AONX-F07) ,~$14-$17 on aliexpress, also on Gearbest [here](https://www.gearbest.com/smart-watches/pp_1231729.html?wid=1433363) and [here](https://www.gearbest.com/smart-watches/pp_009307252051.html), beware that there is also cheaper similar variant on aliexpress with different pictures on screen sometimes named F07MAX, this one may not be nrf52 so make sure the pictures on screen looks same and listing says it uses iband app and has nrf52832. I got it and I am working on bootloader fixes and Espruino port. Stock bootloader is unsigned but dual banked so only half of flash is available so Espruino doesn't fit. I am working on suitable single bank bootloader replacement.
 
-- F10 - this is slimmer and sligtly more expensive (~$16-$19) version of F07, Aliexpress examples [here](https://www.aliexpress.com/item/32864537037.html) or [here](https://www.aliexpress.com/item/32867894249.html), again make sure pictures on screen looks exactly the same as F07
+- F10 - this is slimmer and sligtly more expensive (~$14-$19) version of F07, Aliexpress examples [here](https://www.aliexpress.com/item/32864537037.html) or [here](https://www.aliexpress.com/item/32867894249.html), again make sure pictures on screen looks exactly the same as F07
+
+- DK08/H808/KETO SR - same manufacturer as F07, F10, same SDK11 based bootloader. This one has always on 176x176 display like Amazfit Bip. prices are around $30USD however I managed to get one DK08 on ebay for 17GBP. IBand app upgraded firmware and left DFu zip in iband folder on the phone so it is possible to restore original firmware. Same generic Espruino build works fine in the device. Basic pins like button, motor, battery work. Now I need to figure out the display.
 
 - some other untested devices supported by [iband app](https://play.google.com/store/apps/details?id=com.manridy.iband&hl=en), details [here](http://forum.espruino.com/comments/14746917/)
 
