@@ -25,4 +25,13 @@ then copy paste those lines to text file and use base64 decode on that, e.g. in 
 ```
 base64 -d file.base64 >file.bin
 ```
-Once you have bootloader it can be patched to allow upgrade to higher versions.
+Once you have bootloader it can be patched to allow upgrade to higher versions of SoftDevice (>=3.0.0).
+
+Easiest way to get out of this limited Espruino environment is to make it invalid by erasing bootloader settings page and reboot, see below. After reboot this should stay in bootloader and wait for flashing valid DFU package.
+
+```
+E.setFlags({unsafeFlash:1})
+var f=require("Flash")
+f.erasePage(0x7f000)
+E.reboot()
+```
