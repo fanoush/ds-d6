@@ -22,4 +22,10 @@ Currently no OLED or main DS-D6 module is included directly in the build as thes
 - download fonts listed in board file on lines JSMODULESOURCES+=libs/js/Font* from https://www.espruino.com/modules/ into libs/js/
 - run `make -j BOARDNAME=DSD6 BOARD=DSD6 RELEASE=1 NRF_SDK11=1 USE_BOOTLADER=1 VERBOSE=1 DFU_UPDATE_BUILD=1`
 
-**UPDATE** some version of my patch was merged in [this commit](https://github.com/espruino/Espruino/commit/f34cce8ea1e82715a16cd7895e6407f6ca914996) however the result does not build cleanly with my targetlibs_nrf5x_11.tgz listed above and needs few changes in either the sdk11 or Espruino. Let me know if you try and have some issue.
+**UPDATE** some version of my patch was merged in [this commit](https://github.com/espruino/Espruino/commit/f34cce8ea1e82715a16cd7895e6407f6ca914996) however the result does not build cleanly with my targetlibs_nrf5x_11.tgz listed above as I renamed `components/toolchain/CMSIS/Include` to `components/toolchain/cmsis/include` to match naming in later SDK version but [version in Espruin tree](https://github.com/espruino/Espruino/blob/master/make/common/NRF5X.make#L82) uses older naming. So either remove that part from  `NRF5X.make` or rename those two folders back to original SDK11 naming after extracting the tgz.
+
+After doing that building for any nrf52 board should work with SDK11 as long as you disable NEOPIXEL and NFC support in board file. You can build it e.g. like this
+```
+make -j BOARD=MDBT42Q RELEASE=1 NRF_SDK11=1 DFU_UPDATE_BUILD=1 
+```
+It will build and try to make legacy SDK11 DFU package via adafruit-nrfutil.
