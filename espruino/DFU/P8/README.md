@@ -31,7 +31,7 @@ For option 1. use `espruino-xxx-DaFit.bin` bin file and upload via DaFlasher. Th
 restore original firmware or update to DFU bootlader by hand. See below for backup/restore scripts (TODO)
 
 For option 2. first use DaFlasher + atc1441's bootloader .bin and then use `espruino-xx-SDK14-SD50.zip` package - again via
-DaFlasher or Nordic DFU tools. For advanced way you can also use -DaFit.bin
+DaFlasher or Nordic DFU tools. For advanced way you can also use -DaFit.bin first to install bootloader yourself via Espruino code (TODO, WIP gist [here](https://gist.github.com/fanoush/c65d0de750a87262fcdd1d91d2cdd43d))
 
 For option 3. there is now SDK11 build if you downgrade via FitBootloaderDFU2.0.1.zip to SoftDevice 2.x  
 TODO - P8 espruino package for SDK12 with Espruino bootloader
