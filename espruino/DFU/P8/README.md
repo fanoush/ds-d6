@@ -35,3 +35,7 @@ DaFlasher or Nordic DFU tools. For advanced way you can also use -DaFit.bin firs
 
 For option 3. there is now SDK11 build if you downgrade via FitBootloaderDFU2.0.1.zip to SoftDevice 2.x  
 TODO - P8 espruino package for SDK12 with Espruino bootloader
+
+## Demo example
+
+You may check example/demo with display driver implemented as [inline C](https://www.espruino.com/InlineC). While it is a bit unusual to do it like this, it is fast, works and was fun to develop. You can get it [here](https://gist.github.com/fanoush/3dede6a16cef85fbf55f9d925521e4a0). There is 4bit/16color in memory framebuffer (taking 28KB out of total 64KB of RAM) and the palette transformation to 12bit display colors is done on the fly when sending data to the display between waiting for DMA transfers, there is no extra delay, everything is limited by slow 8MBbps SPI speed limit of nrf52832. For more free memory for the code you may reduce 'bpp' variable to 2 or 1 to have 4 or 2 color mode.
