@@ -16,7 +16,7 @@ There are multiple ways to run your custom firmware:
   * most advanced but most flexible option, 'easiest' way to restore to stock, best for backups of original state including bootloader and UICR area
   * there is a size limit, app size can be 0x10000 to 0x2f0000 (~185KB)
   * to provide updates you must implement updating procedure yourself = accept new binary and store it to SPI flash and reboot to DaFit bootloader
-2. Upload app that installs standard nordic DFU bootloader first and then make DFU packages for SDK14/SD5.0 via nrfutil
+2. Upload app that installs [standard nordic DFU bootloader first](https://github.com/atc1441/DaFlasherFiles#dafitbootloader23hackedbin) and then make DFU packages for SDK14/SD5.0 via nrfutil
   * easier update via nordic tools
   * app can be larger (0x23000 to 0x78000)
   * S132 5.0 = Bluetooth 5.0
@@ -28,7 +28,7 @@ There are multiple ways to run your custom firmware:
 ### Espruino
 
 For option 1. use `espruino-xxx-DaFit.bin` bin file and upload via DaFlasher. This allows you to backup what you want or
-restore original firmware or update to DFU bootlader by hand. See below for backup/restore scripts (TODO, WIP gist [here](https://gist.github.com/fanoush/c65d0de750a87262fcdd1d91d2cdd43d))
+restore original firmware or update to DFU bootlader by hand. See below for backup/restore scripts (TODO, WIP gist [here](https://gist.github.com/fanoush/c65d0de750a87262fcdd1d91d2cdd43d)). This build is not best for full Espruino experience since some fatures were disabled to fit the size limit so this is just to get you started to get access to the device with as few modifications as possible.
 
 For option 2. first use DaFlasher + atc1441's bootloader .bin and then use `espruino-xx-SDK14-SD50.zip` package - again via
 DaFlasher or Nordic DFU tools. For advanced way you can also use -DaFit.bin first to install bootloader yourself via Espruino code and then use this option.
