@@ -1,7 +1,7 @@
 # DS-D6
 Custom Espruino/Arduino/Micropython firmware for Desay/MPow DS-D6 nRF52832 bracelet
 
-Also works on [Mpow DS-D9/Lenovo HW02](https://github.com/fanoush/ds-d6/wiki/DS-D9), [Lenovo HX03W](https://github.com/fanoush/ds-d6#hx03-hx03w-hx03f-aka-ds-d1010w10f) and also on couple of generic fitness trackers with color screen available on ebay/aliexpress like F07, F07Plus, F10, see below.
+Also works on [Mpow DS-D9/Lenovo HW02](https://github.com/fanoush/ds-d6/wiki/DS-D9), [Lenovo HX03W](https://github.com/fanoush/ds-d6#hx03-hx03w-hx03f-aka-ds-d1010w10f) and also on couple of generic fitness trackers with color screen available on ebay/aliexpress like F07, F07Plus, F10, see below. For Espruino for P8 watch go to  https://github.com/fanoush/ds-d6/tree/master/espruino/DFU/P8
 
 ## Where to get the device
 
