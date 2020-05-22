@@ -1,4 +1,4 @@
-P8 watch is one of many smartwatched supported by DaFit app (including [PineTime](https://www.pine64.org/pinetime/)). It is quite cheap (~$17 USD on aliexpress) and has full touchscreen, button and 240x240 color display.
+P8 watch is one of many smartwatches supported by DaFit app (including [PineTime](https://www.pine64.org/pinetime/)). It is quite cheap (~$17 USD on aliexpress) and has full touchscreen, button and 240x240 color display.
 
 Fortunately DaFit designers decided to not to use Nordic secure DFU bootloader and implemented their own with no fw signing via private keys :-) So thanks to atc1441's reverse engineering efforts ([video](https://youtu.be/gUVEz-pxhgg), [DaFlasher](https://play.google.com/store/apps/details?id=com.atcnetz.paatc.patc), [github](https://github.com/atc1441/DaFlasherFiles))
 we now have easy way to update many of these watches without taking apart!
