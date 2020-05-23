@@ -6,7 +6,7 @@ F07 tracker uses SDK11 based Nordic dual bank bootloader so by default only half
 0x00000-0x1bfff SoftDevice S132 2.x  
 0x1c000-0x4afff first bank (size 0x2f000)  
 0x4b000-0x79fff second bank (size 0x2f000)  
-0x7a000-0x7bfff bootloader  
+0x7a000-0x7dfff bootloader  
 0x7e000 MBR parameters  (missing in UICR at 0x10001018 location !!!)
 0x7f000 bootloader settings
 ```
@@ -87,11 +87,11 @@ poke32(0x4001e504, 0);while(!peek32(0x4001e400)); // disable flash writing
 Enabling reset pin or NFC pins as GPIO is not needed in this case.
 
 #### Updating bootloader
-TODO
+See WIKI [here](https://github.com/fanoush/ds-d6/wiki/Replacing-Nordic-DFU-bootloader#flashing-bootloader)
 
 #### Entering DFU by clearing Espruino
 
-If you did not update bootloader to allow enntering it via `poke32(0x4000051c,1)` then easiest way to get out of  Espruino environment is to make it invalid by erasing bootloader settings page and reboot, see below. After reboot this should stay in bootloader and wait for flashing valid DFU package (new Espruino or stock firmware).
+If you did not update bootloader to allow entering it via `poke32(0x4000051c,1)` then easiest way to get out of  Espruino environment is to make it invalid by erasing bootloader settings page and reboot, see below. After reboot this should stay in bootloader and wait for flashing valid DFU package (new Espruino or stock firmware).
 
 ```
 E.setFlags({unsafeFlash:1})
