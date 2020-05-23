@@ -11,7 +11,7 @@ F07 tracker uses SDK11 based Nordic dual bank bootloader so by default only half
 0x7f000 bootloader settings
 ```
 
-To use more space for larger application (like full build of Espruino) the bootloader needs to be changed to single bank variant. Unfortunately bootloader cannot be updated directly via DFU because the MBR settings address in UICR area is not set so by updating bootlader or softdevice the device will be bricked! This is probably common for all iBAND devices as I managed to brick DK08 watch by trying to update bootloader before knowing this. So the way to update bootloader is to first use stripped down minimal Espruino build that fits into single bank and use it to set UICR properly to allow DFU or even also rewrite the bootloader. So the steps are as follows:
+To use more space for larger application (like full build of Espruino) the bootloader needs to be changed to single bank variant. Unfortunately bootloader cannot be updated directly via DFU because the MBR settings address in UICR area is not set so by updating bootlader or softdevice the device will be bricked! This is probably common for all iBAND devices as I managed to brick DK08 watch by trying to update bootloader before knowing this. So the way to update bootloader is to first use stripped down minimal Espruino build that fits into single bank and use it to set UICR properly and rewrite the bootloader. So the steps are as follows:
 
 - Upload minimal stripped down build of Epruino via standard Nordic DFU (via nrfConnect or DaFlasher)
 - Backup existing bootloader and UICR (just in case)
