@@ -16,7 +16,7 @@ To use more space for larger application (like full build of Espruino) the bootl
 - Upload minimal stripped down build of Epruino via standard Nordic DFU (via nrfConnect or DaFlasher)
 - Backup existing bootloader and UICR (just in case)
 - Fix UICR at 0x10001018 to point to 0x7e000 so that bootloader or softdevice DFU update works
-- Upload new single bank bootloader via DFU or directly from minimal Espruino
+- Upload new single bank bootloader directly from minimal Espruino
 - Upload full size SDK11 based Espruino
 
 #### Backing up bootloader and UICR
