@@ -11,13 +11,13 @@ F07 tracker uses SDK11 based Nordic dual bank bootloader so by default only half
 0x7f000 bootloader settings
 ```
 
-To use more space for larger application (like full build of Espruino) the bootloader needs to be changed to single bank variant. Unfortunately bootloader cannot be updated directly via DFU because the MBR settings address in UICR area is not set so by updating bootlader or softdevice the device will be bricked! This is probably common for all iBAND devices as I managed to brick DK08 watch by trying to update bootloader before knowing this. So the way to update bootloader is to first use stripped down minimal Espruino build that fits into single bank and use it to set UICR properly and rewrite the bootloader. So the steps are as follows:
+To use more space for larger application (like full build of Espruino) the bootloader needs to be changed to single bank variant. Unfortunately bootloader cannot be updated directly via DFU because the MBR settings address in UICR area is not set so by updating bootlader or softdevice the device will be bricked! This is probably common for all iBAND devices as I managed to brick DK08 watch by trying to update bootloader before knowing this. Also updating dualbank to singlebank bootloaderseems to not work too. So the way to update bootloader is to first use stripped down minimal Espruino build that fits into single bank and use it to set UICR properly and rewrite the bootloader. So the steps are as follows:
 
 - Upload minimal stripped down build of Epruino via standard Nordic DFU (via nrfConnect or DaFlasher)
 - Backup existing bootloader and UICR (just in case)
-- Fix UICR at 0x10001018 to point to 0x7e000 so that bootloader or softdevice DFU update works
-- Upload new single bank bootloader directly from minimal Espruino
-- Upload full size SDK11 based Espruino
+- Fix UICR at 0x10001018 to point to 0x7e000 so that furure bootloader or softdevice DFU update works
+- Upload new single bank bootloader to flash directly from minimal Espruino
+- Upload full size SDK11 based Espruino via new single bank bootloader
 
 #### Backing up bootloader and UICR
 
@@ -91,7 +91,7 @@ See WIKI [here](https://github.com/fanoush/ds-d6/wiki/Replacing-Nordic-DFU-bootl
 
 #### Entering DFU by clearing Espruino
 
-If you did not update bootloader to allow entering it via `poke32(0x4000051c,1)` then easiest way to get out of  Espruino environment is to make it invalid by erasing bootloader settings page and reboot, see below. After reboot this should stay in bootloader and wait for flashing valid DFU package (new Espruino or stock firmware).
+If you did not update bootloader yet to allow entering it via `poke32(0x4000051c,1)` then easiest way to get out of  Espruino environment from old stock bootloader is to make application invalid by erasing bootloader settings page and reboot, see below. After reboot this should stay in bootloader and wait for flashing valid DFU package (new Espruino or stock firmware).
 
 ```
 E.setFlags({unsafeFlash:1})
