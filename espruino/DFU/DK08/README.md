@@ -1,6 +1,6 @@
 ### Espruino build for DK08 smartwatch
 
-DK08 is nrf52832 watch with always on sunlight readable display. Typical price on aliexpress was $29, then for some time it went down to $18-$14 ([here](https://www.aliexpress.com/item/4001256048750.html) or [here](https://www.aliexpress.com/item/4001224081207.html) - both stores are owned by same (Kospet?) company)
+DK08 is nrf52832 watch with always on sunlight readable display (176x176, 64 colors - RGB222). Typical price on aliexpress is/was ~$29, then for some time it went down to $18-$14 ([here](https://www.aliexpress.com/item/4001256048750.html) or [here](https://www.aliexpress.com/item/4001224081207.html) - both stores are owned by same (Kospet?) company)
 
 The hardware is designed by same Manridy manufacturer as F07 or F10 fitness trackers and all use IBand android app so upgrade guide is similar/same to [F07](https://github.com/fanoush/ds-d6/tree/master/espruino/DFU/F07).
 
