@@ -7,7 +7,7 @@ The hardware is designed by same Manridy manufacturer as F07 or F10 fitness trac
 Steps to update new DK08 watch to Espruino:
 
 1. Optionally install IBand app and try firmware update. Hopefully this will download firmware file DFU zip into IBand folder on your storage card. This is useful for recovery to original firmware.
-2. Install minimal espruino build e.g. via nrfConnect android app
-3. backup and update bootloader via copy pasting prepared code and data into left side of Espruino Web IDE
+2. Install minimal espruino build zip from [F07 folder](https://github.com/fanoush/ds-d6/tree/master/espruino/DFU/F07) e.g. via nrfConnect android app
+3. backup and update bootloader via copy pasting prepared code and data into left side of Espruino Web IDE as per https://github.com/fanoush/ds-d6/wiki/Replacing-Nordic-DFU-bootloader
 4. clear old bootloader leftovers and minimal espruino, reboot to new bootloader and install full size Espruino from this folder (or possibly original firmware)
 5. try example code https://gist.github.com/fanoush/f91dc52e76e8281a127cce86d8313ec9
