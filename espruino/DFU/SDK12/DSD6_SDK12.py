@@ -17,6 +17,7 @@ import pinutils;
 
 info = {
  'name' : "DS-D6",
+ 'boardname' : "DSD6",
  'link' :  [ "http://www.espruino.com/MDBT42Q" ],
  'espruino_page_link' : 'MDBT42Q', 
  'default_console' : "EV_SERIAL1",
@@ -42,7 +43,7 @@ info = {
    'makefile' : [
      'DEFINES+=-DHAL_NFC_ENGINEERING_BC_FTPAN_WORKAROUND=1', # Looks like proper production nRF52s had this issue
 #     'DEFINES+=-DCONFIG_GPIO_AS_PINRESET', # Allow the reset pin to work
-     'DEFINES+=-DBLUETOOTH_NAME_PREFIX=\'"DS-D6"\'',
+     'DEFINES+=-DBLUETOOTH_NAME_PREFIX=\'"DS-D6"\' -DSPI0_USE_EASY_DMA=0',
      'JSMODULESOURCES+=libs/js/Font4x4.min.js',
      'JSMODULESOURCES+=libs/js/Font4x8Numeric.min.js',
      'JSMODULESOURCES+=libs/js/Font4x4Numeric.min.js',
@@ -54,6 +55,7 @@ info = {
 #     'JSMODULESOURCES+=libs/js/SSD1306.min.js', # this watch has SPI OLED - SCK 6 MOSI 5 RST 4 DC 28 CS 29
 #     'JSMODULESOURCES+=libs/js/DSD6.js',
      'DFU_PRIVATE_KEY=targets/nrf5x_dfu/dfu_private_key.pem',
+     'NRF_BL_DFU_INSECURE=1',
      'DFU_SETTINGS=--application-version 0xff --hw-version 52 --sd-req 0x8C,0x91'
    ]
  }
@@ -72,10 +74,10 @@ chip = {
   'adc' : 1,
   'dac' : 0,
   'saved_code' : {
-    'address' : ((118 - 10) * 4096), # Bootloader takes pages 120-127, FS takes 118-119
+    'address' : ((118 - 20) * 4096), # Bootloader takes pages 120-127, FS takes 118-119
     'page_size' : 4096,
-    'pages' : 10,
-    'flash_available' : 512 - ((31 + 8 + 2 + 10)*4) # Softdevice uses 31 pages of flash, bootloader 8, FS 2, code 10. Each page is 4 kb.
+    'pages' : 20,
+    'flash_available' : 512 - ((31 + 8 + 2 + 20)*4) # Softdevice uses 31 pages of flash, bootloader 8, FS 2, code 10. Each page is 4 kb.
   },
 };
 
