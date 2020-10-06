@@ -19,9 +19,9 @@ Some initial demo code here https://gist.github.com/fanoush/505a6f44532e4fdaadef
 | 14 |SPI FLASH CLK |
 | 15 |accel irq (?) |
 | 16 |? set as output, in some code, set to 1 (while vibrating) |	
-| 17 |accel i2c sda 0x1f  KX123? WHO_AM_I gives 0x20 as per https://d10bqar0tuhard.cloudfront.net/en/document/TN004-Power-On-Procedure.pdf |
+| 17 |accel i2c sda, address 0x1f  KX123? WHO_AM_I register gives 0x20 as per [this](https://d10bqar0tuhard.cloudfront.net/en/document/TN004-Power-On-Procedure.pdf) |
 | 18 |accel i2c scl |
-| 19 |hrs3313lp i2c sda(19+20) address 0x44, reading 6 bytes from reg a0,a6
+| 19 |hrs3313lp i2c sda, address 0x44
 | 20 |hrs3313lp i2c scl |
 | 21 |unused? (reset) |
 | 22 |? low even with input pull up (some irg pin?) |
