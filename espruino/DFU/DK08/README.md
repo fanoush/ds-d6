@@ -51,3 +51,37 @@ Steps to update new DK08 watch to Espruino:
     
 4. install full size Espruino from this folder (or possibly original firmware)
 5. try example code https://gist.github.com/fanoush/f91dc52e76e8281a127cce86d8313ec9
+
+# Pinout ##
+| Pin No.  | Description |
+| ------------- | ------------- |
+| 02 | LCD CLK |
+| 03 |accel int 2? |
+| 04 |accel int 1?|
+| 05 | battery analog |
+| 06 |MOTOR |
+| 07 |accel power |
+| 08 |BUTTON |
+| 09 |unused? |
+| 10 |unused? (nfc pair with 9) |
+| 11 | LCD PWR |
+| 12 | ? |
+| 13 |LCD backlight |
+| 14 |HR power |
+| 15 |LCD RST |
+| 16 |LCD MOSI|	
+| 17 |LCD CLK|
+| 18 |LCD CS |
+| 19 |LCD D/C|
+| 20 |HR SDA |
+| 21 |unused? (reset) |
+| 22 |HR SCL |
+| 23 |battery something, changes after charged fully, then disconnected, then reattached - full battery signal? |
+| 24 |CHARGER connected |
+| 25 |? |
+| 26 | ? |
+| 27 | SPI Flash CS |
+| 28 | ? |
+| 29 | Flash/accel SPI CLK |
+| 30 | Flash/accel SPI MOSI |
+| 31 | Flash/accel SPI MISO |
