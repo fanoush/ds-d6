@@ -1,5 +1,6 @@
 SMA B5 is ~$19 fitness tracker with builtin GPS. What is most interesting is that it has SWD debug port on USB data pins so it is unbrickable with no need to open it.
 
+Some initial demo code here https://gist.github.com/fanoush/505a6f44532e4fdaadef4da5777d7777
 
 | Pin No.  | Description |
 | ------------- | ------------- |
