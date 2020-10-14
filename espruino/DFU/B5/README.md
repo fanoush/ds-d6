@@ -6,7 +6,11 @@ Some initial demo code here https://gist.github.com/fanoush/505a6f44532e4fdaadef
 
 The device is locked and firmware uses secure DFU with unknown signing key so the only way is to unlock it via SWD, for that you need debugger that can send direct commands to access custom debug access port ([CTRL-DAP](https://infocenter.nordicsemi.com/topic/com.nordic.infocenter.nrf52832.ps.v1.1/dif.html?cp=4_2_0_15_1#concept_udr_mns_1s)) on nrf52 to trigger mass erase and unlock (=writing 1 to [ERASEALL](https://infocenter.nordicsemi.com/topic/com.nordic.infocenter.nrf52832.ps.v1.1/dif.html#register.ERASEALL) register). This cannot be done via generic $2 STlink V2 clone from ebay/aliexpress (unless you reflash it with [CMSIS-DAP](https://github.com/RadioOperator/STM32F103C8T6_CMSIS-DAP_SWO/tree/master/Doc/STLINK_V2A_V2B) or [BlackMagicProbe](https://github.com/blacksphere/blackmagic/tree/master/src/platforms/stlink) firmware). Perhaps easiest is to use Raspberry Pi, for more details see https://wiki.pine64.org/index.php/Reprogramming_the_PineTime#Unlocking_the_device
 
-USB connector SWD wiring is GND,SWDCLK,SWDIO,5V
+USB connector SWD wiring from one side to another is:
+
+|black|green |white|red|
+|-----|------|-----|---|
+| GND |SWDCLK|SWDIO|5V |
 
 After unlocking it can be flashed via openocd command `program <name of hex file>`
 
