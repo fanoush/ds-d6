@@ -69,6 +69,7 @@ BLE Connected, queueing BLE restart for later
 >peek32(0x10001018).toString(16)
 ="7e000"
 ```
+If it stays at all FFs then the onRestart was not called. Most probably this is becasue you forgot to call NRF.restart or the disconection time was too short or some other device connected. You may also call `NRF.disconnect()` in the command line instead of just clicking WebIDE button to disconnect.
 
 Beware that flash memory can be only written few times between erasing and it is only possible to change ones to zeroes so the procedure above works only if initial value of `0x10001018` was `"ffffffff"`. It is also possible to clear UICR area completely and reset both values again but this should not be needed. However it can be done like this:
 ```
@@ -84,7 +85,7 @@ poke32(0x10001018,0x7E000);while(!peek32(0x4001e400)); // set mbr settings
 poke32(0x4001e504, 0);while(!peek32(0x4001e400)); // disable flash writing
 }
 ```
-Enabling reset pin or NFC pins as GPIO is not needed in this case.
+Enabling reset pin or NFC pins as GPIO is not needed in this case. You can also check previous UICR backup to see what UICR values might be worth restoring.
 
 #### Updating bootloader
 See WIKI [here](https://github.com/fanoush/ds-d6/wiki/Replacing-Nordic-DFU-bootloader#flashing-bootloader)
