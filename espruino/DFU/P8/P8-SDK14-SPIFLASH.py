@@ -53,6 +53,7 @@ info = {
 #     'WRAPPERSOURCES += libs/banglejs/jswrap_banglep8.c',
 # -DUSE_HEATSHRINK',
 #     'DEFINES += -DUART1_ENABLED=0',
+     'DEFINES += -DSPIFLASH_SHARED_SPI',
      'DEFINES += -DFDS_VIRTUAL_PAGES=2',
      'NRF_SDK14=1',
    ]
