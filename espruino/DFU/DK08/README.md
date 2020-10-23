@@ -26,7 +26,7 @@ Steps to update new DK08 watch to Espruino:
       ```
       To run the code you must temporarily disconnect from the device to allow bluetooth and SoftDevice restart. After reconnecting you may try to check via `peek32(0x10001014).toString(16);` that the UICR is cleared to all FFs.
     
-    - upload new bootloader from https://gist.github.com/fanoush/98adf1626b883677bfcf6f62e20d78e5 - first paste flashing code, then base64 encoded bootloader binary
+    - upload new bootloader from DK08-bootloader.txt - first paste flashing code, then base64 encoded bootloader binary
     - verify bootloader (run `f=verify` and paste bootloader again)
     - erase last flash page to clear data stored by old bootloader
       ```
