@@ -49,10 +49,10 @@ After unlocking it can be flashed via openocd command `program <name of hex file
 | 22 |? low even with input pull up (some irg pin - HR?) |
 | 23 |? follows pull, floating? |
 | 24 |CHARGER input, pull up - 0=charging |
-| 25 |? follows pull, floating? |
-| 26 | ? set as input with pull down in code (value follows pull - floating?) |
-| 27 | GPS TX (9600) |
-| 28 | GPS RX |
+| 25 | GPS (TX? set as pullup with pin 26 in uart_230400_init, not set as TX!) |
+| 26 | GPS RX (230400) - set as RX in uart_230400_init|
+| 27 | GPS TX (9600) nmea |
+| 28 | GPS RX (9600) nmea|
 | 29 | LCD Backlight (1=on) |
 | 30 | MOTOR |
 | 31 | 1= enable hrs3313 i2c pins 19,20 |
