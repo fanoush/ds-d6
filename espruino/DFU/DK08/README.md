@@ -55,7 +55,7 @@ Steps to update new DK08 watch to Espruino:
 # Pinout ##
 | Pin No.  | Description |
 | ------------- | ------------- |
-| 02 | LCD CLK |
+| 02 |accel CS |
 | 03 |accel int 2? |
 | 04 |accel int 1?|
 | 05 | battery analog |
