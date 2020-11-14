@@ -52,7 +52,14 @@ Steps to update new DK08 watch to Espruino:
 4. install full size Espruino from this folder (or possibly original firmware)
 5. try example code https://gist.github.com/fanoush/f91dc52e76e8281a127cce86d8313ec9
 
-# Pinout ##
+### Hardware ###
+
+- LCD 176x176 always on ST7301
+- HR sensor EM7028 (detasheet linked [here](https://lcsc.com/product-detail/Specialized-Sensors_Epticore-Microelectronics-Shanghai-EM7028_C91478.html))
+- accelerometer Bosch BMA253 (?)
+- 2MB SPI flash / fontchip [GT24L24A2Y](https://github.com/RichardBsolut/GT24L24A2Y)
+
+### Pinout ###
 | Pin No.  | Description |
 | ------------- | ------------- |
 | 02 |accel CS |
