@@ -55,7 +55,7 @@ Steps to update new DK08 watch to Espruino:
 ### Hardware ###
 
 - LCD  always on 176x176 64 colors (RGB222) ST7301
-- HR sensor EM7028 (detasheet linked [here](https://lcsc.com/product-detail/Specialized-Sensors_Epticore-Microelectronics-Shanghai-EM7028_C91478.html))
+- HR sensor EM7028 ([datasheet](https://datasheet.lcsc.com/szlcsc/Epticore-Microelectronics-Shanghai-EM7028_C91478.pdf) linked from [here](https://lcsc.com/product-detail/Specialized-Sensors_Epticore-Microelectronics-Shanghai-EM7028_C91478.html)), for code examples search github for EM7028
 - accelerometer Bosch BMA253 (?)
 - 2MB SPI flash / fontchip [GT24L24A2Y](https://github.com/RichardBsolut/GT24L24A2Y)
 
