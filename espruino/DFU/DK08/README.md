@@ -73,9 +73,9 @@ Steps to update new DK08 watch to Espruino:
 | 17 |LCD CLK|
 | 18 |LCD CS |
 | 19 |LCD D/C|
-| 20 |HR SDA |
+| 20 |HR SCL - EM7028, address 0x24 |
 | 21 |unused? (reset) |
-| 22 |HR SCL |
+| 22 |HR SDA - EM7028, address 0x24 |
 | 23 |battery something, changes after charged fully, then disconnected, then reattached - full battery signal? |
 | 24 |CHARGER connected |
 | 25 |? |
