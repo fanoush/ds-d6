@@ -56,7 +56,7 @@ Steps to update new DK08 watch to Espruino:
 
 - LCD  always on 176x176 64 colors (RGB222) ST7301
 - HR sensor EM7028 ([datasheet](https://datasheet.lcsc.com/szlcsc/Epticore-Microelectronics-Shanghai-EM7028_C91478.pdf) linked from [here](https://lcsc.com/product-detail/Specialized-Sensors_Epticore-Microelectronics-Shanghai-EM7028_C91478.html)), for code examples search github for EM7028
-- accelerometer Bosch BMA222E - gives CHIP ID 0xf8 ([datasheet](https://www.mouser.com/datasheet/2/783/BST-BMA222E-DS004-1509611.pdf), linked from [here](https://www.mouser.com/ProductDetail/Bosch-Sensortec/BMA222E?qs=d72FGnIDsgT0QS7arpWuRA%3D%3D))
+- accelerometer Bosch BMA222E - gives CHIP ID 0xf8 ([datasheet](https://www.mouser.com/datasheet/2/783/BST-BMA222E-DS004-1509611.pdf), linked from [here](https://www.mouser.com/ProductDetail/Bosch-Sensortec/BMA222E?qs=d72FGnIDsgT0QS7arpWuRA%3D%3D)), driver source [here](https://github.com/BoschSensortec/BMA2x2_driver)
 - 2MB SPI flash / fontchip [GT24L24A2Y](https://github.com/RichardBsolut/GT24L24A2Y)
 
 ### Pinout ###
