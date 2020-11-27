@@ -13,10 +13,11 @@ Also it looks like the hw/sw design of [all those watches](https://gist.github.c
 There are multiple ways to run your custom firmware:
 
 1. Directly upload you application built for Nordic SDK14 with Softdevice 5.0 as a bin file (by DaFlasher)
+  * probably not the option you want to start with as a beginner
   * most advanced but most flexible option, 'easiest' way to restore to stock, best for backups of original state including bootloader and UICR area
-  * there is a size limit, app size can be 0x10000 to 0x2f0000 (~185KB)
+  * there is a size limit, app size can be 0x1000 to 0x2f000 (~185KB)
   * to provide updates you must implement updating procedure yourself = accept new binary and store it to SPI flash and reboot to DaFit bootloader
-2. Upload app that installs [standard nordic DFU bootloader first](https://github.com/atc1441/DaFlasherFiles#dafitbootloader23hackedbin) and then make DFU packages for SDK14/SD5.0 via nrfutil
+2. Upload atc1441's [app that installs standard nordic DFU bootloader first](https://github.com/atc1441/DaFlasherFiles#dafitbootloader23hackedbin) and then make DFU packages for SDK14/SD5.0 via nrfutil
   * easier update via nordic tools
   * app can be larger (0x23000 to 0x78000)
   * S132 5.0 = Bluetooth 5.0
