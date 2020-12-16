@@ -24,7 +24,7 @@ Steps to update new DK08 watch to Espruino:
       }
       NRF.restart(); // will schedule SoftDevice restart after you disconnect
       ```
-      To run the code you must temporarily disconnect from the device to allow bluetooth and SoftDevice restart. After reconnecting you may try to check via `peek32(0x10001014).toString(16);` that the UICR is cleared to all FFs.
+      To run the code you must temporarily disconnect from the device to allow bluetooth and SoftDevice restart. After reconnecting check via `peek32(0x10001014).toString(16);` that the UICR is cleared to all FFs. If not it is not safe to continue.
     
     - upload new bootloader from DK08-bootloader.txt - first paste flashing code, then base64 encoded bootloader binary
     - verify bootloader (run `f=verify` and paste bootloader again)
@@ -48,9 +48,10 @@ Steps to update new DK08 watch to Espruino:
       ```
       E.reboot();
       ```
+    - if it reboots back to Espruino then most probably `peek32(0x10001014).toString(16);` still returns all FFs, please retry previous step 'set UICR bootloader start and bootloader settings address'
     
 4. install full size Espruino from this folder (or possibly original firmware)
-5. try example code https://gist.github.com/fanoush/f91dc52e76e8281a127cce86d8313ec9
+5. try example code https://gist.github.com/fanoush/f91dc52e76e8281a127cce86d8313ec9 (copy to right side of WebIDE and upload to RAM, enable minification and pretokenization to reduce size)
 
 ### Hardware ###
 
@@ -81,7 +82,7 @@ Steps to update new DK08 watch to Espruino:
 | 18 |LCD CS |
 | 19 |LCD D/C|
 | 20 |HR SCL - EM7028, address 0x24 |
-| 21 |unused? (reset) |
+| 21 |unused? (reset pin) |
 | 22 |HR SDA - EM7028, address 0x24 |
 | 23 |battery something, changes after charged fully, then disconnected, then reattached - full battery signal? |
 | 24 |CHARGER connected |
