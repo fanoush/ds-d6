@@ -52,6 +52,7 @@ Steps to update new DK08 watch to Espruino:
     
 4. install full size Espruino from this folder (or possibly original firmware)
 5. try example code https://gist.github.com/fanoush/f91dc52e76e8281a127cce86d8313ec9 (copy to right side of WebIDE and upload to RAM, enable minification and pretokenization to reduce size)
+6. to enter DFU bootloader again (e.g. to upgrade Espruino) you can type `poke32(0x4000051c,1)`
 
 ### Hardware ###
 
