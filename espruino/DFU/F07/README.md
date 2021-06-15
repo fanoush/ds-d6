@@ -127,7 +127,7 @@ E.reboot()
 | 22 |Flash/accel SPI MISO|
 | 23 |flash CS|
 | 24 ||
-| 25 ||
+| 25 |motor|
 | 26 ||
 | 27 |HR LED/power|
 | 28 |HR analog 1|
