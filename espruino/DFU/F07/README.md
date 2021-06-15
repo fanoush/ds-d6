@@ -100,3 +100,37 @@ var f=require("Flash")
 f.erasePage(0x7f000)
 E.reboot()
 ```
+
+### Pinout ###
+| Pin No.  | Description |
+| ------------- | ------------- |
+| 02 |display MOSI|
+| 03 |display CLK|
+| 04 ||
+| 05 |battery 4.20/0.18 * analogRead(D5)|
+| 06 |display D/C|
+| 07 |display RST|
+| 08 |display CS|
+| 09 |unused? |
+| 10 |unused? (nfc pair with 9) |
+| 11 |display backlight/power|
+| 12 |input pullup - accel irq?|
+| 13 |charging|
+| 14 ||
+| 15 ||
+| 16 ||	
+| 17 |input pulldown - accel irq?|
+| 18 |BMA accel CS|
+| 19 |Flash/accel SPI CLK|
+| 20 |Flash/accel SPI MOSI|
+| 21 |unused (reset pin) |
+| 22 |Flash/accel SPI MISO|
+| 23 |flash CS|
+| 24 ||
+| 25 ||
+| 26 ||
+| 27 |HR LED/power|
+| 28 |HR analog 1|
+| 29 ||
+| 30 |HR analog 2?|
+| 31 |BMA (222E ID=0xf8) accel enabled = 1|
