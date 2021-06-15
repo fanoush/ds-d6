@@ -114,12 +114,12 @@ E.reboot()
 | 09 |unused? |
 | 10 |unused? (nfc pair with 9) |
 | 11 |display backlight/power|
-| 12 |input pullup - accel irq?|
-| 13 |charging|
+| 12 |input pullup - 0=charging|
+| 13 |1 = charging|
 | 14 ||
 | 15 ||
 | 16 ||	
-| 17 |input pulldown - accel irq?|
+| 17 |input pulldown - accel IRQ2|
 | 18 |BMA accel CS|
 | 19 |Flash/accel SPI CLK|
 | 20 |Flash/accel SPI MOSI|
