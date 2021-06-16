@@ -101,7 +101,11 @@ f.erasePage(0x7f000)
 E.reboot()
 ```
 
-### Pinout ###
+#### Espruino code example
+
+https://gist.github.com/fanoush/7f12afc474be509a37f13aa558e5f6dd
+
+#### Pinout
 | Pin No.  | Description |
 | ------------- | ------------- |
 | 02 |display MOSI|
