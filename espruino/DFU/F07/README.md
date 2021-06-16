@@ -115,7 +115,7 @@ E.reboot()
 | 10 |unused? (nfc pair with 9) |
 | 11 |display backlight/power|
 | 12 |input pullup - 0=charging|
-| 13 |1 = charging|
+| 13 |1 = on charger|
 | 14 ||
 | 15 ||
 | 16 ||	
