@@ -105,6 +105,13 @@ E.reboot()
 
 https://gist.github.com/fanoush/7f12afc474be509a37f13aa558e5f6dd
 
+#### Hardware
+
+- LCD 80x160 ST7735
+- accelerometer Bosch BMA222E or BMA223 (both give CHIP ID 0xf8) - [datasheet](https://www.mouser.com/datasheet/2/783/BST-BMA222E-DS004-1509611.pdf) linked from Mouser [BMA222E](https://www.mouser.com/ProductDetail/Bosch-Sensortec/BMA222E?qs=d72FGnIDsgT0QS7arpWuRA%3D%3D) or [BMA223](https://www.mouser.com/ProductDetail/Bosch-Sensortec/BMA223?qs=Vn3Si3NHuBwR50Iqn96oMA%3D%3D), reference driver source [here](https://github.com/BoschSensortec/BMA2x2_driver)
+- 2MB SPI flash / fontchip [GT24L24A2Y](https://github.com/RichardBsolut/GT24L24A2Y)
+- unknown HR chip/circuit, looks like direct analog connection to (two?) light sensor(s) - see [FCC ID photos](https://fccid.io/2AONX-F07/Internal-Photos/internal-Photos-3717182.html)
+
 #### Pinout
 | Pin No.  | Description |
 | ------------- | ------------- |
@@ -118,7 +125,7 @@ https://gist.github.com/fanoush/7f12afc474be509a37f13aa558e5f6dd
 | 09 |unused? |
 | 10 |unused? (nfc pair with 9) |
 | 11 |display backlight/power|
-| 12 |input pullup - 0=charging|
+| 12 |input pullup - 0=charging, goes high when charged or not on charger |
 | 13 |1 = on charger|
 | 14 ||
 | 15 ||
