@@ -16,7 +16,7 @@ After unlocking it can be flashed via openocd command `program <name of hex file
 
 ### Hardware ###
 
-- ST7735 80x160 OLED
+- ST7735 80x160 LCD
 - AT6558 GPS (MA=CASIC,IC=AT6558-5N-32-1C510800,SW=URANUS5,V5.1.0.0), [datasheet](http://www.icofchina.com/d/file/xiazai/2016-12-05/b1be6f481cdf9d773b963ab30a2d11d8.pdf)
 - KX123 accelerometer (?)
 - HRS3313 heartrate sensor
