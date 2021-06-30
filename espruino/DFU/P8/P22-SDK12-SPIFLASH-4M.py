@@ -16,12 +16,12 @@
 import pinutils;
 
 info = {
- 'name' : "P8 DaFit smartwatch",
- 'boardname' : 'P8', # visible in process.env.BOARD
+ 'name' : "P22 DaFit smartwatch",
+ 'boardname' : 'P22', # visible in process.env.BOARD
  'default_console' : "EV_BLUETOOTH",
  'variables' : 2565-14, # SD5.0 0x200014B8 SD 3.0 0x200019C0  How many variables are allocated for Espruino to use. RAM will be overflowed if this number is too high and code won't compile.
  'bootloader' : 1,
- 'binary_name' : 'espruino_%v_p8_SDK12_SD30_SPIFLASH4M.hex',
+ 'binary_name' : 'espruino_%v_p22_SDK12_SD30_SPIFLASH4M.hex',
  'build' : {
    'optimizeflags' : '-Os',
    'libraries' : [
@@ -32,11 +32,10 @@ info = {
 #     'NEOPIXEL'
    ],
    'makefile' : [
-#    'SAVE_ON_FLASH=1',
 #     'DEFINES+=-DCONFIG_GPIO_AS_PINRESET', # Allow the reset pin to work
      'DEFINES+=-DNRF_BLE_GATT_MAX_MTU_SIZE=59 -DNRF_BLE_MAX_MTU_SIZE=59',
      'LDFLAGS += -Xlinker --defsym=LD_APP_RAM_BASE=0x2d18', #0x2c40+(59-23)*6
-     'DEFINES+= -DUSE_FONT_6X8 -DBLE_HIDS_ENABLED=1 -DBLUETOOTH_NAME_PREFIX=\'"P8"\'',
+     'DEFINES+= -DUSE_FONT_6X8 -DBLE_HIDS_ENABLED=1 -DBLUETOOTH_NAME_PREFIX=\'"P22"\'',
      'USE_LCD_SPI_UNBUF=1',
      'DEFINES+= -DSPISENDMANY_BUFFER_SIZE=126',
      'DEFINES += -DSPIFLASH_SHARED_SPI',
@@ -72,7 +71,7 @@ chip = {
 };
 
 devices = {
- 'BTN1' : { 'pin' : 'D17', 'pinstate' : 'IN_PULLDOWN' },
+ 'BTN1' : { 'pin' : 'D15', 'pinstate' : 'IN_PULLDOWN' },
   'LED1' : { 'pin' : 'D27' },
   'VIBRATE' : { 'pin' : 'D16' }, # Pin negated in software
   'BAT' : {
