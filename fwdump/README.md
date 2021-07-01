@@ -20,6 +20,23 @@ I have added support for Desay bootloader, some recovery retry code, ability to 
 sudo ./desay_dfu.py -a D2:72:54:EA:16:1E -z DS-D6-desay-bootloader-noanim-fix-with-sd132v201.zip 
 ```
 
+### Docker
+In order to have all dependencies in one place, a docker image can be built via
+```
+docker build -t desaydfu .
+```
+
+The script can then be invoked via
+```
+docker run --rm -it --device=/dev/bus --net=host -v ${PWD}/:/fw/ desaydfu -help
+```
+
+This mounts the current directory to `/fw/` in the container, redirects host devices to the container (required for accessing bluetooth without root) and deletes the container once finished.
+
+Flashing would look like this (from a folder which contains an `app_dfu_package.zip` where your MAC is `A0:B1:C3:D4:E5:F6`)
+```
+docker run --rm -it --device=/dev/bus --net=host -v ${PWD}/:/fw/ desaydfu -a A0:B1:C3:D4:E5:F6 -z /fw/app_dfu_package.zip
+```
 
 
 ## firmware dumps 
