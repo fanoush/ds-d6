@@ -38,6 +38,13 @@ Flashing would look like this (from a folder which contains an `app_dfu_package.
 docker run --rm -it --device=/dev/bus --net=host -v ${PWD}/:/fw/ desaydfu -a A0:B1:C3:D4:E5:F6 -z /fw/app_dfu_package.zip
 ```
 
+The tools in the container can also be used to perform a scan, e.g. by
+```
+docker run --rm -it --device=/dev/bus --net=host --entrypoint=/bin/bash desaydfu
+root@host:/app# hcitool lescan
+LE Scan ...
+A1:B2:C3:D4:E5:F6 (unknown)
+```
 
 ## firmware dumps 
 
