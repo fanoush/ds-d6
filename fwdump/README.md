@@ -23,7 +23,7 @@ sudo ./desay_dfu.py -a D2:72:54:EA:16:1E -z DS-D6-desay-bootloader-noanim-fix-wi
 ### Docker
 In order to have all dependencies in one place, a docker image can be built via
 ```
-docker build -t desaydfu .
+docker build -f desay_dfu.Dockerfile -t desaydfu .
 ```
 
 The script can then be invoked via
