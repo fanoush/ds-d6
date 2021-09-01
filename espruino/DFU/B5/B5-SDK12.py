@@ -22,7 +22,7 @@ info = {
  'boardname' : 'SMAB5', # visible in process.env.BOARD
   # This is the PCA10036
  'default_console' : "EV_BLUETOOTH",
- 'variables' : 2565, # 2565 SD5.0 0x200014B8 SD 3.0 0x200019C0  How many variables are allocated for Espruino to use. RAM will be overflowed if this number is too high and code won't compile.
+ 'variables' : 2565, # *16//13 2565 SD5.0 0x200014B8 SD 3.0 0x200019C0  How many variables are allocated for Espruino to use. RAM will be overflowed if this number is too high and code won't compile.
  'bootloader' : 1,
  'binary_name' : 'espruino_%v_SMAB5.hex',
  'build' : {
@@ -38,8 +38,17 @@ info = {
    'makefile' : [
 #    'SAVE_ON_FLASH=1',
 #     'DEFINES+=-DCONFIG_GPIO_AS_PINRESET', # Allow the reset pin to work
+     'DEFINES += -DCONFIG_NFCT_PINS_AS_GPIOS', # Allow using NFC pins for gpio
+#     'DEFINES+=-DNRF_BLE_GATT_MAX_MTU_SIZE=131 -DNRF_BLE_MAX_MTU_SIZE=131', # increase MTU from default of 23
+     'DEFINES+=-DNRF_BLE_GATT_MAX_MTU_SIZE=53 -DNRF_BLE_MAX_MTU_SIZE=53', # increase MTU from default of 23
+     'LDFLAGS += -Xlinker --defsym=LD_APP_RAM_BASE=0x2c40', # set RAM base to match MTU
+     'DEFINES+=-DNO_DUMP_HARDWARE_INITIALISATION', # don't dump hardware init - not used and saves 1k of flash
+#     'DEFINES+=-DJSVAR_FORCE_16_BYTE=1', # 16 byte variables
      'DEFINES+=-DBLUETOOTH_NAME_PREFIX=\'"B5"\'',
-     'DEFINES+=-DUSE_FONT_6X8 -DGRAPHICS_PALETTED_IMAGES=1 -DGRAPHICS_FAST_PATHS=1',
+     'DEFINES+=-DUSE_FONT_6X8 -DBLE_HIDS_ENABLED=1 -DGRAPHICS_PALETTED_IMAGES=1 -DGRAPHICS_FAST_PATHS=1',
+     'NRF_BL_DFU_INSECURE=1',
+     'DEFINES+=-DBTN1_IS_TOUCH=1',
+#     'LINKER_BOOTLOADER=targetlibs/nrf5x_12/nrf5x_linkers/banglejs_dfu.ld',
      'DFU_PRIVATE_KEY=targets/nrf5x_dfu/dfu_private_key.pem',
      'DFU_SETTINGS=--application-version 0xff --hw-version 52 --sd-req 0x8C,0x91',
 
@@ -74,7 +83,7 @@ chip = {
 
 devices = {
   'BTN1' : { 'pin' : 'D9', 'pinstate' : 'IN_PULLDOWN' },
-
+  'VIBRATE' : { 'pin' : 'D30' },
   'SPIFLASH' : {
             'pin_sck' : 'D14',
             'pin_mosi' : 'D13',
