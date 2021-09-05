@@ -24,6 +24,7 @@ void jswrap_id130_init() {
 
 #ifdef SDK11_BUTTONLESS_DFU
 
+// mostly copied from SDK11 components/libraries/bootloader_dfu/dfu_app_handler.c
 #include "nrf_svc.h"
 #include "nrf_sdm.h"
 
@@ -110,7 +111,14 @@ SVCALL(DFU_BLE_SVC_PEER_DATA_SET, uint32_t, dfu_ble_svc_peer_data_set(void * p_p
   "name" : "startDFU",
   "generate" : "jswrap_espruino_enter_bootloader"
 }
+
+Something like this can trigger it:
+
+function enterDFU(){NRF.disconnect();setTimeout(()=>{E.enterBootloader();},1000);}
+
+It sort of works with SDK11 bootloader example however it does not work with ID130 bootloader.
 */
+
 void jswrap_espruino_enter_bootloader(){
     uint32_t err_code;
     err_code = sd_power_gpregret_set(BOOTLOADER_DFU_START);
