@@ -18,9 +18,9 @@ import pinutils;
 info = {
  'name' : "ID130",
  'link' :  [ "https://fccid.io/2AHFTID130PLUSCOLOR" ],
- 'espruino_page_link' : 'MDBT42Q',
+# 'espruino_page_link' : 'MDBT42Q',
  'default_console' : "EV_BLUETOOTH",
- 'variables' : 2250, # How many variables are allocated for Espruino to use. RAM will be overflowed if this number is too high and code won't compile.
+ 'variables' : 2600, # How many variables are allocated for Espruino to use. RAM will be overflowed if this number is too high and code won't compile.
  'bootloader' : 1, 
  'binary_name' : 'espruino_%v_ID130.hex',
  'build' : {
@@ -33,8 +33,9 @@ info = {
      #'DEFINES+=-DCONFIG_GPIO_AS_PINRESET', # Allow the reset pin to work
      'DEFINES+=-DBLUETOOTH_NAME_PREFIX=\'"ID130"\'',
      'DEFINES+=-DUSE_FONT_6X8 -DBLE_HIDS_ENABLED=1',
+     'DEFINES+=-DNO_DUMP_HARDWARE_INITIALISATION', # don't dump hardware init - not used and saves 1k of flash
      'WRAPPERSOURCES += boards/jswrap_ID130.c',
-     'DFU_SETTINGS=--sd-req 129,136 --dev-type 616 --dev-revision 616', ## TODO change for ID107 HR plus
+     'DFU_SETTINGS=--sd-req 129,136 --dev-type 616 --dev-revision 616',
      'NRF_SDK11=1'
    ]
  }
