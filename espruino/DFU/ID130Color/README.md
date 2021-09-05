@@ -1,6 +1,7 @@
 [ID130 Color Plus HR](https://fccid.io/2AHFTID130PLUSCOLOR) is NRF52832 based fitness tracker made by  Shenzhen DO Intelligent Technology Co., Ltd.
+It is quite old now (2017) so may be hard to get. I got few of them in 2021 in some sale for ~6EUR each. Sometimes it can be found on aliexpress/ebay, e.g. [here](https://www.aliexpress.com/item/32907244187.html)
 
-There are many similar devices by same company and the firmware of all 52832 based ones are based on SDK11 so can be update without taking apart.
+There are many similar devices by same company and the firmware of all 52832 based ones are based on SDK11 so can be updated without taking apart.
  
 For initial demo code see code.js
 
@@ -14,9 +15,11 @@ Bootloader starts watchdog (20s interval) so your FW must ping it or device rebo
 ### Hardware ###
 
 - ST7735 80x160 LCD (SPI)
-- KX022 accelerometer (SPI), WHOAMI gives 0x14
+- KX022 accelerometer (SPI), WHOAMI register gives 0x14
 - Si1142 heartrate sensor (I2C, 0x5a), gives partid 66 = Si1142, seqid 9 = Si114x-A11
 - SPI flash (2MB?)
+- single touch button
+- charging red LED (hardwired to power)
 
 ### Pinout ###
 
