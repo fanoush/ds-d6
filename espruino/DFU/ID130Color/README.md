@@ -7,10 +7,11 @@ For initial demo code see code.js
 
 ### Installation ###
 
-Bootloader can be triggered by writing 0x01,0x01 to 0x0AF6 characteristics e.g. via nRF connect android app (same as most other devices by same company) then reconnect and upload espruino zip file.
+Bootloader can be triggered by writing 0x01,0x01 to 0x0AF6 characteristics e.g. via nRF connect Android app (same procedure as with most other devices by same IDOO company ID107, ID115, ...) then reconnect and upload espruino zip via DFU button.
 
-Bootloader is located at 0x79000, device ID is 616 so DFU package must be built with `--dev-type 616 --dev-revision 616`.
-Bootloader starts watchdog (20s interval) so your FW must ping it or device reboots.
+Bootloader is located at 0x79000 - similar to other IDxx devices and unlike iBand devices (0x7a000) or Desay or DaFit devices (0x78000), this means softdevice/bootloader upgrade packages for those are not usable here.
+Device ID is 616 so DFU package must be built with `--dev-type 616 --dev-revision 616` or the bootloader will not accept it.
+Bootloader starts watchdog (with 20s interval) so your FW must ping it or device reboots, Espruino build is patched to enable automatic watchdog pinging.
 
 ### Hardware ###
 
@@ -26,7 +27,7 @@ Bootloader starts watchdog (20s interval) so your FW must ping it or device rebo
 | Pin No.  | Description |
 | ------------- | ------------- |
 | 02 | LCD Backlight |
-| 03 |analog battery voltage 4.20/0.207*analogRead(D4); |
+| 03 |analog battery voltage 4.20/0.207*analogRead(D3); |
 | 04 | KX022 CS |
 | 05 |LCD Power |
 | 06 | touch button enable when set low |
