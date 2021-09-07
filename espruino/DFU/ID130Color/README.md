@@ -10,8 +10,13 @@ For initial demo code see code.js
 Bootloader can be triggered by writing 0x01,0x01 to 0x0AF6 characteristics e.g. via nRF connect Android app (same procedure as with most other devices by same IDOO company ID107, ID115, ...) then reconnect and upload espruino zip via DFU button.
 
 Bootloader is located at 0x79000 - similar to other IDxx devices and unlike iBand devices (0x7a000) or Desay or DaFit devices (0x78000), this means softdevice/bootloader upgrade packages for those are not usable here.
-Device ID is 616 so DFU package must be built with `--dev-type 616 --dev-revision 616` or the bootloader will not accept it.
-Bootloader starts watchdog (with 20s interval) so your FW must ping it or device reboots, Espruino build is patched to enable automatic watchdog pinging.
+Please note that bootloader starts watchdog (with 20s interval) so your FW must ping it or device reboots, Espruino build is patched to enable automatic watchdog pinging at boot time.
+
+Unfortunately there are several variants of this 'ID130 Plus Color HR' device that looks identical from the outside but differs by internal wiring of the pins or maybe also some components(?). Device ID for the device I received initially is 616.  DFU package for each variant must be built with its specific ID, for `adafruit-nrfutil the relevant parameters look like `--dev-type 616 --dev-revision 616`. Bootloader will not accept package for other device veriant.
+
+So far  I know there are at least 5 device ids for ID130 Color - 598,603,616,645,646. Currently I got variants 598,616 and 645.
+
+It is important to discover ID of your variant in advance before attempting to install custom firmware. For that install VeryFit Pro Android application and then use some file manager app on the phone (e.g. Ghost Commander) and navigate to `/storage/emulated/0/Android/data/com.veryfit2hr.second/files/VeryfitPro/log/device_update` folder and examine log files there for 'firmware id'. If you are lucky you may even find download link to firmware update for your version if you have older version then latest or attempted the upgrade earlier. If you are not lucky there are known download links for IDs 603,616,645,646.
 
 ### Hardware ###
 
@@ -22,7 +27,7 @@ Bootloader starts watchdog (with 20s interval) so your FW must ping it or device
 - single touch button
 - charging red LED (hardwired to power)
 
-### Pinout ###
+### Pinout for ID130Plus with device id 616 ###
 
 | Pin No.  | Description |
 | ------------- | ------------- |
@@ -56,3 +61,38 @@ Bootloader starts watchdog (with 20s interval) so your FW must ping it or device
 | 29 |KX022 MOSI |
 | 30 |KX022 MISO |
 | 31 |KX022 SCK |
+
+### Pinout for ID130Plus with device id 645 ###
+
+| Pin No.  | Description |
+| ------------- | ------------- |
+| 02 | KX022 MOSI|
+| 03 |analog battery voltage 4.20/0.207*analogRead(D3); |
+| 04 | KX022 MISO|
+| 05 | |
+| 06 | KX022 CS|
+| 07 | KX022 SCK|
+| 08 | |
+| 09 | |
+| 10 |unused? (nfc pair with 9, affected by charger too) |
+| 11 ||
+| 12 | |
+| 13 | |
+| 14 ||
+| 15 | |
+| 16 | |	
+| 17 ||
+| 18 ||
+| 19 ||
+| 20 ||
+| 21 |unused? (reset) |
+| 22 | |
+| 23 | |
+| 24 | |
+| 25 |FLASH MOSI|
+| 26 |FLASH SCK|
+| 27 ||
+| 28 |FLASH MISO|
+| 29 |LCD MOSI |
+| 30 |LCD SCK|
+| 31 | |
