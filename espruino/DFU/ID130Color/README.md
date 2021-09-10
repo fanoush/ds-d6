@@ -68,32 +68,32 @@ Please note that bootloader starts watchdog (with 20s interval) so your FW must 
 | Pin No.  | Description |
 | ------------- | ------------- |
 | 02 | KX022 MOSI|
-| 03 |analog battery voltage 4.20/0.207*analogRead(D3); |
+| 03 |analog battery? |
 | 04 | KX022 MISO|
-| 05 | |
+| 05 | LCD BACKLIGHT|
 | 06 | KX022 CS|
 | 07 | KX022 SCK|
-| 08 | |
-| 09 | |
+| 08 | KX022 IRQ?|
+| 09 | charger|
 | 10 |unused? (nfc pair with 9, affected by charger too) |
-| 11 ||
-| 12 | |
-| 13 | |
-| 14 ||
-| 15 | |
+| 11 |LCD CS|
+| 12 |LCD RST |
+| 13 |HR SDA|
+| 14 |HR SCL|
+| 15 |HR IRQ?|
 | 16 | |	
 | 17 ||
 | 18 ||
-| 19 ||
+| 19 |BUTTON|
 | 20 ||
 | 21 |unused? (reset) |
 | 22 | |
-| 23 | |
+| 23 | LCD POWER|
 | 24 | |
 | 25 |FLASH MOSI|
 | 26 |FLASH SCK|
-| 27 ||
+| 27 |FLASH CS|
 | 28 |FLASH MISO|
 | 29 |LCD MOSI |
 | 30 |LCD SCK|
-| 31 | |
+| 31 |LCD D/C|
