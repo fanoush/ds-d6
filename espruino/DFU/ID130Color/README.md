@@ -82,7 +82,7 @@ Please note that bootloader starts watchdog (with 20s interval) so your FW must 
 | 14 |HR SCL|
 | 15 |HR IRQ?|
 | 16 | |	
-| 17 ||
+| 17 |motor|
 | 18 ||
 | 19 |BUTTON|
 | 20 ||
