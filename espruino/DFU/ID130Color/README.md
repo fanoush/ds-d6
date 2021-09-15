@@ -10,7 +10,7 @@ For initial demo code see code.js
 Bootloader can be triggered by writing 0x01,0x01 to 0x0AF6 characteristics e.g. via nRF connect Android app (same procedure as with most other devices by same IDOO company - ID107, ID115, ...) then reconnect and upload espruino zip via DFU button.
 
 
-Unfortunately there are several variants of this 'ID130 Plus Color HR' device that looks identical from the outside but differs by internal wiring of the pins or maybe also some components(?). Device ID for the device I received initially is 616.  DFU package for each variant must be built with its specific ID, for `adafruit-nrfutil the relevant parameters look like `--dev-type 616 --dev-revision 616`. Bootloader will not accept package for other device veriant.
+Unfortunately there are several variants of this 'ID130 Plus Color HR' device that looks identical from the outside but differs by internal wiring of the pins or maybe also some components(?). Device ID for the device I received initially is 616.  DFU package for each variant must be built with its specific ID, for `adafruit-nrfutil` the relevant parameters look like `--dev-type 616 --dev-revision 616`. Bootloader will not accept package for other device variant.
 
 So far  I know there are at least 5 device ids for ID130 Color - 598,603,616,645,646. Currently I got variants 598,616 and 645.
 
