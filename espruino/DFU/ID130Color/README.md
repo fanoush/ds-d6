@@ -1,9 +1,8 @@
 [ID130 Color Plus HR](https://fccid.io/2AHFTID130PLUSCOLOR) is NRF52832 based fitness tracker made by  Shenzhen DO Intelligent Technology Co., Ltd.
 It is quite old now (2017) so may be hard to get. I got few of them in 2021 in some sale for ~6EUR each. Sometimes it can be found on aliexpress/ebay, e.g. [here](https://www.aliexpress.com/item/32907244187.html)
 
-There are many similar devices by same company and the firmware of all 52832 based ones are based on SDK11 so can be updated without taking apart. Most of them are even based on same hardware. Later I got [ID133 Color HR](https://fccid.io/2AHFT646) which looks different from outside and the hardware and pinout is same as ID130 with id 645.
+There are many similar devices by same company and the firmware of all 52832 based ones are based on SDK11 so can be updated without taking apart. Most of them are even based on same hardware. Later I got [ID133 Color HR](https://fccid.io/2AHFT646) (rebranded as Yamay SW350) which looks different from outside however the hardware and pinout is same as ID130 with id 645 mentioned below.
  
-
 ### Installation ###
 
 Bootloader can be triggered by writing 0x01,0x01 to 0x0AF6 characteristics e.g. via nRF connect Android app (same procedure as with most other devices by same IDOO company - ID107, ID115, ...) then reconnect and upload espruino zip via DFU button.
