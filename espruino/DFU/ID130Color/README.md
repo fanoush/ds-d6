@@ -1,9 +1,8 @@
 [ID130 Color Plus HR](https://fccid.io/2AHFTID130PLUSCOLOR) is NRF52832 based fitness tracker made by  Shenzhen DO Intelligent Technology Co., Ltd.
 It is quite old now (2017) so may be hard to get. I got few of them in 2021 in some sale for ~6EUR each. Sometimes it can be found on aliexpress/ebay, e.g. [here](https://www.aliexpress.com/item/32907244187.html)
 
-There are many similar devices by same company and the firmware of all 52832 based ones are based on SDK11 so can be updated without taking apart.
+There are many similar devices by same company and the firmware of all 52832 based ones are based on SDK11 so can be updated without taking apart. Most of them are even based on same hardware. Later I got [ID133 Color HR](https://fccid.io/2AHFT646) which looks different from outside and the hardware and pinout is same as ID130 with id 645.
  
-For initial demo code see code.js
 
 ### Installation ###
 
@@ -18,6 +17,8 @@ It is important to discover ID of your variant in advance before attempting to i
 
 Bootloader is located at 0x79000 - similar to other IDxx devices and unlike iBand devices (0x7a000) or Desay or DaFit devices (0x78000), this means softdevice/bootloader upgrade packages for those are not usable here.
 Please note that bootloader starts watchdog (with 20s interval) so your FW must ping it or device reboots, Espruino build is patched to enable automatic watchdog pinging at boot time.
+
+For initial demo code see code.js
 
 ### Hardware ###
 
@@ -63,7 +64,7 @@ Please note that bootloader starts watchdog (with 20s interval) so your FW must 
 | 30 |KX022 MISO |
 | 31 |KX022 SCK |
 
-### Pinout for ID130Plus with device id 645 ###
+### Pinout for ID130Plus with device id 645 (also ID133 Color with id 630)###
 
 | Pin No.  | Description |
 | ------------- | ------------- |
