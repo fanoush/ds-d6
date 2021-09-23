@@ -17,7 +17,15 @@ It is important to discover ID of your variant in advance before attempting to i
 Bootloader is located at 0x79000 - similar to other IDxx devices and unlike iBand devices (0x7a000) or Desay or DaFit devices (0x78000), this means softdevice/bootloader upgrade packages for those are not usable here.
 Please note that bootloader starts watchdog (with 20s interval) so your FW must ping it or device reboots, Espruino build is patched to enable automatic watchdog pinging at boot time.
 
-For initial demo code see code.js
+For initial demo code see code.js , upload it via [Web IDE](https://www.espruino.com/ide/) to RAM, with minification and pretokenization enabled in IDE settings.
+
+To get back to original firmware or update espruino version, currently the only way to enter DFU bootloader is to mark existing espruino installation invalid and reboot via copy pasting (ctrl+v) to left side console window of WebIDE. Do this only if you have zip file prepared to flash.
+
+```
+var f=require("Flash")
+f.erasePage(0x7f000)
+E.reboot()
+```
 
 ### Hardware ###
 
