@@ -67,7 +67,7 @@ You can postpone next steps however without DFU bootloader it is not easy to upg
 
 ### Hardware ###
 
-- LCD  240x320 16bit color display
+- LCD  240x280 16bit color display
 - HR sensor?
 - accelerometer?
 - toucscreen 
