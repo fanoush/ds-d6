@@ -47,7 +47,7 @@ You can postpone next steps however without DFU bootloader it is not easy to upg
       ```
       As mentioned in the output to run the code you must temporarily disconnect from the device to allow bluetooth and SoftDevice restart.
       After reconnecting check via `peek32(0x10001014).toString(16);` and `peek32(0x1000-8).toString(16);` that code was run and both values are really `F8000`.
-      Do not reset/reboot the watch or let battery die if you see all FFs or F**C**000. retry step 5 until you see both as F8000.
+      Do not reset/reboot the watch or let battery die if you see all FFs or F**C**000. retry step 6 until you see both as F8000.
       If watch reboots with new bootloader flashed but bootloader start still pointing to FC000 (=middle of new bootloader) you just bricked your device.
       It may happen that due to radio noise WebIDE may disconnect, in such case just reconnect and continue or redo previous step.
 
