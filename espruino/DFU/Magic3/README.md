@@ -8,9 +8,9 @@ For first generation (NRF52832) see [P8 or P22](https://github.com/fanoush/ds-d6
 Beware that there is no way back and **you may brick your watch** during this process!
 
 1. Check watch firmware version, this should work for devices with name MOY-NBC5
-2. Put your watch on charger of make sure it is charged, if battery dies during the process you may have a brick.
+2. Put your watch on charger or make sure it is charged, if battery dies during the process you may have a brick.
 3. Install `espruino_2v10.102_magic3-dafit.bin` via [DaFlasher](https://play.google.com/store/apps/details?id=com.atcnetz.paatc.patc&hl=en&gl=US)
-4. If you were lucky you should see bluetooth device 'Magic3 xxxx' and can connect to it via [Espruino Web IDE](https://www.espruino.com/ide/).
+4. If you were lucky you should now see bluetooth device 'Magic3 xxxx' and can connect to it via [Espruino Web IDE](https://www.espruino.com/ide/).
 
 At this point there no way back but you already have full Espruino installed and can start experimenting with it (e.g. upload `code.js` as metioned below).
 You can postpone next steps however without DFU bootloader it is not easy to upgrade it so when you are ready follow with steps below.
