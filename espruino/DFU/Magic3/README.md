@@ -1,6 +1,6 @@
 ### Espruino for Kospet Magic3 smartwatch
 
-Magic3 is 2nd generation DaFit watch based on NRF52840 chip  (256KB RAM, 1MB internal flash) with 240x280 LCD full touch display and button.
+Magic3 is 2nd generation DaFit watch based on NRF52840 chip  (256KB RAM, 1MB internal flash) with 240x280 LCD, full touch display and button.
 For first generation (NRF52832) see [P8 or P22](https://github.com/fanoush/ds-d6/tree/master/espruino/DFU/P8)
 
 #### Steps to update new Magic3 watch to Espruino and install Nordic DFU bootloader:
