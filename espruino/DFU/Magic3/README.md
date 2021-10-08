@@ -12,7 +12,7 @@ Beware that there is no way back and **you may brick your watch** during this pr
 3. Install `espruino_2v10.102_magic3-dafit.bin` via [DaFlasher](https://play.google.com/store/apps/details?id=com.atcnetz.paatc.patc&hl=en&gl=US)
 4. If you were lucky you should now see bluetooth device 'Magic3 xxxx' and can connect to it via [Espruino Web IDE](https://www.espruino.com/ide/).
 
-At this point there no way back but you already have full Espruino installed and can start experimenting with it (e.g. upload `code.js` as metioned below).
+At this point there is no way back but you already have full Espruino installed and can start experimenting with it (e.g. upload `code.js` as metioned below).
 You can postpone next steps however without DFU bootloader it is not easy to upgrade it so when you are ready follow with steps below.
 
 5. backup UICR and bootloader via copy pasting (CTRL+V) prepared code and data into left side of Espruino Web IDE. More details and explanations also here https://github.com/fanoush/ds-d6/wiki/Replacing-Nordic-DFU-bootloader but here is quick step by step guide:
