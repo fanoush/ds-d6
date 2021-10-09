@@ -81,6 +81,7 @@ You can postpone next steps however without DFU bootloader it is not easy to upg
 | |  |
 | 06 | motor 0=on, works when 07 is 1 |
 | 07 | 1 = turns red led off and motor works |
+| 08 | charger, 0=attached  |
 | |  |
 | 12 | backlight |
 | |  |
