@@ -76,7 +76,19 @@ You can postpone next steps however without DFU bootloader it is not easy to upg
 ### Pinout ###
 | Pin No.  | Description |
 | ------------- | ------------- |
+| 02 | LCD RST  |
+| 03 | LCD CS  |
 | |  |
+| 06 | motor 0=on, works when 07 is 1 |
+| 07 | 1 = turns red led off and motor works |
 | |  |
+| 12 | backlight |
 | |  |
+| 26 | button, 0=pressed (inverted in Espruino so that BTN1.pressed==true) |
 | |  |
+| 30 | battery voltage, 4.20/0.60 * analogRead(D30) |
+| |  |
+| 44 | LCD MOSI |
+| 45 | LCD SCK |
+| 46 |  |
+| 47 | LCD D/C |
