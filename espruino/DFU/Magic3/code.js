@@ -665,7 +665,7 @@ vibrate=function(intensity,count,onms,offms){
 };
 
 function battVolts(){
-  return 3.5;//4.20/0.60*analogRead(D31);
+  return 4.20/0.60*analogRead(D30);
 }
 function battLevel(v){
   var l=3.5,h=4.19;
