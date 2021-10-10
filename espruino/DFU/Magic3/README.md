@@ -83,12 +83,20 @@ You can postpone next steps however without DFU bootloader it is not easy to upg
 | 07 | 1 = turns red led off and motor works |
 | 08 | charger, 0=attached  |
 | |  |
+| 12 | backlight |
+| |  |
 | 14 | I2C SCL |
 | 15 | I2C SDA - devices on bus 0x15 (touch) ,0x18 (accel) ,0x44 (hr sensor?) |
 | |  |
-| 12 | backlight |
+| 17 | SPI Flash CS |
+| 18 | unused - 52840 reset pin |
+| 19 | SPI Flash SCK |
+| 20 | MOSI/IO0 |
+| 21 | MISO/IO1 |
+| 22 | WP/IO2 |
+| 23 | RS/HOLD/IO3 |
 | |  |
-| 26 | button, 0=pressed (inverted in Espruino so that BTN1.pressed==true) |
+| 26 | button, 0=pressed (inverted in Espruino so that BTN1 pressed gives true) |
 | |  |
 | 30 | battery voltage, 4.20/0.60 * analogRead(D30) |
 | |  |
