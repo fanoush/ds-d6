@@ -21,15 +21,15 @@ You can postpone next steps however without DFU bootloader it is not easy to upg
       var f=require("Flash")
       for (a=0x10001000;a<0x10001400;a+=256) console.log(btoa(f.read(256,a)));
       ```
-      then copy paste output lines (4 lines of mostly ///) to text file named `UICR.base64` and use base64 decode on that, e.g. in linux run `base64 -d UICR.base64 >UICR.bin`
+      then copy paste output lines (4 lines of mostly ///) to text file named `UICR.base64` and use base64 decode on that, e.g. in linux run `base64 -d UICR.base64 >UICR.bin`. There is also WebIDE plugin that can record all console output to file, that may be easier for larger blocks, enable via Setting->General->Terminal Log Icon.
 
     - backup existing bootloader - just in case
       ```
       var f=require("Flash")
       for (a=0xFC000;a<0xFE000;a+=256) console.log(btoa(f.read(256,a)));
       ```
-      then copy paste output lines to text file named `bootloader.base64` and use base64 decode on that, e.g. in linux run `base64 -d bootloader.base64 >bootloader.bin`
-5. install new bootloader, from this point **it is dangerous to reboot or restart the watch or let the battery die** without finishing all steps
+      then copy output lines to text file named `bootloader.base64` and use base64 decode on that, e.g. in linux run `base64 -d bootloader.base64 >bootloader.bin`
+5. install new bootloader, from this point **it is dangerous to reboot or crash/reset the watch or let the battery die** without finishing all steps
     - flash new bootloader (and overwrite old) by copy paste from `Magic3-bootloader.txt` - first paste flashing code , then paste base64 encoded bootloader binary
     - verify bootloader (run `f=verify` and paste bootloader again) - you should see only V-OK lines for all addresses.
     - set correct bootloader start and bootloader settings address - will enable new bootloader, copy paste whole block
@@ -51,7 +51,7 @@ You can postpone next steps however without DFU bootloader it is not easy to upg
       If watch reboots with new bootloader flashed but bootloader start still pointing to FC000 (=middle of new bootloader) you just bricked your device.
       It may happen that due to radio noise WebIDE may disconnect, in such case just reconnect and continue or redo previous step.
 
-    - erase last two flash pages to clear data stored by old bootloader
+    - erase last two flash pages to clear data for new bootloader (MBR and bootloader settings pages)
       ```
       E.setFlags({unsafeFlash:1});
       var f=require("Flash");
@@ -68,9 +68,9 @@ You can postpone next steps however without DFU bootloader it is not easy to upg
 ### Hardware ###
 
 - LCD  240x280 16bit color display
-- HR sensor?
-- accelerometer?
-- toucscreen 
+- HR sensor?  I2C 0x44
+- accelerometer sc7a20 on I2C address 0x18
+- touchscreen CST816 on address 0x15, reports coordinates before you lift finger
 - ? MB SPI flash 
 
 ### Pinout ###
@@ -83,13 +83,18 @@ You can postpone next steps however without DFU bootloader it is not easy to upg
 | 07 | 1 = turns red led off and motor works |
 | 08 | charger, 0=attached  |
 | |  |
+| 14 | I2C SCL |
+| 15 | I2C SDA - devices on bus 0x15 (touch) ,0x18 (accel) ,0x44 (hr sensor?) |
+| |  |
 | 12 | backlight |
 | |  |
 | 26 | button, 0=pressed (inverted in Espruino so that BTN1.pressed==true) |
 | |  |
 | 30 | battery voltage, 4.20/0.60 * analogRead(D30) |
 | |  |
+| 32 | touch IRQ |
+| |  |
 | 44 | LCD MOSI |
 | 45 | LCD SCK |
-| 46 |  |
+| 46 | some input, in stock FW set in same way as 26 and 32 |
 | 47 | LCD D/C |
