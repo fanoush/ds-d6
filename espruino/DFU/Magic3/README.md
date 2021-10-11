@@ -9,7 +9,7 @@ Beware that there is no way back and **you may brick your watch** during this pr
 
 1. Check watch firmware version, this should work for devices with firmware MOY-NBC5, also was verified with Kospet Rock with MOY-NAX3.
 2. Put your watch on charger or make sure it is charged, if battery dies during the process you may have a brick.
-3. Install `espruino_2v10.102_magic3-dafit.bin` via [DaFlasher](https://play.google.com/store/apps/details?id=com.atcnetz.paatc.patc&hl=en&gl=US)
+3. Install `espruino_2v10.102_magic3-dafit.bin` via [DaFlasher](https://play.google.com/store/apps/details?id=com.atcnetz.paatc.patc&hl=en&gl=US) (as of October 2021 you need update to  latest version, v2 protocol was added only recently)
 4. If you were lucky you should now see bluetooth device 'Magic3 xxxx' and can connect to it via [Espruino Web IDE](https://www.espruino.com/ide/).
 
 At this point there is no way back but you already have full Espruino installed and can start experimenting with it (e.g. upload `code.js` as metioned below).
