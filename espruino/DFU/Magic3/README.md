@@ -7,7 +7,7 @@ For first generation (NRF52832) see [P8 or P22](https://github.com/fanoush/ds-d6
 
 Beware that there is no way back and **you may brick your watch** during this process!
 
-1. Check watch firmware version, this should work for devices with name MOY-NBC5
+1. Check watch firmware version, this should work for devices with firmware MOY-NBC5, also was verified with Kospet Rock with MOY-NAX3.
 2. Put your watch on charger or make sure it is charged, if battery dies during the process you may have a brick.
 3. Install `espruino_2v10.102_magic3-dafit.bin` via [DaFlasher](https://play.google.com/store/apps/details?id=com.atcnetz.paatc.patc&hl=en&gl=US)
 4. If you were lucky you should now see bluetooth device 'Magic3 xxxx' and can connect to it via [Espruino Web IDE](https://www.espruino.com/ide/).
@@ -62,16 +62,16 @@ You can postpone next steps however without DFU bootloader it is not easy to upg
     - now the botloader is installed, to test it and reboot to newly flashed bootloader run `poke32(0x4000051c,1)` or hold the button, run `E.reboot()` and quickly release the button (less than 3 seconds).
       If this worked you should see DfuTarg device that waits for 90 seconds for connecting an uploading DFU zip package
     
-6. install newer version of  Espruino from this folder or use different package to downgrade/upgrade softdevice and install other custom software.
+6. install newer version of  Espruino from this folder or use different package to downgrade/upgrade softdevice and install other custom software. Firmware with **SPIFLASH** in name has file storage in external 8MB flash. The one without SPIFLASH has storage in internal nRF52840 1MB flash (600KB free), external flash is still accessible via Flash module API but is unused, this is useful for doing initial SPI flash backup or if 600KB is enough for you.
 7. try example `code.js` from this folder (copy to right side of WebIDE and upload to RAM, enable minification and pretokenization to reduce size)
 
 ### Hardware ###
 
 - LCD  240x280 16bit color display
-- HR sensor?  I2C 0x44
-- accelerometer sc7a20 on I2C address 0x18
-- touchscreen CST816 on address 0x15, reports coordinates before you lift finger
-- ? MB SPI flash 
+- HR sensor?,  I2C 0x44
+- accelerometer sc7a20, I2C 0x18
+- touchscreen CST816, I2C 0x15, reports coordinates before you lift finger
+- 8 MB SPI flash 
 
 ### Pinout ###
 | Pin No.  | Description |
