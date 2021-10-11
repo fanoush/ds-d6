@@ -104,5 +104,5 @@ You can postpone next steps however without DFU bootloader it is not easy to upg
 | |  |
 | 44 | LCD MOSI |
 | 45 | LCD SCK |
-| 46 | some input, in stock FW set in same way as 26 and 32 |
+| 46 | button 2 on Kospet Rock MOY-NAX3 , needs pull down , 1 when pressed|
 | 47 | LCD D/C |
