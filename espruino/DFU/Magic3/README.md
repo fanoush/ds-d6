@@ -87,7 +87,7 @@ You can postpone next steps however without DFU bootloader it is not easy to upg
 | |  |
 | 14 | I2C SCL |
 | 15 | I2C SDA - devices on bus 0x15 (touch) ,0x18 (accel) ,0x44 (hr sensor?) |
-| |  |
+| 16 | sc7a20 accel IRQ pin |
 | 17 | SPI Flash CS |
 | 18 | unused - 52840 reset pin |
 | 19 | SPI Flash SCK |
