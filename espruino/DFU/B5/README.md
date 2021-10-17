@@ -12,7 +12,7 @@ USB connector SWD wiring from one side to another is:
 |-----|------|-----|---|
 | GND |SWDCLK|SWDIO|5V |
 
-After unlocking it can be flashed via openocd command `program <name of hex file>`
+After unlocking it can be flashed via openocd command `program <name of hex file>` and started via `reset run`. When running you should see B5 xxxx device on bluetooth and you should be able to connect to it via [Web IDE](https://www.espruino.com/ide/). Then copy demo code to right side of IDE, better enable pretokenzation in settings to reduce size and upload it to RAM. If there are no errors on upload touch the button and hopefully you will see something.
 
 ### Hardware ###
 
