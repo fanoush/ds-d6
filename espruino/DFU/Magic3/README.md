@@ -96,7 +96,7 @@ You can postpone next steps however without DFU bootloader it is not easy to upg
 | 22 | WP/IO2 |
 | 23 | RS/HOLD/IO3 |
 | |  |
-| 26 | button, 0=pressed (inverted in Espruino so that BTN1 pressed gives true) |
+| 26 | button, 1=pressed |
 | |  |
 | 30 | battery voltage, 4.20/0.60 * analogRead(D30) |
 | |  |
@@ -104,5 +104,5 @@ You can postpone next steps however without DFU bootloader it is not easy to upg
 | |  |
 | 44 | LCD MOSI |
 | 45 | LCD SCK |
-| 46 | button 2 on Kospet Rock MOY-NAX3 , needs pull down , 1 when pressed|
+| 46 | button 2 on Kospet Rock MOY-NAX3 , needs pull down - D46.mode("input_pulldown"), 1 when pressed|
 | 47 | LCD D/C |
