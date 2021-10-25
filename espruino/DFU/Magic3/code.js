@@ -12,6 +12,7 @@ var SPI2 = E.compiledC(`
 // int cmds(int,int)
 // int cmd4(int,int,int,int)
 // void setpins(int,int,int,int)
+// void setwin(int,int,int,int)
 // int enable(int,int)
 // void disable()
 // void blit_setup(int,int,int,int)
@@ -30,7 +31,7 @@ var SPI2 = E.compiledC(`
 #define SHARED_SPIFLASH
 
 // also we may need to unselect flash chip CS pin as Espruino is in a middle of read command
-//#define SPIFLASH_CS (1<<5)
+//#define SPIFLASH_CS (1<<xx)
 
 //SPI0 0x40003000
 //SPI1 0x40004000
@@ -38,12 +39,14 @@ var SPI2 = E.compiledC(`
 //SPI3 0x4002F000
 #define SPIBASE 0x4002F000
 #define SPI3
+
 typedef unsigned int uint32_t;
 typedef signed int int32_t;
 typedef unsigned short uint16_t;
 typedef unsigned char uint8_t;
 typedef signed char int8_t;
 #define NULL ((void*)0)
+
 // if code is in RAM we can put global data into text/code segment
 // this allows simpler pc-relative addressing and shorter/faster code
 #define __code __attribute__((section(".text")))
@@ -66,6 +69,7 @@ typedef signed char int8_t;
 #define PSELCSN REG(0x514)
 #define CSNPOL REG(0x568)
 #define PSELDCX REG(0x56c)
+#define DCXCNT REG(0x570)
 #define ERRT195 REG(4)
 #define RXD REG(0x518)
 #define TXD REG(0x51c)
@@ -89,12 +93,13 @@ typedef signed char int8_t;
 #define TXDAMOUNT REG(0x54C)
 #define TXDLIST REG(0x550)
 #define ORC  REG(0x5c0)
+
 #define GPIO(x) ((volatile uint32_t*)(0x50000000+x))
 #define OUT     GPIO(0x504)
 #define OUTSET  GPIO(0x508)
 #define OUTCLR  GPIO(0x50c)
-#define OUTSET1  GPIO(0x808)
-#define OUTCLR1  GPIO(0x80c)
+//#define OUTSET1  GPIO(0x808)
+//#define OUTCLR1  GPIO(0x80c)
 #define IN     GPIO(0x510)
 // direction 1=output
 #define DIR     GPIO(0x514)
@@ -107,7 +112,12 @@ __code uint32_t pMISO= -1;
 __code uint32_t pCS= 0;
 __code uint32_t pCD= 0; //command/data
 void setpins(int sck,int mosi,int cs,int cd){
-  pSCK=sck;pMOSI=mosi;pCS=1<<cs;pCD=1<<(cd-32);
+  pSCK=sck;pMOSI=mosi;pCS=1<<cs;
+#ifdef SPI3
+  pCD=cd;
+#else
+  pCD=1<<cd;
+#endif
 }
 __code uint32_t savedintflags=0;
 __code uint32_t savedmode=0;
@@ -133,7 +143,8 @@ int setup(uint32_t speed,uint32_t mode){
     SPI[PSELMISO]=pMISO;
 #ifdef SPI3
     SPI[PSELCSN]= -1;
-    SPI[PSELDCX]= -1;
+    SPI[PSELDCX]= pCD;
+    SPI[DCXCNT]=0;
 #endif
     SPI[FREQUENCY]=speed<<24; // 0x80=8mbits,0x40=4mbits,...
     SPI[CONFIG]=mode<<1; //msb first
@@ -141,6 +152,7 @@ int setup(uint32_t speed,uint32_t mode){
   }
   return 0;
 }
+
 void disable(){
   SPI[ENABLE]=0;
   SPI[READY]=0;
@@ -166,6 +178,7 @@ int enable(uint32_t speed,uint32_t mode){
 }
 int write_dma(uint8_t *buffer, uint32_t len,int async);
 
+#if 0 // data command not needed
 int data(uint8_t *buffer, int len){
   if (pCD==0) return -1;
   if(buffer==NULL || len==0) return -1;
@@ -173,10 +186,14 @@ int data(uint8_t *buffer, int len){
 #ifdef SPIFLASH_CS
   *OUTSET = SPIFLASH_CS;
 #endif
-    SPI[ENABLE]=7;//SPIM with DMA
+  SPI[ENABLE]=7;//SPIM with DMA
 #endif
   if(pCS>0) *OUTCLR = pCS; // CHIP SELECT
-  *OUTSET1 = pCD; // data
+#ifdef SPI3
+  SPI[DCXCNT]=0;
+#else
+  *OUTSET = pCD; // data
+#endif
   write_dma(buffer,len,0);
   if(pCS>0) *OUTSET = pCS; // CHIP SELECT
 #ifdef SHARED_SPIFLASH
@@ -187,6 +204,8 @@ int data(uint8_t *buffer, int len){
 #endif
   return 0;
 }
+#endif
+
 int cmd(uint8_t *buffer, int len){
   if (pCD==0) return -1;
 #ifdef SHARED_SPIFLASH
@@ -195,12 +214,22 @@ int cmd(uint8_t *buffer, int len){
 #endif
     SPI[ENABLE]=7;//SPIM with DMA
 #endif
-  *OUTCLR1 = pCD; // CMD
+#ifdef SPI3
+// we can send cmd+data as one DMA transfer
+  SPI[DCXCNT]=1;
+  if(pCS>0) *OUTCLR = pCS; // CHIP SELECT
+  write_dma(buffer,len,0);
+  if(pCS>0) *OUTSET = pCS; // CHIP SELECT
+//    SPI[DCXCNT]=0;
+#else
+// toggle DC pin ourselves and send two transfers
+  *OUTCLR = pCD; // CMD
   if(pCS>0) *OUTCLR = pCS; // CHIP SELECT
   write_dma(buffer,1,0);
-  *OUTSET1 = pCD; // data
+  *OUTSET = pCD; // data
   if (len>1)
     write_dma(buffer+1,len-1,0);
+#endif
   if(pCS>0) *OUTSET = pCS; // CHIP SELECT
 #ifdef SHARED_SPIFLASH
     SPI[ENABLE]=0;//disable SPI
@@ -233,6 +262,23 @@ int cmd4(int c0,int d1,int d2, int d3){
   cmd(buff,cnt);
   return cnt;
 }
+void setwin(int x1,int x2,int y1,int y2){
+  uint8_t c[15] =  {
+    5, 0x2a, 0,0, 0,0,
+    5, 0x2b, 0,0, 0,0,
+    1, 0x2c,
+  0 };
+#if LCD_BPP==12
+  x1=x1&0xfe;x2=(x2+2)&0xfe;
+#endif
+  c[3]=x1;c[5]=x2-1; //0x2a params
+  int y=y1 /* +20 */;
+  c[9]=y&255;c[8]=y>>8;
+  y=y2 /* +20 */;
+  c[11]=y&255;c[10]=y>>8;
+  cmds(c,sizeof(c));
+}
+
 __code uint16_t running=0;
 void wait_dma(){
   if (running) {
@@ -241,11 +287,13 @@ void wait_dma(){
     running=0;
   }
 }
+#ifdef LONG_WRITES
+// len can be over 255 bytes, write in multiple blocks
 int write_dma(uint8_t *ptr, uint32_t len, int async)
 {
   wait_dma();
   int offset = 0;
-  SPI[RXDPTR]=0;
+//  SPI[RXDPTR]=0;
   SPI[RXDMAXCNT]=0;
   SPI[EVENTS_END]=0;
   do {
@@ -268,6 +316,26 @@ int write_dma(uint8_t *ptr, uint32_t len, int async)
   } while (len != 0);
   return 0;
 }
+#else
+int write_dma(uint8_t *ptr, uint32_t len, int async)
+{
+  wait_dma();
+//  SPI[RXDPTR]=0;
+  SPI[RXDMAXCNT]=0;
+  SPI[EVENTS_END]=0;
+  SPI[TXDPTR]=(uint32_t)(ptr);
+  SPI[TXDMAXCNT]=len;
+  SPI[TASKS_START]=1;
+    if (async){
+      running=1; // do not wait for last part
+    } else {
+        while (SPI[EVENTS_END] == 0);
+        SPI[EVENTS_END]=0;
+    }
+  return 0;
+}
+
+#endif
 __code uint16_t blit_bpp=0;
 __code uint16_t blit_w=0;
 __code uint16_t blit_h=0;
@@ -275,7 +343,7 @@ __code uint16_t blit_stride=0;
 void blit_setup(uint16_t w,uint16_t h,uint16_t bpp, uint16_t stride){
   blit_bpp=bpp;blit_w=w;blit_h=h;blit_stride=stride; //*bpp/8;
 }
-#define LCHUNK 48 //36 // divisible by 3 and 2
+#define LCHUNK 96 //192 //96 //48 //36 // divisible by 3 and 2
 
 #if LCD_BPP==8
 //only 8 bit palette entry
@@ -300,6 +368,9 @@ int blt_pal(uint8_t *buff,palbuff_t* palbuff,uint8_t xbitoff){
 #ifdef SHARED_SPIFLASH
 #ifdef SPIFLASH_CS
   *OUTSET = SPIFLASH_CS;
+#endif
+#ifdef SPI3
+    SPI[DCXCNT]=0;
 #endif
   SPI[ENABLE]=7;//SPIM with DMA
 #endif
@@ -442,28 +513,25 @@ int fill_color(uint32_t val,uint32_t len){
 ///*
 // MIT License (c) 2020 fanoush https://github.com/fanoush
 // see full license text at https://choosealicense.com/licenses/mit/
-// compiled with options LCD_BPP=12,SHARED_SPIFLASH,SPIFLASH_CS=(1<<5)
+// compiled with options SPI3,LCD_BPP=12,SHARED_SPIFLASH
 var SPI2 = (function(){
-  var bin=atob("//////////8AAAAAAAAAAP////8AAAAAAAAAAAAAAL8QtQZMfETE6QABIDsBIQH6AvKZQKJg4WAQvQC/2P///wZLACLD+AAlw/gIIQEiWmDT+AQjCrHD+AgjcEcA8AJAEkvT+AAlELXqudP4BCMKscP4CCMOSnpEAAYUaMP4CEVUaMP4DEUSacP4ECVJAE/w/zLD+BQlw/hsJcP4JAXD+FQVASAQvU/w/zD75wDwAkCG////CEt7RJuKU7EFStL4GDEAK/vQACPC+BgxA0p6RJOCcEcA8AJARv///y7///8QtQNMfETigiCDYYOjgxC9GP////i1FUb/99z/FEsAJMP4NEX/J8P4OEUBIsP4GEEmRv8pAOsEDMP4RMWLv/80w/hIFcP4SHUAIYi//zkaYSWxGbkHS3tEmoL4vdP4GMG88QAP+tDD+BhhACnh0fTnAPACQMb+//8bSnpEOLUMRtFoWbMXTQcjxfgANU/woEPD+AwYkmgKscP4DCUAIgEh//e4/xFLe0QBLNpoT/CgQ8P4CCgE3QAiYR4BMP/3qv8LS3tEm2gbsU/woELC+Ag1ACABI8X4AAVrYDi9T/D/MPvnAL8A8AJAov7//3b+//9a/v//cLUERoixRhgAJSBGEPgBGxmxRBi0QgLZbUIoRnC9//ex/wAo+dEBNe/nBUb15xO1ACgd2wAppr+N+AUQAiQBJAAqob8CqQkZATQB+AQsACuivwKqEhkBNI34BACovwL4BDwhRgGo//eN/yBGArAQvQAk+uct6fBPobDN6QESU0p6RAdGkvgWkAAoAPCZgAApAPCWgAnx/zMHKwDykYABIwP6CfMBOwVG27I1+AJLA5MCm0VJsvgagBxBByPB+AA1k2ikshuxT/CgQsL4DDVP6kkD27IEkz5Le0QUqAWTCKvN6QYwT/AAC1lGBZsCnrP4GKADmwGaI0BE+gn0MvgTwAObI0BE+gn0MvgTIASbHkT2sgcugb8IPhX4ATv2ssbxCA6EvwP6DvMcQ0/qHBNDVBMKAfECDkPqDBxDGAMxqvECCi8pg/gBwKSyAPgOIB/6ivoJ3QEi//fj/tvxAQsLvweYBphZRgAhuvEAD8HRGUt7RAjx/zibix9EPUYCmzX4Aksf+oj4HEGksrjxAA+s0ZmxQkb/98T+D0t7RJtoG7FP8KBCwvgINQdKACABI8L4AAVTYCGwvejwj//3kf7r50/w/zD25wC/APACQKj9//9Q/f//uPz//478//8=");
+  var bin=atob("//////////8AAAAAAAAAAP////8AAAAAAAAAAAAAAL8QtQVMfETE6QABASEB+gLyxOkCIxC9AL/Y////BksAIsP4ACXD+AghASJaYNP4BCMKscP4CCNwRwDwAkAUS9P4ACUQtQq70/gEIwqxw/gIIxBKekQABhRow/gIRVRow/gMRRRpw/gQRU/w/zTD+BRF0mjD+GwlSQAAIsP4cCXD+CQFw/hUFQEgEL1P8P8w++cA8AJAiv///xC1A0x8RKKC4IIhg2ODEL1A////FEt7RDC1nIsRS0yx0/gYQQAs+9AQTX1EACTD+BhBrIMAJMP4OEXD+BhBw/hEBcP4SBUBIRlhGrEIS3tEmYMwvdP4GCEAKvvQACLD+Bgh9ucA8AJALv///xr////2/v//F0t7RBC12mgqsxRMByLE+AAlASLE+HAlm2gbsU/woELC+Aw1ACL/97v/Dkt7RJtoG7FP8KBCwvgINQtLe0SbaBuxT/CgQsL4CDUAIAEjxPgABWNgEL1P8P8w++cA8AJAzv7//6T+//+U/v//cLUERoixRhgAJSBGEPgBGxmxRBi0QgLZbUIoRnC9//e5/wAo+dEBNe/nBUb15wAALen/QRpNbkZ9RAdGDEYF8QgItEYoaGlotkau6AMACDVFRXZG9tEoaM74AAACNKiIqXmu+AQABPD+BI74BhAH8P4HjfgJII34CzASEhsSATwPIWBGjfgDcI34BUCN+AggjfgKMP/3tP8EsL3o8IEAvzgCAAATtQAoHdsAKaa/jfgFEAIkASQAKqG/AqkJGQE0AfgELAAror8CqhIZATSN+AQAqL8C+AQ8IUYBqP/3Wv8gRgKwEL0AJPrnAAAt6fBPubDN6QESWUp6RAdGkvgUoAAoAPCogAApAPClgArx/zMHKwDyoIABIwP6CvMBOwVG27I1+AJLA5MCm9/4NIGy+BiQHEEAI8j4cDUHI8j4ADWTaKSyG7FP8KBCwvgMNU/qSgPbsgSTQ0t7RCCoBZMIq83pBjBP8AALWUYFmwKe24oAkwObAZojQET6CvQy+BPAA5sjQET6CvQy+BMgBJseRPayBy6Bvwg+FfgBO/ayxvEIDoS/A/oO8xxDT+ocE0NUEwpD6gwcQxgB8QIOg/gBwACbAPgOIAMxAjubsl8ppLIAkwndASL/963+2/EBCwu/B5gGmFlGACEAmwArwdEeS3tECfH/OVqLF0Q9RgKaNfgCSx/6ifkUQaSyufEAD6zRmbFKRv/3jv4US3tEm2gbsU/woELC+Ag1ACABI8j4AAXI+AQwObC96PCPm4sAK+vQ2PgYMQAr+9AJSnpEACPI+Bgxk4Pg50/w/zDr52z9//8A8AJADP3//3T8//9K/P//Gvz//wUqAAAAAAUrAAAAAAEsAAA=");
   return {
-    cmd:E.nativeCall(345, "int(int,int)", bin),
-    cmds:E.nativeCall(469, "int(int,int)", bin),
-    cmd4:E.nativeCall(515, "int(int,int,int,int)", bin),
+    cmd:E.nativeCall(301, "int(int,int)", bin),
+    cmds:E.nativeCall(409, "int(int,int)", bin),
+    cmd4:E.nativeCall(573, "int(int,int,int,int)", bin),
     setpins:E.nativeCall(33, "void(int,int,int,int)", bin),
-    enable:E.nativeCall(97, "int(int,int)", bin),
-    disable:E.nativeCall(65, "void()", bin),
-    blit_setup:E.nativeCall(225, "void(int,int,int,int)", bin),
-    blt_pal:E.nativeCall(585, "int(int,int,int)", bin),
+    setwin:E.nativeCall(457, "void(int,int,int,int)", bin),
+    enable:E.nativeCall(93, "int(int,int)", bin),
+    disable:E.nativeCall(61, "void()", bin),
+    blit_setup:E.nativeCall(185, "void(int,int,int,int)", bin),
+    blt_pal:E.nativeCall(645, "int(int,int,int)", bin),
   };
 })();
-
-// this method would produce code string that can replace bin declaration above with heatshrink compressed variant
-// however it seems the gain is very small so is not worth it
-//    shrink:function(){return `var bin=E.toString(require("heatshrink").decompress(atob("${btoa(require("heatshrink").compress(bin))}")))`;}
 //*/
 E.kickWatchdog();
 
-D7.write(1); // turns off HR red led
+D7.write(1); // turns off HR red led + power up i2c chips
 //MAGIC3 pins
 CS=D3;DC=D47;RST=D2;BL=D12;
 SCK=D45;MOSI=D44;
@@ -510,7 +578,7 @@ function init(){
   cmd(0x11); // sleep out
   delayms(120);
   cmd([0x36, 0]);     // MADCTL - This is an unrotated screen
-  //cmd([0x37,0,0]);
+  cmd([0x37,1,44]); //256+44=300 = offset by -20 so no need to add +20 to y
   // These 2 rotate the screen by 180 degrees
   //[0x36,0xC0],     // MADCTL
   //[0x37,0,80],   // VSCSAD (37h): Vertical Scroll Start Address of RAM
@@ -534,9 +602,6 @@ function init(){
   cmd([0x2b,0,0x14,1,0x2b]);
   cmd(0x29);
   cmd([0x35, 0]);
-  //cmd([0x2a,0,0,0,239]);
-  //cmd([0x2b,0,0,0,239]);
-  //cmd([0x2c]);
 }
 
 var bpp=4; // powers of two work, 3=8 colors would be nice
@@ -571,19 +636,7 @@ switch(bpp){
     ]);break;
 }
 
-// preallocate setwindow command buffer for flip
-g.winCmd=toFlatBuffer([
-  5, 0x2a, 0,0, 0,0,
-  5, 0x2b, 0,0, 0,0,
-  1, 0x2c,
-  0 ]);
-/*
-  cmd([0x2a,0,x1,0,x2-1]);
-  cmd([0x2b,0,r.y1,0,r.y2]);
-  cmd([0x2c]);
-*/
 // precompute addresses for flip
-g.winA=E.getAddressOf(g.winCmd,true);
 g.palA=E.getAddressOf(pal.buffer,true); // pallete address
 g.buffA=E.getAddressOf(g.buffer,true); // framebuffer address
 g.stride=g.getWidth()*bpp/8;
@@ -597,16 +650,12 @@ g.flip=function(force){
   var xw=(x2-x1);
   var yw=(r.y2-r.y1+1);
   if (xw<1||yw<1) {print("empty rect ",xw,yw);return;}
-  var c=g.winCmd;
-  c[3]=x1;c[5]=x2-1; //0x2a params
-  var y=r.y1+20;c[9]=y%256;c[8]=y>>8;
-  y=r.y2+20;c[11]=y%256;c[10]=y>>8; // 0x2b params
   SPI2.blit_setup(xw,yw,bpp,g.stride);
   var xbits=x1*bpp;
   var bitoff=xbits%8;
   var addr=g.buffA+(xbits-bitoff)/8+r.y1*g.stride; // address of upper left corner
   //VIB.set();//debug
-  SPI2.cmds(g.winA,c.length);
+  SPI2.setwin(r.x1,r.x2,r.y1,r.y2);
   SPI2.blt_pal(addr,g.palA,bitoff);
   //VIB.reset();//debug
 };
@@ -665,7 +714,7 @@ vibrate=function(intensity,count,onms,offms){
 };
 
 function battVolts(){
-  return 4.20/0.60*analogRead(D30);
+  return 4.20/0.59*analogRead(D30);
 }
 function battLevel(v){
   var l=3.5,h=4.19;
@@ -843,6 +892,17 @@ setWatch(function(){
   currint=screens[currscr]();
 },BTN1,{ repeat:true, edge:'rising',debounce:25 }
 );
+
+/*
+var sf=SPI1; //new SPI(); // SPI flash
+var FCS=D17;FCS.write(1);
+D22.reset();D23.set();//wp,hold (IO2,IO3)
+sf.setup({sck:D19,mosi:D20,miso:D21,mode:0});
+//sf.send([0xab],FCS); //wake
+//print(sf.send([0x90,0,0,1,0,0],FCS));
+//print(sf.send([0x9f,0,0,0],FCS));
+sf.send([0xb9],FCS); //put to deep sleep
+*/
 
 /*
 NRF.whitelist=[];
