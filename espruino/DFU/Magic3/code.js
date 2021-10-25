@@ -272,9 +272,9 @@ void setwin(int x1,int x2,int y1,int y2){
   x1=x1&0xfe;x2=(x2+2)&0xfe;
 #endif
   c[3]=x1;c[5]=x2-1; //0x2a params
-  int y=y1 /* +20 */;
+  int y=y1;
   c[9]=y&255;c[8]=y>>8;
-  y=y2 /* +20 */;
+  y=y2;
   c[11]=y&255;c[10]=y>>8;
   cmds(c,sizeof(c));
 }
