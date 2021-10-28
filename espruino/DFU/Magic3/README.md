@@ -102,6 +102,8 @@ You can postpone next steps however without DFU bootloader it is not easy to upg
 | |  |
 | 32 | touch IRQ |
 | |  |
+| 39 | touch RST |
+| |  |
 | 44 | LCD MOSI |
 | 45 | LCD SCK |
 | 46 | button 2 on Kospet Rock MOY-NAX3 , needs pull down - D46.mode("input_pulldown"), 1 when pressed|
