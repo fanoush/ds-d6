@@ -60,9 +60,9 @@ You can postpone next steps, however without DFU bootloader it is not easy to up
       ```
 
     - now the botloader is installed, to test it and reboot to newly flashed bootloader run `poke32(0x4000051c,1)` or hold the button, run `E.reboot()` and quickly release the button (less than 3 seconds).
-      If this worked you should see DfuTarg device that waits for 90 seconds for connecting an uploading DFU zip package
+      If this worked you should see DfuTarg device that waits for 90 seconds for connecting an uploading DFU zip package. You can also use button for entering bootloader from dead battery as a recovery when flashing something broken that makes device inaccessible (hold button, attach charger, release button quickly).
     
-6. install newer version of  Espruino from this folder or use different package to downgrade/upgrade softdevice and install other custom software. **EDIT:Nov 03,2021 - some guys got the watch (semi?)bricked by installing softdevice downgrade directly on top of espruino-xx-dafit.bin. For now make sure to install some espruino DFU zip first and then do the downgrade of wait with SD downgrade before things get more clear**. Firmware with **SPIFLASH** in name has file storage in external 8MB flash. The one without SPIFLASH has storage in internal nRF52840 1MB flash (600KB free), external flash is still accessible via Flash module API but is unused, this is useful for doing initial SPI flash backup or if 600KB is enough for you.
+6. install newer version of  Espruino from this folder or use different package to install other custom software. **EDIT:Nov 03,2021 - some guys got the watch semi-bricked by installing softdevice downgrade directly on top of espruino-xx-dafit.bin. For now make sure to install some espruino DFU zip first and then do the SoftDevice downgrade**. Firmware with **SPIFLASH** in name has file storage in external 8MB flash. The one without SPIFLASH has storage in internal nRF52840 1MB flash (600KB free), external flash is still accessible via Flash module API but is unused, this is useful for doing initial SPI flash backup or if 600KB is enough for you.
 7. try example `code.js` from this folder (copy to right side of WebIDE and upload to RAM, enable minification and pretokenization to reduce size)
 
 ### Hardware ###
