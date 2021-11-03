@@ -8,12 +8,12 @@ For first generation (NRF52832) see [P8 or P22](https://github.com/fanoush/ds-d6
 Beware that there is no way back and **you may brick your watch** during this process!
 
 1. Check watch firmware version, this should work for devices with firmware MOY-NBC5, also was verified with Kospet Rock with MOY-NAX3.
-2. Put your watch on charger or make sure it is charged, if battery dies during the process you may have a brick.
+2. Put your watch on charger or make sure it is charged enough to survive, if battery dies during the process (step 6) you may have a brick. 
 3. Install `espruino_2v10.102_magic3-dafit.bin` via [DaFlasher](https://play.google.com/store/apps/details?id=com.atcnetz.paatc.patc&hl=en&gl=US) (as of October 2021 you need update to  latest version, v2 protocol was added only recently)
 4. If you were lucky you should now see bluetooth device 'Magic3 xxxx' and can connect to it via [Espruino Web IDE](https://www.espruino.com/ide/).
 
 At this point there is no way back but you already have full Espruino installed and can start experimenting with it (e.g. upload `code.js` as metioned below).
-You can postpone next steps however without DFU bootloader it is not easy to upgrade it so when you are ready follow with steps below.
+You can postpone next steps, however without DFU bootloader it is not easy to upgrade it, so when you are ready, follow with steps below.
 
 5. backup UICR and bootloader via copy pasting (CTRL+V) prepared code and data into left side of Espruino Web IDE. More details and explanations also here https://github.com/fanoush/ds-d6/wiki/Replacing-Nordic-DFU-bootloader but here is quick step by step guide:
     - backup whole UICR - just in case
@@ -62,7 +62,7 @@ You can postpone next steps however without DFU bootloader it is not easy to upg
     - now the botloader is installed, to test it and reboot to newly flashed bootloader run `poke32(0x4000051c,1)` or hold the button, run `E.reboot()` and quickly release the button (less than 3 seconds).
       If this worked you should see DfuTarg device that waits for 90 seconds for connecting an uploading DFU zip package
     
-6. install newer version of  Espruino from this folder or use different package to downgrade/upgrade softdevice and install other custom software. **EDIT:Nov 03,2021 - some guys got the watch (semi)bricked by installing softdevice downgrade directly on top of espruino-xx-dafit.bin. Better install some espruino DFU zip first and then do the downgrade of wait with SD downgrade before things get more clear**. Firmware with **SPIFLASH** in name has file storage in external 8MB flash. The one without SPIFLASH has storage in internal nRF52840 1MB flash (600KB free), external flash is still accessible via Flash module API but is unused, this is useful for doing initial SPI flash backup or if 600KB is enough for you.
+6. install newer version of  Espruino from this folder or use different package to downgrade/upgrade softdevice and install other custom software. **EDIT:Nov 03,2021 - some guys got the watch (semi?)bricked by installing softdevice downgrade directly on top of espruino-xx-dafit.bin. For now make sure to install some espruino DFU zip first and then do the downgrade of wait with SD downgrade before things get more clear**. Firmware with **SPIFLASH** in name has file storage in external 8MB flash. The one without SPIFLASH has storage in internal nRF52840 1MB flash (600KB free), external flash is still accessible via Flash module API but is unused, this is useful for doing initial SPI flash backup or if 600KB is enough for you.
 7. try example `code.js` from this folder (copy to right side of WebIDE and upload to RAM, enable minification and pretokenization to reduce size)
 
 ### Hardware ###
