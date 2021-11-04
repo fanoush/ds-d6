@@ -19,7 +19,7 @@ info = {
  'name' : "F07 fitness tracker",
  'boardname' : 'F07', # visible in process.env.BOARD
  'default_console' : "EV_BLUETOOTH",
- 'variables' : 2565, # 2600 SD5.0 0x200014B8 SD 3.0 0x200019C0  How many variables are allocated for Espruino to use. RAM will be overflowed if this number is too high and code won't compile.
+ 'variables' : 2560*16//13, # 2600 SD5.0 0x200014B8 SD 3.0 0x200019C0  How many variables are allocated for Espruino to use. RAM will be overflowed if this number is too high and code won't compile.
  'bootloader' : 1,
  'binary_name' : 'espruino_%v_F07_SDK12.hex',
  'build' : {
@@ -33,6 +33,8 @@ info = {
    ],
    'makefile' : [
 #     'DEFINES+=-DCONFIG_GPIO_AS_PINRESET', # Allow the reset pin to work
+     'CFLAGS += -D__STARTUP_CLEAR_BSS -D__START=main',
+     'LDFLAGS += -D__STARTUP_CLEAR_BSS -D__START=main -nostartfiles',
      'DEFINES+=-DNO_DUMP_HARDWARE_INITIALISATION',
      'DEFINES+= -DUSE_FONT_6X8 -DBLE_HIDS_ENABLED=1 -DBLUETOOTH_NAME_PREFIX=\'"F07"\'',
      'DEFINES+=-DNRF_BLE_GATT_MAX_MTU_SIZE=53 -DNRF_BLE_MAX_MTU_SIZE=53', # increase MTU from default of 23
@@ -40,13 +42,15 @@ info = {
      'DFU_PRIVATE_KEY=targets/nrf5x_dfu/dfu_private_key.pem',
      'NRF_BL_DFU_INSECURE=1',
      'DEFINES+=-DBTN1_IS_TOUCH=1',
+     'DEFINES += -DSPIFLASH_SHARED_SPI',
+     'DEFINES+= -DSAVE_ON_FLASH_SAVE -DSAVE_ON_FLASH_SWSERIAL',
      'LINKER_BOOTLOADER=targetlibs/nrf5x_12/nrf5x_linkers/banglejs_dfu.ld',
      'DFU_SETTINGS=--application-version 0xff --hw-version 52 --sd-req 0x8C,0x91'
    ]
  }
 };
 
-saved_code_pages = 16;
+saved_code_pages = 28;
 chip = {
   'part' : "NRF52832",
   'family' : "NRF52",
@@ -54,7 +58,7 @@ chip = {
   'ram' : 64,
   'flash' : 512,
   'speed' : 64,
-  'usart' : 1,
+  'usart' : 0,
   'spi' : 1,
   'i2c' : 1,
   'adc' : 1,
@@ -63,8 +67,8 @@ chip = {
     'page_size' : 4096,
     'address' : ((0x7a - 2 - saved_code_pages) * 4096), # Bootloader takes pages 120-127, FS takes 118-119
     'pages' : saved_code_pages,
-#    'address' : 0x60380000, # Bootloader takes pages 120-127, FS takes 118-119
-#    'pages' : 32,
+#    'address' : 0x601a3000, # font chip empty space 0x5D pages
+#    'pages' : 0x5D,
     'flash_available' : 512 - ((0x1F + 6 + 2 + saved_code_pages)*4) # Softdevice 3.0 uses 31 pages of flash, bootloader 8, FS 2, code 10. Each page is 4 kb.
 #    'flash_available' : 512 - ((35 + 8 + 2 + 16)*4) # Softdevice 5.0  uses 35 pages of flash, bootloader 8, FS 2, code 10. Each page is 4 kb.
   },
