@@ -30,7 +30,7 @@ You can postpone next steps, however without DFU bootloader it is not easy to up
       ```
       then copy output lines to text file named `bootloader.base64` and use base64 decode on that, e.g. in linux run `base64 -d bootloader.base64 >bootloader.bin`
 5. install new bootloader, from this point **it is dangerous to reboot or crash/reset the watch or let the battery die** without finishing all steps
-    - flash new bootloader (and overwrite old) by copy paste from `Magic3-bootloader.txt` - first paste flashing code , then paste base64 encoded bootloader binary
+    - flash new bootloader (and overwrite old) by copy paste from `Magic3-bootloader.txt` - first paste flashing code , then paste base64 encoded bootloader binary. D       Do everything in the left side of IDE where direct interactive console is, do not put it to right side, do not click upload, just paste via CTRL+V to left side.
     - verify bootloader (run `f=verify` and paste bootloader again) - you should see only V-OK lines for all addresses.
     - set correct bootloader start and bootloader settings address - will enable new bootloader, copy paste whole block
 
