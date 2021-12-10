@@ -18,7 +18,7 @@ After unlocking it can be flashed via openocd command `program <name of hex file
 
 - ST7735 80x160 LCD
 - AT6558 GPS (MA=CASIC,IC=AT6558-5N-32-1C510800,SW=URANUS5,V5.1.0.0), [datasheet](http://www.icofchina.com/d/file/xiazai/2016-12-05/b1be6f481cdf9d773b963ab30a2d11d8.pdf)
-- KX123 accelerometer (?)
+- KX022 accelerometer
 - HRS3313 heartrate sensor
 - SPI flash (2MB?)
 
@@ -41,7 +41,7 @@ After unlocking it can be flashed via openocd command `program <name of hex file
 | 14 |SPI FLASH CLK |
 | 15 |accel irq (?) |
 | 16 |? set as output, in some code is set to 1 (while vibrating) |	
-| 17 |accel i2c sda, address 0x1f  KX123? WHO_AM_I register gives 0x20 as per [this](https://kionixfs.azureedge.net/en/document/TN004-Power-On-Procedure.pdf) |
+| 17 |accel i2c sda, address 0x1f, KX022 WHO_AM_I register gives 20=0x14 as per [this](https://kionixfs.azureedge.net/en/document/TN004-Power-On-Procedure.pdf) |
 | 18 |accel i2c scl |
 | 19 |hrs3313 i2c sda, address 0x44
 | 20 |hrs3313 i2c scl |
