@@ -19,7 +19,7 @@ After unlocking it can be flashed via openocd command `program <name of hex file
 - ST7735 80x160 LCD
 - GPS - one of
   - AT6558 (`MA=CASIC,IC=AT6558-5N-32-1C510800,SW=URANUS5,V5.1.0.0`), [datasheet](http://www.icofchina.com/d/file/xiazai/2016-12-05/b1be6f481cdf9d773b963ab30a2d11d8.pdf)
-  - UBX-G7020 (`HW  UBX-G70xx   00070000, ROM CORE 1.00 (59842) Jun 27 2012 17:43:52`), datasheet [1](https://www.u-blox.com/sites/default/files/products/documents/UBX-G7020_ProductSummary_%28UBX-13003349%29.pdf),[2](http://innovictor.com/pdf/UBX-G7020-Kx_DataSheet_%28GPS%20G7-HW-12001%29_Confidential.pdf)
+  - UBX-G7020 (`HW  UBX-G70xx   00070000, ROM CORE 1.00 (59842) Jun 27 2012 17:43:52,PROTVER 14.00`), datasheet [1](https://www.u-blox.com/sites/default/files/products/documents/UBX-G7020_ProductSummary_%28UBX-13003349%29.pdf),[2](http://innovictor.com/pdf/UBX-G7020-Kx_DataSheet_%28GPS%20G7-HW-12001%29_Confidential.pdf)
 - KX022 accelerometer
 - HRS3313 heartrate sensor
 - SPI flash (2MB?)
