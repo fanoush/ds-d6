@@ -21,6 +21,7 @@ info = {
      'GRAPHICS',
 #     'NFC',
 #     'NEOPIXEL'
+     'JIT',
    ],
    'makefile' : [
 #    'DEFINES += -DCONFIG_GPIO_AS_PINRESET', # Allow the reset pin to work
@@ -39,13 +40,14 @@ info = {
      'DEFINES += -DESPR_USE_SPI3 -DSPI0_USE_EASY_DMA=1',
      'ESPR_BLUETOOTH_ANCS=1', # Enable ANCS (Apple notifications) support
      'DEFINES += -DNRF_BL_DFU_INSECURE=1',
+     'DEFINES += -DSAVE_ON_FLASH_SAVE  -DSAVE_ON_FLASH_SWSERIAL  -DSAVE_ON_FLASH_DUMP',
      'DEFINES += -DNO_DUMP_HARDWARE_INITIALISATION -DUSE_FONT_6X8',
      'NRF_SDK15=1'
    ]
  }
 };
 
-save_code_pages = 96; #96;
+save_code_pages = 140; #96;
 fstorage_pages = 2; # typically 2, 10 reduces risk of brick on first flash from stock FW
 chip = {
   'part' : "NRF52840",
