@@ -343,6 +343,8 @@ echo(1);
 // include also this line or press enter after echo(1)
 // now you may set f function to verify method via "f=verify" and paste bootloader code again to verify it was written correctly
 
-// If you see FIFO overflow error and verification failures then maybe it it still written OK but code is pasted too fast
+// If you see FIFO overflow error and verification failures then maybe it is still written OK but code is pasted too fast
 // enable Communication -> Throttle Send in WebIDE for verification phase (will be slow), if you still see errors then
-// try flashing again with Throttle Send on (=start from 1. and copy faste flashing code again)
+// try flashing again with Throttle Send on (=start from 1. and copy paste flashing code again)
+
+// make sure you also set UICR and MBR bootloader vectors to 0xF8000/0xFE000 as per README before rebooting after flashing this
