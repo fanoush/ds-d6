@@ -1,7 +1,11 @@
 ### Espruino for Kospet Magic3 smartwatch
 
-Magic3 is 2nd generation DaFit watch based on NRF52840 chip  (256KB RAM, 1MB internal flash) with 240x280 LCD, full touch display and button.
+Magic3 (also named C17) is 2nd generation DaFit watch based on NRF52840 chip  (256KB RAM, 1MB internal flash) with 240x280 LCD, full touch display and button.
 For first generation (NRF52832) see [P8 or P22](https://github.com/fanoush/ds-d6/tree/master/espruino/DFU/P8)
+
+There are also two smartwatches with almost identical internals
+- Kospet Rock (also named C16) - plastic rugged outdoor look with two buttons
+- QY03 (also named P16) - single button in aple watch like design
 
 #### Steps to update new Magic3 watch to Espruino and install Nordic DFU bootloader:
 
@@ -78,9 +82,10 @@ You can postpone next steps, however without DFU bootloader it is not easy to up
 | ------------- | ------------- |
 | 02 | LCD RST  |
 | 03 | LCD CS  |
+| 04 | QY03 button, inverted=pushed goes low, needs pull up, QY03 espruino build inverts it for you  |
 | |  |
 | 06 | motor 0=on, works when 07 is 1 |
-| 07 | 1 = turns red led off and motor works |
+| 07 | 1 = turns red led blinking off and motor works (not needed for QY03 and maybe some other) |
 | 08 | charger, 0=attached  |
 | |  |
 | 12 | backlight |
