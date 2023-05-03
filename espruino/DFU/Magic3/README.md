@@ -5,7 +5,7 @@ For first generation (NRF52832) see [P8 or P22](https://github.com/fanoush/ds-d6
 
 There are also two smartwatches with almost identical internals
 - Kospet Rock (also named C16) - plastic rugged outdoor look with two buttons
-- QY03 (also named P16) - single button in aple watch like design
+- QY03 (also named P16) - single button in apple watch like design
 
 #### Steps to update new Magic3 watch to Espruino and install Nordic DFU bootloader:
 
