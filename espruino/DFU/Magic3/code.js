@@ -270,9 +270,12 @@ void setwin(int x1,int x2,int y1,int y2){
   0 };
 #if LCD_BPP==12
 // align X to even number, two pixels are sent together
-  x1=x1&0x1fe;x2=(x2+2)&0x1fe; // when rotated, X can go over 255
+  x1=x1&0x1fe;x2=((x2+2)&0x1fe)-1; // when rotated, X can go over 255
 #endif
-  c[3]=x1;c[5]=x2-1; //0x2a params
+  c[3]=x1&255;
+  c[2]=x1>>8;
+  c[5]=x2&255; //0x2a params
+  c[4]=x2>>8;
   int y=y1;
   c[9]=y&255;c[8]=y>>8;
   y=y2;
@@ -516,17 +519,17 @@ int fill_color(uint32_t val,uint32_t len){
 // see full license text at https://choosealicense.com/licenses/mit/
 // compiled with options SPI3,LCD_BPP=12,SHARED_SPIFLASH
 var SPI2 = (function(){
-  var bin=atob("AAAAAAAAAAAAAAAAAAAAAAAAAAD///////////////8QtQNMfEQigGCAoYDjgBC92P///wdLe0QbiUOxBEoTaAAr/NAAIxNgA0p6RBOBcEcY8QJAxv///7L///84tSNLe0TaaAAqMNAZSgckFGAZTAElJWAbaRRGC7EXShNg//fZ/xZLACIaYKP1hGMaYBRKEGBRYKLyNFIBIRFgGmgAKvzQACIaYBJLe0QbaQuxDUoTYBBLe0QbaQuxCkoTYApLACABIiBgGmA4vU/w/zD75wD1AkBw9QJADAUAUDj1AkBE9QJACAUAUATwAkCc////VP///0j///8TtQAoHtsAKaa/jfgFEAIkASQAKqS/AqkJGY34BACkvwE0AfgELAAror8CqhIZATQhRgGoqL8C+AQ8//eT/yBGArAQvQAk+udwtQVGiLFGGAAkKEYQ+AEbGbFFGLVCAtlkQiBGcL3/933/ACj50QE07+cERvXnAAAt6f9BFkxuRnxEhkYNRgTxCAi0RiBoYWg3RgPHCDRERT5G99EgaDhgAjWgiKF5uIAF9P91uXEO9P9+UrpbugE9DyFgRo34A+CN+AVQrfgIIK34CjD/97z/BLC96PCBAL/MAgAAEksbaBC167kRSxtoC7ERShNgE0sQSntEAAZcaRRgnGlUYNxplGBP8P801GDaaAtLSQAaYAAiWmBD+EgMQ/gYHAEgEL1P8P8w++cAvwD1AkAE8wJACPMCQAj1AkBs9QJAEv7//wdKACMTYKL1fnITYAVLASIaYAP1QHMbaAuxA0oTYHBHAPUCQATwAkAI8wJAELUFTHxExOkFAQEhAfoC8sTpAzIQvQC/lP3//y3p8E+3sM3pARJqSnpEkvgAkAAoAPC6gAApAPC3gAnx/zMHKwDysoABIwP6CfMBO9uyA5MBeEN4l4hB6gMhApsZQVRLACQcYFNMByMjYBNpBZQA8QILibILsVBKE2BP6kkD27JP8AAIBJNERh6uUksCnXtEs/gCoAObAZoLQEH6CfEy+BPAA5sLQEH6CfEy+BMgBJsdRO2yBy1n2ImyT+osEzNVExIE8QIOQ+oMHDMZAzSq8QIKXyyD+AHAH/qK+gb4DiAY3f/3df41SgAjE2Ci9YRiE2DC+CxkwvgwRDFMASIiYDVMfESy6wgIIoEHvx6uREYcRgauuvEAD7zRMEt7RAE/24gYRL+yQ3gBeEHqAyECmxlBAPECC4myAC+m0QAsMND/90b+HUsfSh9go/WEY6LyNFIfYML4NGXC+DhFASERYBpoACr80AAiGmAdS3tEG2kLsRVKE2AFmwAgGGATSwEiGmA3sL3o8I/eRgg9HvgBO+2yxfEICwP6C/MZQ4my80aL5//3Ff7g50/w/zDp5wC/cPUCQAD1AkAMBQBQOPUCQBDwAkBE9QJACAUAUATwAkBw/f//Cv3//5b8//98/P//LPz//wUqAAAAAAUrAAAAAAEsAAA=");
+  var bin=atob("AAAAAAAAAAAAAAAAAAAAAAAAAAD///////////////8QtQNMfEQigGCAoYDjgBC92P///wdLe0QbiUOxBEoTaAAr/NAAIxNgA0p6RBOBcEcY8QJAxv///7L///84tSNLe0TaaAAqMNAZSgckFGAZTAElJWAbaRRGC7EXShNg//fZ/xZLACIaYKP1hGMaYBRKEGBRYKLyNFIBIRFgGmgAKvzQACIaYBJLe0QbaQuxDUoTYBBLe0QbaQuxCkoTYApLACABIiBgGmA4vU/w/zD75wD1AkBw9QJADAUAUDj1AkBE9QJACAUAUATwAkCc////VP///0j///8TtQAoHtsAKaa/jfgFEAIkASQAKqS/AqkJGY34BACkvwE0AfgELAAror8CqhIZATQhRgGoqL8C+AQ8//eT/yBGArAQvQAk+udwtQVGiLFGGAAkKEYQ+AEbGbFFGLVCAtlkQiBGcL3/933/ACj50QE07+cERvXnAAAt6f9BGU1uRn1EB0YMRgXxCAi0RihoaWi2Rq7oAwAINUVFdkb20QI0KGjO+AAABPT/dKiIqXmu+AQAB/T/dwE8jvgGEFK6W7p/umS6DyFgRq34AnCt+ARArfgIIK34CjD/97b/BLC96PCBAL/YAgAAEksbaBC167kRSxtoC7ERShNgE0sQSntEAAZcaRRgnGlUYNxplGBP8P801GDaaAtLSQAaYAAiWmBD+EgMQ/gYHAEgEL1P8P8w++cAvwD1AkAE8wJACPMCQAj1AkBs9QJABv7//wdKACMTYKL1fnITYAVLASIaYAP1QHMbaAuxA0oTYHBHAPUCQATwAkAI8wJAELUFTHxExOkFAQEhAfoC8sTpAzIQvQC/iP3//y3p8E+3sM3pARJqSnpEkvgAkAAoAPC6gAApAPC3gAnx/zMHKwDysoABIwP6CfMBO9uyA5MBeEN4l4hB6gMhApsZQVRLACQcYFNMByMjYBNpBZQA8QILibILsVBKE2BP6kkD27JP8AAIBJNERh6uUksCnXtEs/gCoAObAZoLQEH6CfEy+BPAA5sLQEH6CfEy+BMgBJsdRO2yBy1n2ImyT+osEzNVExIE8QIOQ+oMHDMZAzSq8QIKXyyD+AHAH/qK+gb4DiAY3f/3b/41SgAjE2Ci9YRiE2DC+CxkwvgwRDFMASIiYDVMfESy6wgIIoEHvx6uREYcRgauuvEAD7zRMEt7RAE/24gYRL+yQ3gBeEHqAyECmxlBAPECC4myAC+m0QAsMND/90D+HUsfSh9go/WEY6LyNFIfYML4NGXC+DhFASERYBpoACr80AAiGmAdS3tEG2kLsRVKE2AFmwAgGGATSwEiGmA3sL3o8I/eRgg9HvgBO+2yxfEICwP6C/MZQ4my80aL5//3D/7g50/w/zDp5wC/cPUCQAD1AkAMBQBQOPUCQBDwAkBE9QJACAUAUATwAkBk/f///vz//4r8//9w/P//IPz//wUqAAAAAAUrAAAAAAEsAAA=");
   return {
     cmd:E.nativeCall(93, "int(int,int)", bin),
     cmds:E.nativeCall(321, "int(int,int)", bin),
     cmd4:E.nativeCall(249, "int(int,int,int,int)", bin),
-    setpins:E.nativeCall(613, "void(int,int,int,int)", bin),
+    setpins:E.nativeCall(625, "void(int,int,int,int)", bin),
     setwin:E.nativeCall(369, "void(int,int,int,int)", bin),
-    enable:E.nativeCall(469, "int(int,int)", bin),
-    disable:E.nativeCall(569, "void()", bin),
+    enable:E.nativeCall(481, "int(int,int)", bin),
+    disable:E.nativeCall(581, "void()", bin),
     blit_setup:E.nativeCall(33, "void(int,int,int,int)", bin),
-    blt_pal:E.nativeCall(641, "int(int,int,int)", bin),
+    blt_pal:E.nativeCall(653, "int(int,int,int)", bin),
   };
 })();
 //*/
