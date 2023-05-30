@@ -269,7 +269,8 @@ void setwin(int x1,int x2,int y1,int y2){
     1, 0x2c,
   0 };
 #if LCD_BPP==12
-  x1=x1&0xfe;x2=(x2+2)&0xfe;
+// align X to even number, two pixels are sent together
+  x1=x1&0x1fe;x2=(x2+2)&0x1fe; // when rotated, X can go over 255
 #endif
   c[3]=x1;c[5]=x2-1; //0x2a params
   int y=y1;
@@ -515,17 +516,17 @@ int fill_color(uint32_t val,uint32_t len){
 // see full license text at https://choosealicense.com/licenses/mit/
 // compiled with options SPI3,LCD_BPP=12,SHARED_SPIFLASH
 var SPI2 = (function(){
-  var bin=atob("//////////8AAAAAAAAAAP////8AAAAAAAAAAAAAAL8QtQVMfETE6QABASEB+gLyxOkCIxC9AL/Y////BksAIsP4ACXD+AghASJaYNP4BCMKscP4CCNwRwDwAkAUS9P4ACUQtQq70/gEIwqxw/gIIxBKekQABhRow/gIRVRow/gMRRRpw/gQRU/w/zTD+BRF0mjD+GwlSQAAIsP4cCXD+CQFw/hUFQEgEL1P8P8w++cA8AJAiv///xC1A0x8RKKC4IIhg2ODEL1A////FEt7RDC1nIsRS0yx0/gYQQAs+9AQTX1EACTD+BhBrIMAJMP4OEXD+BhBw/hEBcP4SBUBIRlhGrEIS3tEmYMwvdP4GCEAKvvQACLD+Bgh9ucA8AJALv///xr////2/v//F0t7RBC12mgqsxRMByLE+AAlASLE+HAlm2gbsU/woELC+Aw1ACL/97v/Dkt7RJtoG7FP8KBCwvgINQtLe0SbaBuxT/CgQsL4CDUAIAEjxPgABWNgEL1P8P8w++cA8AJAzv7//6T+//+U/v//cLUERoixRhgAJSBGEPgBGxmxRBi0QgLZbUIoRnC9//e5/wAo+dEBNe/nBUb15wAALen/QRpNbkZ9RAdGDEYF8QgItEYoaGlotkau6AMACDVFRXZG9tEoaM74AAACNKiIqXmu+AQABPD+BI74BhAH8P4HjfgJII34CzASEhsSATwPIWBGjfgDcI34BUCN+AggjfgKMP/3tP8EsL3o8IEAvzgCAAATtQAoHdsAKaa/jfgFEAIkASQAKqG/AqkJGQE0AfgELAAror8CqhIZATSN+AQAqL8C+AQ8IUYBqP/3Wv8gRgKwEL0AJPrnAAAt6fBPubDN6QESWUp6RAdGkvgUoAAoAPCogAApAPClgArx/zMHKwDyoIABIwP6CvMBOwVG27I1+AJLA5MCm9/4NIGy+BiQHEEAI8j4cDUHI8j4ADWTaKSyG7FP8KBCwvgMNU/qSgPbsgSTQ0t7RCCoBZMIq83pBjBP8AALWUYFmwKe24oAkwObAZojQET6CvQy+BPAA5sjQET6CvQy+BMgBJseRPayBy6Bvwg+FfgBO/ayxvEIDoS/A/oO8xxDT+ocE0NUEwpD6gwcQxgB8QIOg/gBwACbAPgOIAMxAjubsl8ppLIAkwndASL/963+2/EBCwu/B5gGmFlGACEAmwArwdEeS3tECfH/OVqLF0Q9RgKaNfgCSx/6ifkUQaSyufEAD6zRmbFKRv/3jv4US3tEm2gbsU/woELC+Ag1ACABI8j4AAXI+AQwObC96PCPm4sAK+vQ2PgYMQAr+9AJSnpEACPI+Bgxk4Pg50/w/zDr52z9//8A8AJADP3//3T8//9K/P//Gvz//wUqAAAAAAUrAAAAAAEsAAA=");
+  var bin=atob("AAAAAAAAAAAAAAAAAAAAAAAAAAD///////////////8QtQNMfEQigGCAoYDjgBC92P///wdLe0QbiUOxBEoTaAAr/NAAIxNgA0p6RBOBcEcY8QJAxv///7L///84tSNLe0TaaAAqMNAZSgckFGAZTAElJWAbaRRGC7EXShNg//fZ/xZLACIaYKP1hGMaYBRKEGBRYKLyNFIBIRFgGmgAKvzQACIaYBJLe0QbaQuxDUoTYBBLe0QbaQuxCkoTYApLACABIiBgGmA4vU/w/zD75wD1AkBw9QJADAUAUDj1AkBE9QJACAUAUATwAkCc////VP///0j///8TtQAoHtsAKaa/jfgFEAIkASQAKqS/AqkJGY34BACkvwE0AfgELAAror8CqhIZATQhRgGoqL8C+AQ8//eT/yBGArAQvQAk+udwtQVGiLFGGAAkKEYQ+AEbGbFFGLVCAtlkQiBGcL3/933/ACj50QE07+cERvXnAAAt6f9BFkxuRnxEhkYNRgTxCAi0RiBoYWg3RgPHCDRERT5G99EgaDhgAjWgiKF5uIAF9P91uXEO9P9+UrpbugE9DyFgRo34A+CN+AVQrfgIIK34CjD/97z/BLC96PCBAL/MAgAAEksbaBC167kRSxtoC7ERShNgE0sQSntEAAZcaRRgnGlUYNxplGBP8P801GDaaAtLSQAaYAAiWmBD+EgMQ/gYHAEgEL1P8P8w++cAvwD1AkAE8wJACPMCQAj1AkBs9QJAEv7//wdKACMTYKL1fnITYAVLASIaYAP1QHMbaAuxA0oTYHBHAPUCQATwAkAI8wJAELUFTHxExOkFAQEhAfoC8sTpAzIQvQC/lP3//y3p8E+3sM3pARJqSnpEkvgAkAAoAPC6gAApAPC3gAnx/zMHKwDysoABIwP6CfMBO9uyA5MBeEN4l4hB6gMhApsZQVRLACQcYFNMByMjYBNpBZQA8QILibILsVBKE2BP6kkD27JP8AAIBJNERh6uUksCnXtEs/gCoAObAZoLQEH6CfEy+BPAA5sLQEH6CfEy+BMgBJsdRO2yBy1n2ImyT+osEzNVExIE8QIOQ+oMHDMZAzSq8QIKXyyD+AHAH/qK+gb4DiAY3f/3df41SgAjE2Ci9YRiE2DC+CxkwvgwRDFMASIiYDVMfESy6wgIIoEHvx6uREYcRgauuvEAD7zRMEt7RAE/24gYRL+yQ3gBeEHqAyECmxlBAPECC4myAC+m0QAsMND/90b+HUsfSh9go/WEY6LyNFIfYML4NGXC+DhFASERYBpoACr80AAiGmAdS3tEG2kLsRVKE2AFmwAgGGATSwEiGmA3sL3o8I/eRgg9HvgBO+2yxfEICwP6C/MZQ4my80aL5//3Ff7g50/w/zDp5wC/cPUCQAD1AkAMBQBQOPUCQBDwAkBE9QJACAUAUATwAkBw/f//Cv3//5b8//98/P//LPz//wUqAAAAAAUrAAAAAAEsAAA=");
   return {
-    cmd:E.nativeCall(301, "int(int,int)", bin),
-    cmds:E.nativeCall(409, "int(int,int)", bin),
-    cmd4:E.nativeCall(573, "int(int,int,int,int)", bin),
-    setpins:E.nativeCall(33, "void(int,int,int,int)", bin),
-    setwin:E.nativeCall(457, "void(int,int,int,int)", bin),
-    enable:E.nativeCall(93, "int(int,int)", bin),
-    disable:E.nativeCall(61, "void()", bin),
-    blit_setup:E.nativeCall(185, "void(int,int,int,int)", bin),
-    blt_pal:E.nativeCall(645, "int(int,int,int)", bin),
+    cmd:E.nativeCall(93, "int(int,int)", bin),
+    cmds:E.nativeCall(321, "int(int,int)", bin),
+    cmd4:E.nativeCall(249, "int(int,int,int,int)", bin),
+    setpins:E.nativeCall(613, "void(int,int,int,int)", bin),
+    setwin:E.nativeCall(369, "void(int,int,int,int)", bin),
+    enable:E.nativeCall(469, "int(int,int)", bin),
+    disable:E.nativeCall(569, "void()", bin),
+    blit_setup:E.nativeCall(33, "void(int,int,int,int)", bin),
+    blt_pal:E.nativeCall(641, "int(int,int,int)", bin),
   };
 })();
 //*/
@@ -582,6 +583,9 @@ function init(){
   // These 2 rotate the screen by 180 degrees
   //[0x36,0xC0],     // MADCTL
   //[0x37,0,80],   // VSCSAD (37h): Vertical Scroll Start Address of RAM
+  // ROTATE 90, swap also width,height in createArrayBuffer
+  //cmd([0x36,0x60]);cmd([0x37,0,20]);
+  //cmd([0x36,0xB4]);cmd([0x37,1,44]); // ROTATE -90
   cmd([0x3A, 0x03]);  // COLMOD - interface pixel format - 03 - 12bpp, 05 - 16bpp
   cmd([0xB2, 0xb, 0xb, 0x33, 0x00, 0x33]); // PORCTRL (B2h): Porch Setting
   cmd([0xB7, 0x11]);     // GCTRL (B7h): Gate Control
@@ -598,14 +602,13 @@ function init(){
   cmd([0x35, 0]);
   cmd([0x44, 0x25,0,0]);
   delayms(120);
-  cmd([0x2a,0,0,0,239]);
-  cmd([0x2b,0,0x14,1,0x2b]);
   cmd(0x29);
   cmd([0x35, 0]);
 }
 
 var bpp=4; // powers of two work, 3=8 colors would be nice
 var g=Graphics.createArrayBuffer(240,280,bpp);
+//var g=Graphics.createArrayBuffer(280,240,bpp); // rotated to landscape
 var pal;
 switch(bpp){
   case 2: pal= Uint16Array([0x000,0xf00,0x0f0,0x00f]);break; // white won't fit
@@ -646,7 +649,7 @@ g.flip=function(force){
   if (force)
     r={x1:0,y1:0,x2:this.getWidth()-1,y2:this.getHeight()-1};
   if (r === undefined) return;
-  var x1=r.x1&0xfe;var x2=(r.x2+2)&0xfe; // for 12bit mode align to 2 pixels
+  var x1=r.x1&0x1fe;var x2=(r.x2+2)&0x1fe; // for 12bit mode align to 2 pixels
   var xw=(x2-x1);
   var yw=(r.y2-r.y1+1);
   if (xw<1||yw<1) {print("empty rect ",xw,yw);return;}
@@ -893,16 +896,30 @@ setWatch(function(){
 },BTN1,{ repeat:true, edge:'rising',debounce:25 }
 );
 
-/*
-var sf=SPI1; //new SPI(); // SPI flash
+/* if you run from internal flash external one can be put to sleep
+var sf=new SPI(); // SPI flash
 var FCS=D17;FCS.write(1);
-D22.reset();D23.set();//wp,hold (IO2,IO3)
+D22.mode("input_pullup");//wp,hold (IO2,IO3)
+D23.mode("input_pullup");
 sf.setup({sck:D19,mosi:D20,miso:D21,mode:0});
 //sf.send([0xab],FCS); //wake
-//print(sf.send([0x90,0,0,1,0,0],FCS));
-//print(sf.send([0x9f,0,0,0],FCS));
+//print(sf.send([0x90,0,0,1,0,0],FCS)); // ID
+//print(sf.send([0x9f,0,0,0],FCS)); // ID
 sf.send([0xb9],FCS); //put to deep sleep
 */
+
+D39.set(); // touch RST pin
+var i2c=new I2C();
+i2c.setup({scl:D14, sda:D15});
+
+//tochscreen sleep
+//i2c.writeTo(0x15,0xa5,3);
+digitalPulse(D39,1,[5,50]);setTimeout(()=>{i2c.writeTo(0x15,0xa5,3);},100);
+i2c.writeTo(0x15,254,1); // 816 autosleep for Rock or QY03
+
+// accelerometer sleep
+i2c.writeTo(0x18,0x20,0x07); //Clear LPen-Enable all axes-Power down
+i2c.writeTo(0x18,0x26);i2c.readFrom(0x18,1);// Read REFERENCE-Reset filter block
 
 /*
 NRF.whitelist=[];
