@@ -262,21 +262,23 @@ int cmd4(int c0,int d1,int d2, int d3){
   cmd(buff,cnt);
   return cnt;
 }
-void setwin(int x1,int x2,int y1,int y2){
-  uint8_t c[15] =  {
+__code uint8_t c[15] =  {
     5, 0x2a, 0,0, 0,0,
     5, 0x2b, 0,0, 0,0,
     1, 0x2c,
   0 };
+void setwin(uint16_t x1, uint16_t x2, uint16_t y1, uint16_t y2){
 #if LCD_BPP==12
 // align X to even number, two pixels are sent together
-  x1=x1&0x1fe;x2=((x2+2)&0x1fe)-1; // when rotated, X can go over 255
+  x1=x1&0x1fe;x2=(x2+2)&0x1fe; // when rotated, X can go over 255
 #endif
-  c[3]=x1&255;
-  c[2]=x1>>8;
-  c[5]=x2&255; //0x2a params
-  c[4]=x2>>8;
-  int y=y1;
+  uint16_t x=x1;
+  c[2]=x>>8;
+  c[3]=x&255;
+  x=x2-1;
+  c[4]=x>>8;
+  c[5]=x&255; //0x2a params
+  uint16_t y=y1;
   c[9]=y&255;c[8]=y>>8;
   y=y2;
   c[11]=y&255;c[10]=y>>8;
@@ -519,17 +521,17 @@ int fill_color(uint32_t val,uint32_t len){
 // see full license text at https://choosealicense.com/licenses/mit/
 // compiled with options SPI3,LCD_BPP=12,SHARED_SPIFLASH
 var SPI2 = (function(){
-  var bin=atob("AAAAAAAAAAAAAAAAAAAAAAAAAAD///////////////8QtQNMfEQigGCAoYDjgBC92P///wdLe0QbiUOxBEoTaAAr/NAAIxNgA0p6RBOBcEcY8QJAxv///7L///84tSNLe0TaaAAqMNAZSgckFGAZTAElJWAbaRRGC7EXShNg//fZ/xZLACIaYKP1hGMaYBRKEGBRYKLyNFIBIRFgGmgAKvzQACIaYBJLe0QbaQuxDUoTYBBLe0QbaQuxCkoTYApLACABIiBgGmA4vU/w/zD75wD1AkBw9QJADAUAUDj1AkBE9QJACAUAUATwAkCc////VP///0j///8TtQAoHtsAKaa/jfgFEAIkASQAKqS/AqkJGY34BACkvwE0AfgELAAror8CqhIZATQhRgGoqL8C+AQ8//eT/yBGArAQvQAk+udwtQVGiLFGGAAkKEYQ+AEbGbFFGLVCAtlkQiBGcL3/933/ACj50QE07+cERvXnAAAt6f9BGU1uRn1EB0YMRgXxCAi0RihoaWi2Rq7oAwAINUVFdkb20QI0KGjO+AAABPT/dKiIqXmu+AQAB/T/dwE8jvgGEFK6W7p/umS6DyFgRq34AnCt+ARArfgIIK34CjD/97b/BLC96PCBAL/YAgAAEksbaBC167kRSxtoC7ERShNgE0sQSntEAAZcaRRgnGlUYNxplGBP8P801GDaaAtLSQAaYAAiWmBD+EgMQ/gYHAEgEL1P8P8w++cAvwD1AkAE8wJACPMCQAj1AkBs9QJABv7//wdKACMTYKL1fnITYAVLASIaYAP1QHMbaAuxA0oTYHBHAPUCQATwAkAI8wJAELUFTHxExOkFAQEhAfoC8sTpAzIQvQC/iP3//y3p8E+3sM3pARJqSnpEkvgAkAAoAPC6gAApAPC3gAnx/zMHKwDysoABIwP6CfMBO9uyA5MBeEN4l4hB6gMhApsZQVRLACQcYFNMByMjYBNpBZQA8QILibILsVBKE2BP6kkD27JP8AAIBJNERh6uUksCnXtEs/gCoAObAZoLQEH6CfEy+BPAA5sLQEH6CfEy+BMgBJsdRO2yBy1n2ImyT+osEzNVExIE8QIOQ+oMHDMZAzSq8QIKXyyD+AHAH/qK+gb4DiAY3f/3b/41SgAjE2Ci9YRiE2DC+CxkwvgwRDFMASIiYDVMfESy6wgIIoEHvx6uREYcRgauuvEAD7zRMEt7RAE/24gYRL+yQ3gBeEHqAyECmxlBAPECC4myAC+m0QAsMND/90D+HUsfSh9go/WEY6LyNFIfYML4NGXC+DhFASERYBpoACr80AAiGmAdS3tEG2kLsRVKE2AFmwAgGGATSwEiGmA3sL3o8I/eRgg9HvgBO+2yxfEICwP6C/MZQ4my80aL5//3D/7g50/w/zDp5wC/cPUCQAD1AkAMBQBQOPUCQBDwAkBE9QJACAUAUATwAkBk/f///vz//4r8//9w/P//IPz//wUqAAAAAAUrAAAAAAEsAAA=");
+  var bin=atob("AAAAAAAAAAAAAAAAAAAAAAAAAAAFKgAAAAAFKwAAAAABLAAA////////////////ELUDTHxEIoBggKGA44AQvcj///8HS3tEG4lDsQRKE2gAK/zQACMTYANKekQTgXBHGPECQLb///+i////OLUjS3tE2mgAKjDQGUoHJBRgGUwBJSVgG2kURguxF0oTYP/32f8WSwAiGmCj9YRjGmAUShBgUWCi8jRSASERYBpoACr80AAiGmASS3tEG2kLsQ1KE2AQS3tEG2kLsQpKE2AKSwAgASIgYBpgOL1P8P8w++cA9QJAcPUCQAwFAFA49QJARPUCQAgFAFAE8AJAjP///0T///84////E7UAKB7bACmmv434BRACJAEkACqkvwKpCRmN+AQApL8BNAH4BCwAK6K/AqoSGQE0IUYBqKi/AvgEPP/3k/8gRgKwEL0AJPrncLUFRoixRhgAJChGEPgBGxmxRRi1QgLZZEIgRnC9//d9/wAo+dEBNO/nBEb15wAAMLQCMQD0/3QLSAH0/3F4RAE5ibIlEsR1QncMEsN3EhIbEkF2hXUEdgJ3g3cPIRQwMLz/982/AL9u/v//EksbaBC167kRSxtoC7ERShNgE0sQSntEAAZcahRgnGpUYNxqlGBP8P801GDaaAtLSQAaYAAiWmBD+EgMQ/gYHAEgEL1P8P8w++cAvwD1AkAE8wJACPMCQAj1AkBs9QJAKv7//wdKACMTYKL1fnITYAVLASIaYAP1QHMbaAuxA0oTYHBHAPUCQATwAkAI8wJAELUFTHxExOkJAQEhAfoC8sTpAzIQvQC/rP3//y3p8E+3sM3pARJqSnpEkvgAkAAoAPC6gAApAPC3gAnx/zMHKwDysoABIwP6CfMBO9uyA5MBeEN4l4hB6gMhApsZQVRLACQcYFNMByMjYBNpBZQA8QILibILsVBKE2BP6kkD27JP8AAIBJNERh6uUksCnXtEs/gCoAObAZoLQEH6CfEy+BPAA5sLQEH6CfEy+BMgBJsdRO2yBy1n2ImyT+osEzNVExIE8QIOQ+oMHDMZAzSq8QIKXyyD+AHAH/qK+gb4DiAY3f/3if41SgAjE2Ci9YRiE2DC+CxkwvgwRDFMASIiYDVMfESy6wgIIoEHvx6uREYcRgauuvEAD7zRMEt7RAE/24gYRL+yQ3gBeEHqAyECmxlBAPECC4myAC+m0QAsMND/91r+HUsfSh9go/WEY6LyNFIfYML4NGXC+DhFASERYBpoACr80AAiGmAdS3tEG2kLsRVKE2AFmwAgGGATSwEiGmA3sL3o8I/eRgg9HvgBO+2yxfEICwP6C/MZQ4my80aL5//3Kf7g50/w/zDp5wC/cPUCQAD1AkAMBQBQOPUCQBDwAkBE9QJACAUAUATwAkCI/f//Iv3//678//+U/P//RPz//w==");
   return {
-    cmd:E.nativeCall(93, "int(int,int)", bin),
-    cmds:E.nativeCall(321, "int(int,int)", bin),
-    cmd4:E.nativeCall(249, "int(int,int,int,int)", bin),
-    setpins:E.nativeCall(625, "void(int,int,int,int)", bin),
-    setwin:E.nativeCall(369, "void(int,int,int,int)", bin),
-    enable:E.nativeCall(481, "int(int,int)", bin),
-    disable:E.nativeCall(581, "void()", bin),
-    blit_setup:E.nativeCall(33, "void(int,int,int,int)", bin),
-    blt_pal:E.nativeCall(653, "int(int,int,int)", bin),
+    cmd:E.nativeCall(109, "int(int,int)", bin),
+    cmds:E.nativeCall(337, "int(int,int)", bin),
+    cmd4:E.nativeCall(265, "int(int,int,int,int)", bin),
+    setpins:E.nativeCall(589, "void(int,int,int,int)", bin),
+    setwin:E.nativeCall(385, "void(int,int,int,int)", bin),
+    enable:E.nativeCall(445, "int(int,int)", bin),
+    disable:E.nativeCall(545, "void()", bin),
+    blit_setup:E.nativeCall(49, "void(int,int,int,int)", bin),
+    blt_pal:E.nativeCall(617, "int(int,int,int)", bin),
   };
 })();
 //*/
