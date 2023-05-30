@@ -262,26 +262,40 @@ int cmd4(int c0,int d1,int d2, int d3){
   cmd(buff,cnt);
   return cnt;
 }
+
+#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+#define htons(x) ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8))
+#else
+#define htons(x) (x)
+#endif
+
 __code uint8_t c[15] =  {
     5, 0x2a, 0,0, 0,0,
     5, 0x2b, 0,0, 0,0,
     1, 0x2c,
   0 };
+
 void setwin(uint16_t x1, uint16_t x2, uint16_t y1, uint16_t y2){
 #if LCD_BPP==12
-// align X to even number, two pixels are sent together
+// align X coordinates to even number as two pixels are sent together
   x1=x1&0x1fe;x2=(x2+2)&0x1fe; // when rotated, X can go over 255
 #endif
+  //0x2a CASET - column params
+  uint16_t *xcoords=(uint16_t*)&c[2];
   uint16_t x=x1;
-  c[2]=x>>8;
-  c[3]=x&255;
+  xcoords[0]=htons(x);
+  //c[2]=x>>8;c[3]=x&255;
   x=x2-1;
-  c[4]=x>>8;
-  c[5]=x&255; //0x2a params
+  //c[4]=x>>8;c[5]=x&255;
+  xcoords[1]=htons(x);
+  //0x2b RASET - rows params
+  uint16_t *ycoords=(uint16_t*)&c[8];
   uint16_t y=y1;
-  c[9]=y&255;c[8]=y>>8;
+  ycoords[0]=htons(y);
+  //c[9]=y&255;c[8]=y>>8;
   y=y2;
-  c[11]=y&255;c[10]=y>>8;
+  //c[11]=y&255;c[10]=y>>8;
+  ycoords[1]=htons(y);
   cmds(c,sizeof(c));
 }
 
@@ -521,17 +535,17 @@ int fill_color(uint32_t val,uint32_t len){
 // see full license text at https://choosealicense.com/licenses/mit/
 // compiled with options SPI3,LCD_BPP=12,SHARED_SPIFLASH
 var SPI2 = (function(){
-  var bin=atob("AAAAAAAAAAAAAAAAAAAAAAAAAAAFKgAAAAAFKwAAAAABLAAA////////////////ELUDTHxEIoBggKGA44AQvcj///8HS3tEG4lDsQRKE2gAK/zQACMTYANKekQTgXBHGPECQLb///+i////OLUjS3tE2mgAKjDQGUoHJBRgGUwBJSVgG2kURguxF0oTYP/32f8WSwAiGmCj9YRjGmAUShBgUWCi8jRSASERYBpoACr80AAiGmASS3tEG2kLsQ1KE2AQS3tEG2kLsQpKE2AKSwAgASIgYBpgOL1P8P8w++cA9QJAcPUCQAwFAFA49QJARPUCQAgFAFAE8AJAjP///0T///84////E7UAKB7bACmmv434BRACJAEkACqkvwKpCRmN+AQApL8BNAH4BCwAK6K/AqoSGQE0IUYBqKi/AvgEPP/3k/8gRgKwEL0AJPrncLUFRoixRhgAJChGEPgBGxmxRRi1QgLZZEIgRnC9//d9/wAo+dEBNO/nBEb15wAAMLQCMQD0/3QLSAH0/3F4RAE5ibIlEsR1QncMEsN3EhIbEkF2hXUEdgJ3g3cPIRQwMLz/982/AL9u/v//EksbaBC167kRSxtoC7ERShNgE0sQSntEAAZcahRgnGpUYNxqlGBP8P801GDaaAtLSQAaYAAiWmBD+EgMQ/gYHAEgEL1P8P8w++cAvwD1AkAE8wJACPMCQAj1AkBs9QJAKv7//wdKACMTYKL1fnITYAVLASIaYAP1QHMbaAuxA0oTYHBHAPUCQATwAkAI8wJAELUFTHxExOkJAQEhAfoC8sTpAzIQvQC/rP3//y3p8E+3sM3pARJqSnpEkvgAkAAoAPC6gAApAPC3gAnx/zMHKwDysoABIwP6CfMBO9uyA5MBeEN4l4hB6gMhApsZQVRLACQcYFNMByMjYBNpBZQA8QILibILsVBKE2BP6kkD27JP8AAIBJNERh6uUksCnXtEs/gCoAObAZoLQEH6CfEy+BPAA5sLQEH6CfEy+BMgBJsdRO2yBy1n2ImyT+osEzNVExIE8QIOQ+oMHDMZAzSq8QIKXyyD+AHAH/qK+gb4DiAY3f/3if41SgAjE2Ci9YRiE2DC+CxkwvgwRDFMASIiYDVMfESy6wgIIoEHvx6uREYcRgauuvEAD7zRMEt7RAE/24gYRL+yQ3gBeEHqAyECmxlBAPECC4myAC+m0QAsMND/91r+HUsfSh9go/WEY6LyNFIfYML4NGXC+DhFASERYBpoACr80AAiGmAdS3tEG2kLsRVKE2AFmwAgGGATSwEiGmA3sL3o8I/eRgg9HvgBO+2yxfEICwP6C/MZQ4my80aL5//3Kf7g50/w/zDp5wC/cPUCQAD1AkAMBQBQOPUCQBDwAkBE9QJACAUAUATwAkCI/f//Iv3//678//+U/P//RPz//w==");
+  var bin=atob("AAAAAAAAAAAAAAAAAAAAAAAAAAAFKgAAAAAFKwAAAAABLAAA////////////////ELUDTHxEIoBggKGA44AQvcj///8HS3tEG4lDsQRKE2gAK/zQACMTYANKekQTgXBHGPECQLb///+i////OLUjS3tE2mgAKjDQGUoHJBRgGUwBJSVgG2kURguxF0oTYP/32f8WSwAiGmCj9YRjGmAUShBgUWCi8jRSASERYBpoACr80AAiGmASS3tEG2kLsQ1KE2AQS3tEG2kLsQpKE2AKSwAgASIgYBpgOL1P8P8w++cA9QJAcPUCQAwFAFA49QJARPUCQAgFAFAE8AJAjP///0T///84////E7UAKB7bACmmv434BRACJAEkACqkvwKpCRmN+AQApL8BNAH4BCwAK6K/AqoSGQE0IUYBqKi/AvgEPP/3k/8gRgKwEL0AJPrncLUFRoixRhgAJChGEPgBGxmxRRi1QgLZZEIgRnC9//d9/wAo+dEBNO/nBEb15wAAAPT/cBC0AjFEuglIAfT/cXhEATlJulK6W7rEggGDgoPDgw8hFDBd+ARL//fRvwC/bP7//xJLG2gQteu5EUsbaAuxEUoTYBNLEEp7RAAGXGoUYJxqVGDcapRgT/D/NNRg2mgLS0kAGmAAIlpgQ/hIDEP4GBwBIBC9T/D/MPvnAL8A9QJABPMCQAjzAkAI9QJAbPUCQDL+//8HSgAjE2Ci9X5yE2AFSwEiGmAD9UBzG2gLsQNKE2BwRwD1AkAE8AJACPMCQBC1BUx8RMTpCQEBIQH6AvLE6QMyEL0Av7T9//8t6fBPt7DN6QESakp6RJL4AJAAKADwuoAAKQDwt4AJ8f8zBysA8rKAASMD+gnzATvbsgOTAXhDeJeIQeoDIQKbGUFUSwAkHGBTTAcjI2ATaQWUAPECC4myC7FQShNgT+pJA9uyT/AACASTREYerlJLAp17RLP4AqADmwGaC0BB+gnxMvgTwAObC0BB+gnxMvgTIASbHUTtsgctZ9iJsk/qLBMzVRMSBPECDkPqDBwzGQM0qvECCl8sg/gBwB/6ivoG+A4gGN3/943+NUoAIxNgovWEYhNgwvgsZML4MEQxTAEiImA1THxEsusICCKBB78erkRGHEYGrrrxAA+80TBLe0QBP9uIGES/skN4AXhB6gMhApsZQQDxAguJsgAvptEALDDQ//de/h1LH0ofYKP1hGOi8jRSH2DC+DRlwvg4RQEhEWAaaAAq/NAAIhpgHUt7RBtpC7EVShNgBZsAIBhgE0sBIhpgN7C96PCP3kYIPR74ATvtssXxCAsD+gvzGUOJsvNGi+f/9y3+4OdP8P8w6ecAv3D1AkAA9QJADAUAUDj1AkAQ8AJARPUCQAgFAFAE8AJAkP3//yr9//+2/P//nPz//0z8//8=");
   return {
     cmd:E.nativeCall(109, "int(int,int)", bin),
     cmds:E.nativeCall(337, "int(int,int)", bin),
     cmd4:E.nativeCall(265, "int(int,int,int,int)", bin),
-    setpins:E.nativeCall(589, "void(int,int,int,int)", bin),
+    setpins:E.nativeCall(581, "void(int,int,int,int)", bin),
     setwin:E.nativeCall(385, "void(int,int,int,int)", bin),
-    enable:E.nativeCall(445, "int(int,int)", bin),
-    disable:E.nativeCall(545, "void()", bin),
+    enable:E.nativeCall(437, "int(int,int)", bin),
+    disable:E.nativeCall(537, "void()", bin),
     blit_setup:E.nativeCall(49, "void(int,int,int,int)", bin),
-    blt_pal:E.nativeCall(617, "int(int,int,int)", bin),
+    blt_pal:E.nativeCall(609, "int(int,int,int)", bin),
   };
 })();
 //*/
