@@ -4,6 +4,22 @@ function KickWd(){
 }
 var wdint=setInterval(KickWd,2000);
 E.enableWatchdog(15, false);
+
+if (process.env.BOARD=="MAGIC3") D7.write(1); // turns off HR red led + power up i2c chips
+//MAGIC3/Rock/QY03 LCD pins
+CS=D3;DC=D47;RST=D2;BL=D12;SCK=D45;MOSI=D44;
+RST.reset();
+SCK.write(0);MOSI.write(0);CS.write(1);DC.write(1);
+
+function toFlatString(arr,retries){
+  return (E.toFlatString||E.toString)(arr) || (function(){
+    if (retries==0) return undefined;
+    E.kickWatchdog();E.defrag();print("toFlatString() fail&retry!");
+    return toFlatString(arr,retries?retries-1:2); // 3 retries
+  })();
+}
+function toFlatBuffer(a){return E.toArrayBuffer(toFlatString(a));}
+
 /*
 // MIT License (c) 2020 fanoush https://github.com/fanoush
 // see full license text at https://choosealicense.com/licenses/mit/
@@ -535,7 +551,7 @@ int fill_color(uint32_t val,uint32_t len){
 // see full license text at https://choosealicense.com/licenses/mit/
 // compiled with options SPI3,LCD_BPP=12,SHARED_SPIFLASH
 var SPI2 = (function(){
-  var bin=atob("AAAAAAAAAAAAAAAAAAAAAAAAAAAFKgAAAAAFKwAAAAABLAAA////////////////ELUDTHxEIoBggKGA44AQvcj///8HS3tEG4lDsQRKE2gAK/zQACMTYANKekQTgXBHGPECQLb///+i////OLUjS3tE2mgAKjDQGUoHJBRgGUwBJSVgG2kURguxF0oTYP/32f8WSwAiGmCj9YRjGmAUShBgUWCi8jRSASERYBpoACr80AAiGmASS3tEG2kLsQ1KE2AQS3tEG2kLsQpKE2AKSwAgASIgYBpgOL1P8P8w++cA9QJAcPUCQAwFAFA49QJARPUCQAgFAFAE8AJAjP///0T///84////E7UAKB7bACmmv434BRACJAEkACqkvwKpCRmN+AQApL8BNAH4BCwAK6K/AqoSGQE0IUYBqKi/AvgEPP/3k/8gRgKwEL0AJPrncLUFRoixRhgAJChGEPgBGxmxRRi1QgLZZEIgRnC9//d9/wAo+dEBNO/nBEb15wAAAPT/cBC0AjFEuglIAfT/cXhEATlJulK6W7rEggGDgoPDgw8hFDBd+ARL//fRvwC/bP7//xJLG2gQteu5EUsbaAuxEUoTYBNLEEp7RAAGXGoUYJxqVGDcapRgT/D/NNRg2mgLS0kAGmAAIlpgQ/hIDEP4GBwBIBC9T/D/MPvnAL8A9QJABPMCQAjzAkAI9QJAbPUCQDL+//8HSgAjE2Ci9X5yE2AFSwEiGmAD9UBzG2gLsQNKE2BwRwD1AkAE8AJACPMCQBC1BUx8RMTpCQEBIQH6AvLE6QMyEL0Av7T9//8t6fBPt7DN6QESakp6RJL4AJAAKADwuoAAKQDwt4AJ8f8zBysA8rKAASMD+gnzATvbsgOTAXhDeJeIQeoDIQKbGUFUSwAkHGBTTAcjI2ATaQWUAPECC4myC7FQShNgT+pJA9uyT/AACASTREYerlJLAp17RLP4AqADmwGaC0BB+gnxMvgTwAObC0BB+gnxMvgTIASbHUTtsgctZ9iJsk/qLBMzVRMSBPECDkPqDBwzGQM0qvECCl8sg/gBwB/6ivoG+A4gGN3/943+NUoAIxNgovWEYhNgwvgsZML4MEQxTAEiImA1THxEsusICCKBB78erkRGHEYGrrrxAA+80TBLe0QBP9uIGES/skN4AXhB6gMhApsZQQDxAguJsgAvptEALDDQ//de/h1LH0ofYKP1hGOi8jRSH2DC+DRlwvg4RQEhEWAaaAAq/NAAIhpgHUt7RBtpC7EVShNgBZsAIBhgE0sBIhpgN7C96PCP3kYIPR74ATvtssXxCAsD+gvzGUOJsvNGi+f/9y3+4OdP8P8w6ecAv3D1AkAA9QJADAUAUDj1AkAQ8AJARPUCQAgFAFAE8AJAkP3//yr9//+2/P//nPz//0z8//8=");
+  var bin=toFlatString(atob("AAAAAAAAAAAAAAAAAAAAAAAAAAAFKgAAAAAFKwAAAAABLAAA////////////////ELUDTHxEIoBggKGA44AQvcj///8HS3tEG4lDsQRKE2gAK/zQACMTYANKekQTgXBHGPECQLb///+i////OLUjS3tE2mgAKjDQGUoHJBRgGUwBJSVgG2kURguxF0oTYP/32f8WSwAiGmCj9YRjGmAUShBgUWCi8jRSASERYBpoACr80AAiGmASS3tEG2kLsQ1KE2AQS3tEG2kLsQpKE2AKSwAgASIgYBpgOL1P8P8w++cA9QJAcPUCQAwFAFA49QJARPUCQAgFAFAE8AJAjP///0T///84////E7UAKB7bACmmv434BRACJAEkACqkvwKpCRmN+AQApL8BNAH4BCwAK6K/AqoSGQE0IUYBqKi/AvgEPP/3k/8gRgKwEL0AJPrncLUFRoixRhgAJChGEPgBGxmxRRi1QgLZZEIgRnC9//d9/wAo+dEBNO/nBEb15wAAAPT/cBC0AjFEuglIAfT/cXhEATlJulK6W7rEggGDgoPDgw8hFDBd+ARL//fRvwC/bP7//xJLG2gQteu5EUsbaAuxEUoTYBNLEEp7RAAGXGoUYJxqVGDcapRgT/D/NNRg2mgLS0kAGmAAIlpgQ/hIDEP4GBwBIBC9T/D/MPvnAL8A9QJABPMCQAjzAkAI9QJAbPUCQDL+//8HSgAjE2Ci9X5yE2AFSwEiGmAD9UBzG2gLsQNKE2BwRwD1AkAE8AJACPMCQBC1BUx8RMTpCQEBIQH6AvLE6QMyEL0Av7T9//8t6fBPt7DN6QESakp6RJL4AJAAKADwuoAAKQDwt4AJ8f8zBysA8rKAASMD+gnzATvbsgOTAXhDeJeIQeoDIQKbGUFUSwAkHGBTTAcjI2ATaQWUAPECC4myC7FQShNgT+pJA9uyT/AACASTREYerlJLAp17RLP4AqADmwGaC0BB+gnxMvgTwAObC0BB+gnxMvgTIASbHUTtsgctZ9iJsk/qLBMzVRMSBPECDkPqDBwzGQM0qvECCl8sg/gBwB/6ivoG+A4gGN3/943+NUoAIxNgovWEYhNgwvgsZML4MEQxTAEiImA1THxEsusICCKBB78erkRGHEYGrrrxAA+80TBLe0QBP9uIGES/skN4AXhB6gMhApsZQQDxAguJsgAvptEALDDQ//de/h1LH0ofYKP1hGOi8jRSH2DC+DRlwvg4RQEhEWAaaAAq/NAAIhpgHUt7RBtpC7EVShNgBZsAIBhgE0sBIhpgN7C96PCP3kYIPR74ATvtssXxCAsD+gvzGUOJsvNGi+f/9y3+4OdP8P8w6ecAv3D1AkAA9QJADAUAUDj1AkAQ8AJARPUCQAgFAFAE8AJAkP3//yr9//+2/P//nPz//0z8//8="));
   return {
     cmd:E.nativeCall(109, "int(int,int)", bin),
     cmds:E.nativeCall(337, "int(int,int)", bin),
@@ -551,28 +567,13 @@ var SPI2 = (function(){
 //*/
 E.kickWatchdog();
 
-D7.write(1); // turns off HR red led + power up i2c chips
-//MAGIC3 pins
-CS=D3;DC=D47;RST=D2;BL=D12;
-SCK=D45;MOSI=D44;
-RST.reset();
-// CLK,MOSI,CS,DC
-SCK.write(0);MOSI.write(0);CS.write(1);DC.write(1);
 SPI2.setpins(SCK,MOSI,CS,DC);
 SPI2.enable(0x14,0); //32MBit, mode 0
 
-function delayms(ms){
-  digitalPulse(DC,0,ms);
-  digitalPulse(DC,0,0); // 0=wait for previous
+function delayms(ms){ // for short delays, blocks everything
+  digitalPulse(DC,0,ms);// use some harmless pin (LCD DC)
+  digitalPulse(DC,0,0); // 0ms just waits for previous call
 }
-
-function toFlatString(arr){
-  var b=E.toString(arr);if (b) return b   ;
-  print("toFlatString() fail&retry!");E.defrag();b=E.toString(arr);if (b) return b;
-  print("fail&retry again!");E.defrag();b=E.toString(arr);if (b) return b;
-  print("failed!"); return b;
-}
-function toFlatBuffer(a){return E.toArrayBuffer(toFlatString(a));}
 
 function cmd(a){
   var l=a.length;
@@ -592,9 +593,9 @@ function cmds(arr){
   return c;
 }
 
-RST.set();
+RST.set(); // release LCD from reset
 
-function init(){
+function magic3init(){
   cmd(0x11); // sleep out
   delayms(120);
   cmd([0x36, 0]);     // MADCTL - This is an unrotated screen
@@ -622,7 +623,17 @@ function init(){
   cmd([0x44, 0x25,0,0]);
   delayms(120);
   cmd(0x29);
-  cmd([0x35, 0]);
+//  cmd([0x35, 0]);
+}
+function qy03init(){
+  cmd(0x11); // sleep out
+  delayms(120);
+  cmd([0x36, 0xa]);     // MADCTL - This is an unrotated screen
+  cmd([0x3A, 0x03]);  // COLMOD - interface pixel format - 03 - 12bpp, 05 - 16bpp
+  cmd([0x37,1,44]); //256+44=300 = offset by -20 so no need to add +20 to y
+  delayms(120);
+  cmd(0x20);
+  cmd(0x29);
 }
 
 var bpp=4; // powers of two work, 3=8 colors would be nice
@@ -683,11 +694,13 @@ g.flip=function(force){
 };
 
 g.isOn=false;
-init();
+if (process.env.BOARD=="MAGIC3") magic3init(); else
+if (process.env.BOARD=="QY03") qy03init();
 
 g.on=function(){
   if (this.isOn) return;
   cmd(0x11);
+  delayms(10);
   g.flip();
   //cmd(0x13); //ST7735_NORON: Set Normal display on, no args, w/delay: 10 ms delay
   //cmd(0x29); //ST7735_DISPON: Set Main screen turn on, no args w/delay: 100 ms delay
@@ -915,7 +928,9 @@ setWatch(function(){
 },BTN1,{ repeat:true, edge:'rising',debounce:25 }
 );
 
-/* if you run from internal flash external one can be put to sleep
+// put SPI flash to sleep if espruino does not handle it already
+///*
+if (!process.env.SPIFLASH){
 var sf=new SPI(); // SPI flash
 var FCS=D17;FCS.write(1);
 D22.mode("input_pullup");//wp,hold (IO2,IO3)
@@ -925,7 +940,8 @@ sf.setup({sck:D19,mosi:D20,miso:D21,mode:0});
 //print(sf.send([0x90,0,0,1,0,0],FCS)); // ID
 //print(sf.send([0x9f,0,0,0],FCS)); // ID
 sf.send([0xb9],FCS); //put to deep sleep
-*/
+}
+//*/
 
 D39.set(); // touch RST pin
 var i2c=new I2C();
@@ -940,7 +956,7 @@ i2c.writeTo(0x15,254,1); // 816 autosleep for Rock or QY03
 i2c.writeTo(0x18,0x20,0x07); //Clear LPen-Enable all axes-Power down
 i2c.writeTo(0x18,0x26);i2c.readFrom(0x18,1);// Read REFERENCE-Reset filter block
 
-/*
+/* MAC address whitelist - allow to connect only if button is held
 NRF.whitelist=[];
 NRF.on('connect',function(addr) {
   if (!NRF.whitelist.includes(addr)){
@@ -953,12 +969,12 @@ NRF.on('connect',function(addr) {
   NRF.connection = {};
   NRF.connection.addr = addr;
   NRF.connected=true;
-  NRF.setRSSIHandler((rssi)=>{NRF.connection.RSSI=rssi;});
+  // NRF.setRSSIHandler((rssi)=>{NRF.connection.RSSI=rssi;}); // may draw extra power when connected
 });
 NRF.on('disconnect',function(reason) {
   NRF.connected=false;
+  //NRF.setRSSIHandler();
   NRF.connection = {};
   NRF.lastReason=reason;
 });
-
 */
