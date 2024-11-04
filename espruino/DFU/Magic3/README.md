@@ -71,7 +71,7 @@ You can postpone next steps, however without DFU bootloader it is not easy to up
 
 ### Hardware ###
 
-- LCD  240x280 16bit color display
+- LCD  ST7789 240x280 16bit color display
 - HR sensor?,  I2C 0x44
 - accelerometer sc7a20, I2C 0x18
 - touchscreen CST816, I2C 0x15, reports coordinates before you lift finger
@@ -89,7 +89,7 @@ You can postpone next steps, however without DFU bootloader it is not easy to up
 | 08 | charger, 0=attached  |
 | |  |
 | 12 | backlight |
-| |  |
+| 13 | RX testpoint on PCB |
 | 14 | I2C SCL |
 | 15 | I2C SDA - devices on bus 0x15 (touch) ,0x18 (accel) ,0x44 (hr sensor?) |
 | 16 | sc7a20 accel IRQ pin |
@@ -107,6 +107,7 @@ You can postpone next steps, however without DFU bootloader it is not easy to up
 | |  |
 | 32 | touch IRQ |
 | |  |
+| 38 | TX tespoint on PCB |
 | 39 | touch RST |
 | |  |
 | 44 | LCD MOSI |
